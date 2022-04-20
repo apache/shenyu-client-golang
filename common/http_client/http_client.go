@@ -26,8 +26,8 @@ import (
 type HttpClient struct {
 }
 
-func (client *HttpClient) Request(r *http.Request, url string, header http.Header, timeoutMs uint64, params map[string]string) (response *http.Response, err error) {
-	switch r.Method {
+func (client *HttpClient) Request(method string, url string, header http.Header, timeoutMs uint64, params map[string]string) (response *http.Response, err error) {
+	switch method {
 	case http.MethodGet:
 		response, err = client.Get(url, header, timeoutMs, params)
 		return
@@ -42,7 +42,7 @@ func (client *HttpClient) Request(r *http.Request, url string, header http.Heade
 		return
 	default:
 		err = errors.New("not available method")
-		logger.Error("request method[%s], url[%s],header:[%s],params:[%s], not available method ", r.Method, url, ToJsonString(header), ToJsonString(params))
+		logger.Error("request method[%s], url[%s],header:[%s],params:[%s], not available method ", method, url, ToJsonString(header), ToJsonString(params))
 	}
 	return
 }

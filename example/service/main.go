@@ -15,33 +15,26 @@
  * limitations under the License.
  */
 
-package http_client
+package main
 
 import (
-	"encoding/json"
 	"github.com/incubator-shenyu-client-golang/common/constants"
-	"github.com/incubator-shenyu-client-golang/model"
-	"github.com/wonderivan/logger"
-	"io/ioutil"
+	"github.com/incubator-shenyu-client-golang/common/http_client"
 	"net/http"
-	"testing"
 )
 
-/**
- * The http_client test
- **/
 type object struct {
-	Url        string            `param:"url"`
-	Header     http.Header       `param:"header"`
-	Params     map[string]string `param:"params"`
-	TimeoutMs  uint64            `param:"timeoutMs"`
-	httpClient HttpClient        `param:"httpClient"`
+	Url        string                 `param:"url"`
+	Header     http.Header            `param:"header"`
+	Params     map[string]string      `param:"params"`
+	TimeoutMs  uint64                 `param:"timeoutMs"`
+	httpClient http_client.HttpClient `param:"httpClient"`
 }
 
 /**
- * Test http_client get ShenYu admin token
+ * The ShenYu admin api example
  **/
-func TestHttpClientRequest(t *testing.T) {
+func main() {
 	headers := map[string][]string{}
 	headers["Connection"] = []string{"Keep-Alive"}
 	headers["Content-Type"] = []string{"application/json"}
@@ -50,30 +43,12 @@ func TestHttpClientRequest(t *testing.T) {
 	params["userName"] = constants.DEFAULT_ADMIN_ACCOUNT
 	params["password"] = constants.DEFAULT_ADMIN_PASSWORD
 
-	obj := &object{
+	o := &object{
 		Url:       "http://127.0.0.1:9095" + constants.DEFAULT_SHENYU_TOKEN,
 		Header:    headers,
 		Params:    params,
 		TimeoutMs: 1000,
 	}
 
-	var response *http.Response
-	response, err := obj.httpClient.Request("GET", obj.Url, obj.Header, 1000, obj.Params)
-	if err != nil {
-		return
-	}
-	var bytes []byte
-	bytes, err = ioutil.ReadAll(response.Body)
-	defer response.Body.Close()
-	if err != nil {
-		return
-	}
-	var adminToken = model.AdminToken{}
-	err = json.Unmarshal(bytes, &adminToken)
-	logger.Info("Get body is ->", adminToken)
-	if response.StatusCode == 200 {
-		return
-	} else {
-		return
-	}
+	GetAminToken(o)
 }

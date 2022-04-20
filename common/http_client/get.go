@@ -22,8 +22,11 @@ import (
 	"time"
 )
 
+/**
+ * The http_client get method Implement
+ **/
 func get(url string, header http.Header, timeoutMs uint64, params map[string]string) (response *http.Response, err error) {
-	url = commonUrlHandle(url, params)
+	url = handleCommonUrl(url, params)
 	client := http.Client{}
 	client.Timeout = time.Millisecond * time.Duration(timeoutMs)
 	request, errNew := http.NewRequest(http.MethodGet, url, nil)

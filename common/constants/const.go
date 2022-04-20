@@ -14,34 +14,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package http_client
 
-import (
-	"net/http"
-	"strings"
-	"time"
-)
+package constants
 
 /**
- * The http_client post method Implement
+ * The sdk const
  **/
-func post(url string, header http.Header, timeoutMs uint64, params map[string]string) (response *http.Response, err error) {
-	client := http.Client{}
-	client.Timeout = time.Millisecond * time.Duration(timeoutMs)
-
-	body := GetUrlFormedMap(params)
-
-	request, errNew := http.NewRequest(http.MethodPost, url, strings.NewReader(body))
-	if errNew != nil {
-		err = errNew
-		return
-	}
-	request.Header = header
-	resp, errDo := client.Do(request)
-	if errDo != nil {
-		err = errDo
-	} else {
-		response = resp
-	}
-	return
-}
+const (
+	REGISTER_URI           = "register-uri"
+	REGISTER_METADATA      = "register-metadata"
+	DEFAULT_SHENYU_TOKEN   = "/platform/login"
+	DEFAULT_ADMIN_PASSWORD = "123456"
+	DEFAULT_ADMIN_ACCOUNT  = "admin"
+	DEFAULT_REQUEST_TIME   = 1000
+)

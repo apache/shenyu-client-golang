@@ -21,6 +21,9 @@ import "net/http"
 
 //go:generate mockgen -destination ../../mock/mock_http_agent_interface.go -package mock -source=./http_agent_interface.go
 
+/**
+ * The http_client interface
+ **/
 type IHttpClient interface {
-	Request(r *http.Request, url string, header http.Header, timeoutMs uint64, params map[string]string) (response *http.Response, err error)
+	Request(method string, url string, header http.Header, timeoutMs uint64, params map[string]string) (response *http.Response, err error)
 }

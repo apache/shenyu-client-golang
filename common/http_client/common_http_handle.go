@@ -19,10 +19,14 @@ package http_client
 
 import (
 	"encoding/json"
+	"net/url"
 	"strings"
 )
 
-func commonUrlHandle(url string, params map[string]string) string {
+/**
+ * Common heep_client util
+ **/
+func handleCommonUrl(url string, params map[string]string) string {
 	if !strings.HasSuffix(url, "?") {
 		url = url + "?"
 	}
@@ -38,4 +42,13 @@ func commonUrlHandle(url string, params map[string]string) string {
 func ToJsonString(object interface{}) string {
 	js, _ := json.Marshal(object)
 	return string(js)
+}
+
+func GetUrlFormedMap(source map[string]string) (urlEncoded string) {
+	urlEncoder := url.Values{}
+	for key, value := range source {
+		urlEncoder.Add(key, value)
+	}
+	urlEncoded = urlEncoder.Encode()
+	return
 }

@@ -14,34 +14,39 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package http_client
+
+package main
 
 import (
+	"encoding/json"
+	"github.com/incubator-shenyu-client-golang/common/constants"
+	"github.com/incubator-shenyu-client-golang/model"
+	"github.com/wonderivan/logger"
+	"io/ioutil"
 	"net/http"
-	"strings"
-	"time"
 )
 
 /**
- * The http_client post method Implement
+ * Test http_client
  **/
-func post(url string, header http.Header, timeoutMs uint64, params map[string]string) (response *http.Response, err error) {
-	client := http.Client{}
-	client.Timeout = time.Millisecond * time.Duration(timeoutMs)
-
-	body := GetUrlFormedMap(params)
-
-	request, errNew := http.NewRequest(http.MethodPost, url, strings.NewReader(body))
-	if errNew != nil {
-		err = errNew
+func GetAminToken(o *object) {
+	var response *http.Response
+	response, err := o.httpClient.Request("GET", o.Url, o.Header, constants.DEFAULT_REQUEST_TIME, o.Params)
+	if err != nil {
 		return
 	}
-	request.Header = header
-	resp, errDo := client.Do(request)
-	if errDo != nil {
-		err = errDo
-	} else {
-		response = resp
+	var bytes []byte
+	bytes, err = ioutil.ReadAll(response.Body)
+	defer response.Body.Close()
+	if err != nil {
+		return
 	}
-	return
+	var adminToken = model.AdminToken{}
+	err = json.Unmarshal(bytes, &adminToken)
+	logger.Info("Get body is ->", adminToken)
+	if response.StatusCode == 200 {
+		return
+	} else {
+		return
+	}
 }

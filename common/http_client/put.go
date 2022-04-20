@@ -23,6 +23,9 @@ import (
 	"time"
 )
 
+/**
+ * The http_client put method Implement
+ **/
 func put(url string, header http.Header, timeoutMs uint64, params map[string]string) (response *http.Response, err error) {
 	client := http.Client{}
 	client.Timeout = time.Millisecond * time.Duration(timeoutMs)
