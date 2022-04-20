@@ -20,15 +20,16 @@ import (
 	"net/http"
 	"strings"
 	"time"
-
-	"github.com/nacos-group/nacos-sdk-go/util"
 )
 
+/**
+ * The http_client post method Implement
+ **/
 func post(url string, header http.Header, timeoutMs uint64, params map[string]string) (response *http.Response, err error) {
 	client := http.Client{}
 	client.Timeout = time.Millisecond * time.Duration(timeoutMs)
 
-	body := util.GetUrlFormedMap(params)
+	body := GetUrlFormedMap(params)
 	request, errNew := http.NewRequest(http.MethodPost, url, strings.NewReader(body))
 	if errNew != nil {
 		err = errNew

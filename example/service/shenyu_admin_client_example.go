@@ -15,40 +15,38 @@
  * limitations under the License.
  */
 
-package http_client
+package main
 
 import (
 	"encoding/json"
-	"net/url"
-	"strings"
+	"github.com/incubator-shenyu-client-golang/common/constants"
+	"github.com/incubator-shenyu-client-golang/model"
+	"github.com/wonderivan/logger"
+	"io/ioutil"
+	"net/http"
 )
 
 /**
- * Common heep_client util
+ * Test http_client
  **/
-func handleCommonUrl(url string, params map[string]string) string {
-	if !strings.HasSuffix(url, "?") {
-		url = url + "?"
+func GetAminToken(o *object) {
+	var response *http.Response
+	response, err := o.httpClient.Request("GET", o.Url, o.Header, constants.DEFAULT_REQUEST_TIME, o.Params)
+	if err != nil {
+		return
 	}
-	for key, value := range params {
-		url = url + key + "=" + value + "&"
+	var bytes []byte
+	bytes, err = ioutil.ReadAll(response.Body)
+	defer response.Body.Close()
+	if err != nil {
+		return
 	}
-	if strings.HasSuffix(url, "&") {
-		url = url[:len(url)-1]
+	var adminToken = model.AdminToken{}
+	err = json.Unmarshal(bytes, &adminToken)
+	logger.Info("Get body is ->", adminToken)
+	if response.StatusCode == 200 {
+		return
+	} else {
+		return
 	}
-	return url
-}
-
-func ToJsonString(object interface{}) string {
-	js, _ := json.Marshal(object)
-	return string(js)
-}
-
-func GetUrlFormedMap(source map[string]string) (urlEncoded string) {
-	urlEncoder := url.Values{}
-	for key, value := range source {
-		urlEncoder.Add(key, value)
-	}
-	urlEncoded = urlEncoder.Encode()
-	return
 }

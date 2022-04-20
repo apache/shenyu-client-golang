@@ -15,40 +15,16 @@
  * limitations under the License.
  */
 
-package http_client
-
-import (
-	"encoding/json"
-	"net/url"
-	"strings"
-)
+package constants
 
 /**
- * Common heep_client util
+ * The sdk const
  **/
-func handleCommonUrl(url string, params map[string]string) string {
-	if !strings.HasSuffix(url, "?") {
-		url = url + "?"
-	}
-	for key, value := range params {
-		url = url + key + "=" + value + "&"
-	}
-	if strings.HasSuffix(url, "&") {
-		url = url[:len(url)-1]
-	}
-	return url
-}
-
-func ToJsonString(object interface{}) string {
-	js, _ := json.Marshal(object)
-	return string(js)
-}
-
-func GetUrlFormedMap(source map[string]string) (urlEncoded string) {
-	urlEncoder := url.Values{}
-	for key, value := range source {
-		urlEncoder.Add(key, value)
-	}
-	urlEncoded = urlEncoder.Encode()
-	return
-}
+const (
+	REGISTER_URI           = "register-uri"
+	REGISTER_METADATA      = "register-metadata"
+	DEFAULT_SHENYU_TOKEN   = "/platform/login"
+	DEFAULT_ADMIN_PASSWORD = "123456"
+	DEFAULT_ADMIN_ACCOUNT  = "admin"
+	DEFAULT_REQUEST_TIME   = 1000
+)
