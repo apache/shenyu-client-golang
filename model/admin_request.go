@@ -17,26 +17,18 @@
 
 package model
 
+import (
+	"github.com/incubator-shenyu-client-golang/common/http_client"
+	"net/http"
+)
+
 /**
- * The ShenYu Admin token
+ * The ShenYuCommonRequest
  **/
-type AdminToken struct {
-	Code           int            `json:"code"`
-	Message        string         `json:"message"`
-	AdminTokenData AdminTokenData `json:"adminTokenData"`
-}
-
-type AdminTokenData struct {
-	ID          string `json:"id"`
-	UserName    string `json:"userName"`
-	Role        int    `json:"role"`
-	Enabled     bool   `json:"enabled"`
-	DateCreated string `json:"dateCreated"`
-	DateUpdated string `json:"dateUpdated"`
-	Token       string `json:"token"`
-}
-
-type ShenYuAdminClient struct {
-	UserName string `json:"userName"`
-	Password string `json:"password"`
+type ShenYuCommonRequest struct {
+	Url        string                 `json:"url"`
+	Header     http.Header            `json:"header"`
+	Params     map[string]string      `json:"jsons"`
+	TimeoutMs  uint64                 `json:"timeoutMs"`
+	HttpClient http_client.HttpClient `json:"httpClient"`
 }

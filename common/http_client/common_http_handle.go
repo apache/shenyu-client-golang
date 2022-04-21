@@ -24,7 +24,7 @@ import (
 )
 
 /**
- * Common heep_client util
+ * Common http_client util
  **/
 func handleCommonUrl(url string, params map[string]string) string {
 	if !strings.HasSuffix(url, "?") {

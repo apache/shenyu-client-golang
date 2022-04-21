@@ -15,40 +15,35 @@
  * limitations under the License.
  */
 
-package main
+package clients
 
 import (
+	"fmt"
 	"github.com/incubator-shenyu-client-golang/common/constants"
-	"github.com/incubator-shenyu-client-golang/common/http_client"
-	"net/http"
+	"github.com/incubator-shenyu-client-golang/model"
 )
 
-type object struct {
-	Url        string                 `param:"url"`
-	Header     http.Header            `param:"header"`
-	Params     map[string]string      `param:"params"`
-	TimeoutMs  uint64                 `param:"timeoutMs"`
-	httpClient http_client.HttpClient `param:"httpClient"`
-}
-
 /**
- * The ShenYu admin api example
+ * Get ShenYuAdminClient
  **/
-func main() {
+func NewShenYuAdminClient(client model.ShenYuAdminClient) (adminTokenData model.AdminTokenData, err error) {
 	headers := map[string][]string{}
-	headers["Connection"] = []string{"Keep-Alive"}
-	headers["Content-Type"] = []string{"application/json"}
+	headers[constants.DEFAULT_CONNECTION] = []string{constants.DEFAULT_CONNECTION_VALUE}
+	headers[constants.DEFAULT_CONTENT_TYPE] = []string{constants.DEFAULT_CONTENT_TYPE_VALUE}
 
 	params := map[string]string{}
-	params["userName"] = constants.DEFAULT_ADMIN_ACCOUNT
-	params["password"] = constants.DEFAULT_ADMIN_PASSWORD
+	params[constants.ADMIN_USERNAME] = client.UserName
+	params[constants.ADMIN_PASSWORD] = client.Password
 
-	o := &object{
+	tokenRequest := &model.ShenYuCommonRequest{
 		Url:       constants.DEFAULT_SHENYU_ADMIN_URL + constants.DEFAULT_SHENYU_TOKEN,
 		Header:    headers,
 		Params:    params,
 		TimeoutMs: constants.DEFAULT_REQUEST_TIME,
 	}
 
-	GetAminToken(o)
+	//todo use  GetShenYuAdminUser
+	fmt.Print(tokenRequest)
+
+	return model.AdminTokenData{}, nil
 }

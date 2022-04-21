@@ -21,10 +21,19 @@ package constants
  * The sdk const
  **/
 const (
-	REGISTER_URI           = "register-uri"
-	REGISTER_METADATA      = "register-metadata"
-	DEFAULT_SHENYU_TOKEN   = "/platform/login"
-	DEFAULT_ADMIN_PASSWORD = "123456"
-	DEFAULT_ADMIN_ACCOUNT  = "admin"
-	DEFAULT_REQUEST_TIME   = 1000
+	REGISTER_URI             = "register-uri"
+	REGISTER_METADATA        = "register-metadata"
+	DEFAULT_SHENYU_TOKEN     = "/platform/login"
+	DEFAULT_ADMIN_PASSWORD   = "123456"
+	DEFAULT_ADMIN_ACCOUNT    = "admin"
+	DEFAULT_REQUEST_TIME     = 1000
+	DEFAULT_SHENYU_ADMIN_URL = "http://127.0.0.1:9095"
+
+	//System default key
+	ADMIN_USERNAME             = "userName"
+	ADMIN_PASSWORD             = "password"
+	DEFAULT_CONNECTION         = "Connection"
+	DEFAULT_CONTENT_TYPE       = "Content-Type"
+	DEFAULT_CONNECTION_VALUE   = "Keep-Alive"
+	DEFAULT_CONTENT_TYPE_VALUE = "application/json"
 )
