@@ -36,7 +36,7 @@ func main() {
 
 	adminTokenData, err := clients.NewShenYuAdminClient(adminClient)
 	if err == nil {
-		logger.Info("this is ShenYu Admin client token info ->", adminTokenData)
+		logger.Info("this is ShenYu Admin client token ->", adminTokenData.AdminTokenData.Token)
 	}
 
 }

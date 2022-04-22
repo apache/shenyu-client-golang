@@ -30,10 +30,11 @@ const (
 	DEFAULT_SHENYU_ADMIN_URL = "http://127.0.0.1:9095"
 
 	//System default key
-	ADMIN_USERNAME             = "userName"
-	ADMIN_PASSWORD             = "password"
-	DEFAULT_CONNECTION         = "Connection"
-	DEFAULT_CONTENT_TYPE       = "Content-Type"
-	DEFAULT_CONNECTION_VALUE   = "Keep-Alive"
-	DEFAULT_CONTENT_TYPE_VALUE = "application/json"
+	ADMIN_USERNAME                  = "userName"
+	ADMIN_PASSWORD                  = "password"
+	DEFAULT_CONNECTION              = "Connection"
+	DEFAULT_CONTENT_TYPE            = "Content-Type"
+	DEFAULT_CONNECTION_VALUE        = "Keep-Alive"
+	DEFAULT_CONTENT_TYPE_VALUE      = "application/json"
+	DEFAULT_ADMIN_TOKEN_PARAM_ERROR = 500
 )

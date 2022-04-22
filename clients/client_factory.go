@@ -21,19 +21,25 @@ import (
 	"github.com/incubator-shenyu-client-golang/clients/admin_client"
 	"github.com/incubator-shenyu-client-golang/common/constants"
 	"github.com/incubator-shenyu-client-golang/model"
+	"reflect"
 )
 
 /**
  * Get ShenYuAdminClient
  **/
-func NewShenYuAdminClient(client *model.ShenYuAdminClient) (adminTokenData model.AdminTokenData, err error) {
+func NewShenYuAdminClient(client *model.ShenYuAdminClient) (adminToken model.AdminToken, err error) {
 	headers := map[string][]string{}
 	headers[constants.DEFAULT_CONNECTION] = []string{constants.DEFAULT_CONNECTION_VALUE}
 	headers[constants.DEFAULT_CONTENT_TYPE] = []string{constants.DEFAULT_CONTENT_TYPE_VALUE}
 
 	params := map[string]string{}
-	params[constants.ADMIN_USERNAME] = client.UserName
-	params[constants.ADMIN_PASSWORD] = client.Password
+	if reflect.DeepEqual(client, model.ShenYuAdminClient{}) || client.UserName == "" || client.Password == "" {
+		params[constants.ADMIN_USERNAME] = constants.DEFAULT_ADMIN_ACCOUNT
+		params[constants.ADMIN_PASSWORD] = constants.DEFAULT_ADMIN_PASSWORD
+	} else {
+		params[constants.ADMIN_USERNAME] = client.UserName
+		params[constants.ADMIN_PASSWORD] = client.Password
+	}
 
 	tokenRequest := &model.ShenYuCommonRequest{
 		Url:       constants.DEFAULT_SHENYU_ADMIN_URL + constants.DEFAULT_SHENYU_TOKEN,
@@ -42,9 +48,10 @@ func NewShenYuAdminClient(client *model.ShenYuAdminClient) (adminTokenData model
 		TimeoutMs: constants.DEFAULT_REQUEST_TIME,
 	}
 
-	adminTokenData, err = admin_client.GetShenYuAdminUser(tokenRequest)
+	adminToken, err = admin_client.GetShenYuAdminUser(tokenRequest)
 	if err == nil {
-		return adminTokenData, nil
+		return adminToken, nil
+	} else {
+		return model.AdminToken{}, err
 	}
-	return model.AdminTokenData{}, nil
 }
