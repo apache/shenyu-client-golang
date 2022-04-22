@@ -30,8 +30,8 @@ func main() {
 
 	//init ShenYuAdminClient
 	adminClient := &model.ShenYuAdminClient{
-		UserName: "admin",   //user provide
-		Password: "1234567", //user provide
+		UserName: "admin",  //user provide
+		Password: "123456", //user provide
 	}
 
 	adminTokenData, err := clients.NewShenYuAdminClient(adminClient)
