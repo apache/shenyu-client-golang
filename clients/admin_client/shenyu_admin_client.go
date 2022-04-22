@@ -34,7 +34,7 @@ type ShenYuAdminClient struct {
 	Password string `json:"password"` //user optional
 }
 
-func GetShenYuAdminUser(shenYuCommonRequest *model.ShenYuCommonRequest) (adminTokenData model.AdminTokenData, err error) {
+func GetShenYuAdminUser(shenYuCommonRequest *model.ShenYuCommonRequest) (adminToken model.AdminToken, err error) {
 	var response *http.Response
 	response, err = shenYuCommonRequest.HttpClient.Request("GET", shenYuCommonRequest.Url, shenYuCommonRequest.Header, constants.DEFAULT_REQUEST_TIME, shenYuCommonRequest.Params)
 	if err != nil {
@@ -43,23 +43,28 @@ func GetShenYuAdminUser(shenYuCommonRequest *model.ShenYuCommonRequest) (adminTo
 	var bytes []byte
 	bytes, err = ioutil.ReadAll(response.Body)
 	defer response.Body.Close()
-	var adminToken = model.AdminToken{}
 	err = json.Unmarshal(bytes, &adminToken)
 
 	if err != nil {
 		return
 	}
 	logger.Info("Get ShenYu Admin response, body is ->", adminToken)
-	if response.StatusCode == 200 {
-		return model.AdminTokenData{
-			ID:          adminToken.AdminTokenData.ID,
-			UserName:    adminToken.AdminTokenData.UserName,
-			Role:        adminToken.AdminTokenData.Role,
-			Enabled:     adminToken.AdminTokenData.Enabled,
-			DateCreated: adminToken.AdminTokenData.DateCreated,
-			DateUpdated: adminToken.AdminTokenData.DateUpdated,
-			Token:       adminToken.AdminTokenData.Token,
-		}, nil
+	if response.StatusCode == http.StatusOK && adminToken.Code == http.StatusOK {
+		return model.AdminToken{
+			Code:    adminToken.Code,
+			Message: adminToken.Message,
+			AdminTokenData: model.AdminTokenData{
+				ID:          adminToken.AdminTokenData.ID,
+				UserName:    adminToken.AdminTokenData.UserName,
+				Role:        adminToken.AdminTokenData.Role,
+				Enabled:     adminToken.AdminTokenData.Enabled,
+				DateCreated: adminToken.AdminTokenData.DateCreated,
+				DateUpdated: adminToken.AdminTokenData.DateUpdated,
+				Token:       adminToken.AdminTokenData.Token,
+			}}, nil
 	}
-	return model.AdminTokenData{}, nil
+	if adminToken.Code == constants.DEFAULT_ADMIN_TOKEN_PARAM_ERROR {
+		return adminToken, err
+	}
+	return model.AdminToken{}, err
 }

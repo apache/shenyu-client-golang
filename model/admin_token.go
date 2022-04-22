@@ -33,10 +33,10 @@ type AdminTokenData struct {
 	Enabled     bool   `json:"enabled"`
 	DateCreated string `json:"dateCreated"`
 	DateUpdated string `json:"dateUpdated"`
-	Token       string `json:"token"`
+	Token       string `json:"token"` //This param can invoke registory http service to shenyu gateway
 }
 
 type ShenYuAdminClient struct {
-	UserName string `json:"userName"`
-	Password string `json:"password"`
+	UserName string `json:"userName"` //optional
+	Password string `json:"password"` //optional
 }
