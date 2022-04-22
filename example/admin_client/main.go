@@ -15,28 +15,28 @@
  * limitations under the License.
  */
 
-package model
+package main
+
+import (
+	"github.com/incubator-shenyu-client-golang/clients"
+	"github.com/incubator-shenyu-client-golang/model"
+	"github.com/wonderivan/logger"
+)
 
 /**
- * The ShenYu Admin token
+ * The shenyu_admin_client example
  **/
-type AdminToken struct {
-	Code           int            `json:"code"`
-	Message        string         `json:"message"`
-	AdminTokenData AdminTokenData `json:"data"`
-}
+func main() {
 
-type AdminTokenData struct {
-	ID          string `json:"id"`
-	UserName    string `json:"userName"`
-	Role        int    `json:"role"`
-	Enabled     bool   `json:"enabled"`
-	DateCreated string `json:"dateCreated"`
-	DateUpdated string `json:"dateUpdated"`
-	Token       string `json:"token"`
-}
+	//init ShenYuAdminClient
+	adminClient := &model.ShenYuAdminClient{
+		UserName: "admin",  //user provide
+		Password: "123456", //user provide
+	}
 
-type ShenYuAdminClient struct {
-	UserName string `json:"userName"`
-	Password string `json:"password"`
+	adminTokenData, err := clients.NewShenYuAdminClient(adminClient)
+	if err == nil {
+		logger.Info("this is ShenYu Admin client token info ->", adminTokenData)
+	}
+
 }

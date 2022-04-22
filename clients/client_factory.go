@@ -18,7 +18,7 @@
 package clients
 
 import (
-	"fmt"
+	"github.com/incubator-shenyu-client-golang/clients/admin_client"
 	"github.com/incubator-shenyu-client-golang/common/constants"
 	"github.com/incubator-shenyu-client-golang/model"
 )
@@ -26,7 +26,7 @@ import (
 /**
  * Get ShenYuAdminClient
  **/
-func NewShenYuAdminClient(client model.ShenYuAdminClient) (adminTokenData model.AdminTokenData, err error) {
+func NewShenYuAdminClient(client *model.ShenYuAdminClient) (adminTokenData model.AdminTokenData, err error) {
 	headers := map[string][]string{}
 	headers[constants.DEFAULT_CONNECTION] = []string{constants.DEFAULT_CONNECTION_VALUE}
 	headers[constants.DEFAULT_CONTENT_TYPE] = []string{constants.DEFAULT_CONTENT_TYPE_VALUE}
@@ -42,8 +42,9 @@ func NewShenYuAdminClient(client model.ShenYuAdminClient) (adminTokenData model.
 		TimeoutMs: constants.DEFAULT_REQUEST_TIME,
 	}
 
-	//todo use  GetShenYuAdminUser
-	fmt.Print(tokenRequest)
-
+	adminTokenData, err = admin_client.GetShenYuAdminUser(tokenRequest)
+	if err == nil {
+		return adminTokenData, nil
+	}
 	return model.AdminTokenData{}, nil
 }

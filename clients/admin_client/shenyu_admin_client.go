@@ -34,7 +34,7 @@ type ShenYuAdminClient struct {
 	Password string `json:"password"` //user optional
 }
 
-func (client *ShenYuAdminClient) GetShenYuAdminUser(shenYuCommonRequest model.ShenYuCommonRequest) (adminTokenData model.AdminTokenData, err error) {
+func GetShenYuAdminUser(shenYuCommonRequest *model.ShenYuCommonRequest) (adminTokenData model.AdminTokenData, err error) {
 	var response *http.Response
 	response, err = shenYuCommonRequest.HttpClient.Request("GET", shenYuCommonRequest.Url, shenYuCommonRequest.Header, constants.DEFAULT_REQUEST_TIME, shenYuCommonRequest.Params)
 	if err != nil {
@@ -49,7 +49,7 @@ func (client *ShenYuAdminClient) GetShenYuAdminUser(shenYuCommonRequest model.Sh
 	if err != nil {
 		return
 	}
-	logger.Info("Get body is ->", adminToken)
+	logger.Info("Get ShenYu Admin response, body is ->", adminToken)
 	if response.StatusCode == 200 {
 		return model.AdminTokenData{
 			ID:          adminToken.AdminTokenData.ID,
