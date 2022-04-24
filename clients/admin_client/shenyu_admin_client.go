@@ -36,7 +36,7 @@ type ShenYuAdminClient struct {
 
 func GetShenYuAdminUser(shenYuCommonRequest *model.ShenYuCommonRequest) (adminToken model.AdminToken, err error) {
 	var response *http.Response
-	response, err = shenYuCommonRequest.HttpClient.Request("GET", shenYuCommonRequest.Url, shenYuCommonRequest.Header, constants.DEFAULT_REQUEST_TIME, shenYuCommonRequest.Params)
+	response, err = shenYuCommonRequest.HttpClient.Request(http.MethodGet, shenYuCommonRequest.Url, shenYuCommonRequest.Header, constants.DEFAULT_REQUEST_TIME, shenYuCommonRequest.Params)
 	if err != nil {
 		return
 	}

@@ -19,6 +19,7 @@ package clients
 
 import (
 	"github.com/incubator-shenyu-client-golang/clients/admin_client"
+	"github.com/incubator-shenyu-client-golang/clients/http_client"
 	"github.com/incubator-shenyu-client-golang/common/constants"
 	"github.com/incubator-shenyu-client-golang/model"
 	"reflect"
@@ -53,5 +54,35 @@ func NewShenYuAdminClient(client *model.ShenYuAdminClient) (adminToken model.Adm
 		return adminToken, nil
 	} else {
 		return model.AdminToken{}, err
+	}
+}
+
+/**
+ * Register metadata to ShenYu Gateway
+ **/
+func RegisterMetaData(adminTokenData model.AdminTokenData) (registerResult bool, err error) {
+	headers := map[string][]string{}
+	headers[constants.DEFAULT_CONNECTION] = []string{constants.DEFAULT_CONNECTION_VALUE}
+	headers[constants.DEFAULT_CONTENT_TYPE] = []string{constants.DEFAULT_CONTENT_TYPE_VALUE}
+	headers[constants.DEFAULT_TOKEN_HEADER_KEY] = []string{adminTokenData.Token}
+
+	params := map[string]string{}
+	params["appName"] = "constants.DEFAULT_ADMIN_ACCOUNT"
+	params["rpcType"] = constants.RPCTYPE_HTTP
+	params["host"] = "127.0.0.1"
+	params["port"] = "8080"
+
+	tokenRequest := &model.ShenYuCommonRequest{
+		Url:       constants.DEFAULT_SHENYU_ADMIN_URL + constants.DEFAULT_BASE_PATH + constants.REGISTER_METADATA,
+		Header:    headers,
+		Params:    params,
+		TimeoutMs: constants.DEFAULT_REQUEST_TIME,
+	}
+
+	registerResult, err = http_client.RegisterMetaData(tokenRequest)
+	if err == nil {
+		return registerResult, nil
+	} else {
+		return false, err
 	}
 }

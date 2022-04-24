@@ -14,35 +14,28 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
 package http_client
 
 import (
-	"encoding/json"
+	"github.com/incubator-shenyu-client-golang/common/constants"
+	"github.com/incubator-shenyu-client-golang/model"
+	"io/ioutil"
 	"net/http"
 	"strings"
-	"time"
 )
 
 /**
- * The http_client post method Implement
+ * Register metadata to ShenYu Gateway
  **/
-func post(url string, header http.Header, timeoutMs uint64, params map[string]string) (response *http.Response, err error) {
-	client := http.Client{}
-	client.Timeout = time.Millisecond * time.Duration(timeoutMs)
-
-	//body := GetUrlFormedMap(params)
-	body, _ := json.Marshal(params)
-	request, errNew := http.NewRequest(http.MethodPost, url, strings.NewReader(string(body)))
-	if errNew != nil {
-		err = errNew
+func RegisterMetaData(shenYuCommonRequest *model.ShenYuCommonRequest) (result bool, err error) {
+	var response *http.Response
+	response, err = shenYuCommonRequest.HttpClient.Request(http.MethodPost, shenYuCommonRequest.Url, shenYuCommonRequest.Header, constants.DEFAULT_REQUEST_TIME, shenYuCommonRequest.Params)
+	if err != nil {
 		return
 	}
-	request.Header = header
-	resp, errDo := client.Do(request)
-	if errDo != nil {
-		err = errDo
-	} else {
-		response = resp
-	}
-	return
+	var bytes []byte
+	bytes, err = ioutil.ReadAll(response.Body)
+	defer response.Body.Close()
+	return strings.Contains(string(bytes), constants.DEFAULT_ADMIN_SUCCESS), err
 }

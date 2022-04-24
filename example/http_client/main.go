@@ -14,35 +14,32 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package http_client
+
+package main
 
 import (
-	"encoding/json"
-	"net/http"
-	"strings"
-	"time"
+	"github.com/incubator-shenyu-client-golang/clients"
+	"github.com/incubator-shenyu-client-golang/model"
+	"github.com/wonderivan/logger"
 )
 
 /**
- * The http_client post method Implement
+ * The shenyu_http_client example
  **/
-func post(url string, header http.Header, timeoutMs uint64, params map[string]string) (response *http.Response, err error) {
-	client := http.Client{}
-	client.Timeout = time.Millisecond * time.Duration(timeoutMs)
+func main() {
 
-	//body := GetUrlFormedMap(params)
-	body, _ := json.Marshal(params)
-	request, errNew := http.NewRequest(http.MethodPost, url, strings.NewReader(string(body)))
-	if errNew != nil {
-		err = errNew
-		return
+	//init ShenYuAdminClient
+	adminClient := &model.ShenYuAdminClient{
+		UserName: "admin",  //user provide
+		Password: "123456", //user provide
 	}
-	request.Header = header
-	resp, errDo := client.Do(request)
-	if errDo != nil {
-		err = errDo
-	} else {
-		response = resp
+
+	adminTokenData, err := clients.NewShenYuAdminClient(adminClient)
+	if err == nil {
+		logger.Info("this is ShenYu Admin client token ->", adminTokenData.AdminTokenData.Token)
 	}
-	return
+	result, err := clients.RegisterMetaData(adminTokenData.AdminTokenData)
+	if err == nil {
+		logger.Info("finish register metadata ,the result is->", result)
+	}
 }
