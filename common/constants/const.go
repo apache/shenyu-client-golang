@@ -42,4 +42,11 @@ const (
 	REGISTER_URI                    = "/register-uri"
 	REGISTER_METADATA               = "/register-metadata"
 	DEFAULT_SHENYU_TOKEN            = "/platform/login"
+	DEFAULT_CLIENT_ERRORCODE        = "SDK.ShenYuError"
+
+	//System default error
+	MISS_PARAM_ERROR_CODE        = "400"
+	MISS_PARAM_ERROR_MSG         = "MetaDataRegister struct miss require param"
+	MISS_SHENYU_ADMIN_ERROR_CODE = "503"
+	MISS_SHENYU_ADMIN_ERROR_MSG  = "Please check ShenYu admin service status"
 )

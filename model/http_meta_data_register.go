@@ -26,7 +26,7 @@ type MetaDataRegister struct {
 	RPCType          string        `json:"rpcType"`
 	Enabled          bool          `json:"enabled"`
 	Host             string        `json:"host"`
-	Port             int           `json:"port"`
+	Port             string        `json:"port"`
 	PluginNames      []interface{} `json:"pluginNames"`
 	RegisterMetaData bool          `json:"registerMetaData"`
 	TimeMillis       int64         `json:"timeMillis"`

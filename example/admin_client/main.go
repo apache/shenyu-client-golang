@@ -34,9 +34,9 @@ func main() {
 		Password: "123456", //user provide
 	}
 
-	adminTokenData, err := clients.NewShenYuAdminClient(adminClient)
+	adminToken, err := clients.NewShenYuAdminClient(adminClient)
 	if err == nil {
-		logger.Info("this is ShenYu Admin client token ->", adminTokenData.AdminTokenData.Token)
+		logger.Info("this is ShenYu Admin client token ->", adminToken.AdminTokenData.Token)
 	}
 
 }
