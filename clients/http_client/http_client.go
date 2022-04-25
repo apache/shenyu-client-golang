@@ -19,9 +19,11 @@ package http_client
 
 import (
 	"github.com/incubator-shenyu-client-golang/common/constants"
+	"github.com/incubator-shenyu-client-golang/common/shenyu_error"
 	"github.com/incubator-shenyu-client-golang/model"
 	"io/ioutil"
 	"net/http"
+	"strconv"
 	"strings"
 )
 
@@ -31,11 +33,17 @@ import (
 func RegisterMetaData(shenYuCommonRequest *model.ShenYuCommonRequest) (result bool, err error) {
 	var response *http.Response
 	response, err = shenYuCommonRequest.HttpClient.Request(http.MethodPost, shenYuCommonRequest.Url, shenYuCommonRequest.Header, constants.DEFAULT_REQUEST_TIME, shenYuCommonRequest.Params)
-	if err != nil {
-		return
+	if response == nil {
+		err = shenyu_error.NewShenYuError(constants.MISS_SHENYU_ADMIN_ERROR_CODE, constants.MISS_SHENYU_ADMIN_ERROR_MSG, err)
+		return false, err
 	}
 	var bytes []byte
 	bytes, err = ioutil.ReadAll(response.Body)
 	defer response.Body.Close()
-	return strings.Contains(string(bytes), constants.DEFAULT_ADMIN_SUCCESS), err
+	if response.StatusCode == http.StatusOK {
+		return strings.Contains(string(bytes), constants.DEFAULT_ADMIN_SUCCESS), err
+	} else {
+		err = shenyu_error.NewShenYuError(strconv.Itoa(response.StatusCode), string(bytes), err)
+		return false, err
+	}
 }

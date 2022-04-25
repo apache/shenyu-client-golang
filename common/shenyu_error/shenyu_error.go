@@ -15,38 +15,43 @@
  * limitations under the License.
  */
 
-package main
-
-import (
-	"encoding/json"
-	"github.com/incubator-shenyu-client-golang/common/constants"
-	"github.com/incubator-shenyu-client-golang/model"
-	"github.com/wonderivan/logger"
-	"io/ioutil"
-	"net/http"
-)
+package shenyu_error
 
 /**
- * Test http_client
+ * ShenYuError
  **/
-func GetAminToken(o *object) {
-	var response *http.Response
-	response, err := o.httpClient.Request("GET", o.Url, o.Header, constants.DEFAULT_REQUEST_TIME, o.Params)
-	if err != nil {
-		return
+import (
+	"fmt"
+	"github.com/incubator-shenyu-client-golang/common/constants"
+)
+
+type ShenYuError struct {
+	originError error
+	errorCode   string
+	errMsg      string
+}
+
+func NewShenYuError(errorCode string, errMsg string, originError error) *ShenYuError {
+	return &ShenYuError{
+		errorCode:   errorCode,
+		errMsg:      errMsg,
+		originError: originError,
 	}
-	var bytes []byte
-	bytes, err = ioutil.ReadAll(response.Body)
-	defer response.Body.Close()
-	if err != nil {
-		return
+
+}
+
+func (err *ShenYuError) Error() (str string) {
+	shenyuErrMsg := fmt.Sprintf("The errCode is ->:%+v, The errMsg is  ->:%+v \n\n", err.ErrorCode(), err.errMsg)
+	if err.originError != nil {
+		return shenyuErrMsg + "caused by:\n" + err.originError.Error()
 	}
-	var adminToken = model.AdminToken{}
-	err = json.Unmarshal(bytes, &adminToken)
-	logger.Info("Get body is ->", adminToken)
-	if response.StatusCode == 200 {
-		return
+	return shenyuErrMsg
+}
+
+func (err *ShenYuError) ErrorCode() string {
+	if err.errorCode == "" {
+		return constants.DEFAULT_CLIENT_ERRORCODE
 	} else {
-		return
+		return err.errorCode
 	}
 }
