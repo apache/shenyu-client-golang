@@ -21,13 +21,11 @@ package constants
  * The sdk const
  **/
 const (
-	REGISTER_URI             = "register-uri"
-	REGISTER_METADATA        = "register-metadata"
-	DEFAULT_SHENYU_TOKEN     = "/platform/login"
+	DEFAULT_SHENYU_ADMIN_URL = "http://127.0.0.1:9095"
 	DEFAULT_ADMIN_PASSWORD   = "123456"
 	DEFAULT_ADMIN_ACCOUNT    = "admin"
 	DEFAULT_REQUEST_TIME     = 1000
-	DEFAULT_SHENYU_ADMIN_URL = "http://127.0.0.1:9095"
+	DEFAULT_ADMIN_SUCCESS    = "success"
 
 	//System default key
 	ADMIN_USERNAME                  = "userName"
@@ -36,5 +34,12 @@ const (
 	DEFAULT_CONTENT_TYPE            = "Content-Type"
 	DEFAULT_CONNECTION_VALUE        = "Keep-Alive"
 	DEFAULT_CONTENT_TYPE_VALUE      = "application/json"
+	DEFAULT_TOKEN_HEADER_KEY        = "X-Access-Token"
 	DEFAULT_ADMIN_TOKEN_PARAM_ERROR = 500
+	RPCTYPE_HTTP                    = "http"
+	RPCTYPE_GRPC                    = "grpc"
+	DEFAULT_BASE_PATH               = "/shenyu-client"
+	REGISTER_URI                    = "/register-uri"
+	REGISTER_METADATA               = "/register-metadata"
+	DEFAULT_SHENYU_TOKEN            = "/platform/login"
 )

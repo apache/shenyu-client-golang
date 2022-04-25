@@ -14,35 +14,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package http_client
 
-import (
-	"encoding/json"
-	"net/http"
-	"strings"
-	"time"
-)
+package model
 
 /**
- * The http_client post method Implement
+ * The ShenYu Http MetaDataRegister
  **/
-func post(url string, header http.Header, timeoutMs uint64, params map[string]string) (response *http.Response, err error) {
-	client := http.Client{}
-	client.Timeout = time.Millisecond * time.Duration(timeoutMs)
-
-	//body := GetUrlFormedMap(params)
-	body, _ := json.Marshal(params)
-	request, errNew := http.NewRequest(http.MethodPost, url, strings.NewReader(string(body)))
-	if errNew != nil {
-		err = errNew
-		return
-	}
-	request.Header = header
-	resp, errDo := client.Do(request)
-	if errDo != nil {
-		err = errDo
-	} else {
-		response = resp
-	}
-	return
+type MetaDataRegister struct {
+	AppName          string        `json:"appName"`
+	Path             string        `json:"path"`
+	RPCType          string        `json:"rpcType"`
+	Enabled          bool          `json:"enabled"`
+	Host             string        `json:"host"`
+	Port             int           `json:"port"`
+	PluginNames      []interface{} `json:"pluginNames"`
+	RegisterMetaData bool          `json:"registerMetaData"`
+	TimeMillis       int64         `json:"timeMillis"`
 }
