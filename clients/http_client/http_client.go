@@ -33,6 +33,23 @@ import (
 func RegisterMetaData(shenYuCommonRequest *model.ShenYuCommonRequest) (result bool, err error) {
 	var response *http.Response
 	response, err = shenYuCommonRequest.HttpClient.Request(http.MethodPost, shenYuCommonRequest.Url, shenYuCommonRequest.Header, constants.DEFAULT_REQUEST_TIME, shenYuCommonRequest.Params)
+	return handleCommonResponse(response, err)
+
+}
+
+/**
+ * Url Register to ShenYu Gateway
+ **/
+func DoUrlRegister(shenYuCommonRequest *model.ShenYuCommonRequest) (result bool, err error) {
+	var response *http.Response
+	response, err = shenYuCommonRequest.HttpClient.Request(http.MethodPost, shenYuCommonRequest.Url, shenYuCommonRequest.Header, constants.DEFAULT_REQUEST_TIME, shenYuCommonRequest.Params)
+	return handleCommonResponse(response, err)
+}
+
+/**
+ * handleCommonResponse
+ **/
+func handleCommonResponse(response *http.Response, err error) (bool, error) {
 	if response == nil {
 		err = shenyu_error.NewShenYuError(constants.MISS_SHENYU_ADMIN_ERROR_CODE, constants.MISS_SHENYU_ADMIN_ERROR_MSG, err)
 		return false, err
