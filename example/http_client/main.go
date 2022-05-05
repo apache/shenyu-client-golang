@@ -19,6 +19,7 @@ package main
 
 import (
 	"github.com/incubator-shenyu-client-golang/clients"
+	"github.com/incubator-shenyu-client-golang/common/constants"
 	"github.com/incubator-shenyu-client-golang/model"
 	"github.com/wonderivan/logger"
 )
@@ -38,6 +39,8 @@ func main() {
 	if err == nil {
 		logger.Info("this is ShenYu Admin client token ->", adminToken.AdminTokenData.Token)
 	}
+
+	//init MetaDataRegister
 	metaData := &model.MetaDataRegister{
 		AppName: "testMetaDataRegister", //require user provide
 		Path:    "/your/path",           //require user provide
@@ -50,4 +53,21 @@ func main() {
 		logger.Warn("MetaDataRegister has error:", err)
 	}
 	logger.Info("finish register metadata ,the result is->", result)
+
+	//init urlRegister
+	urlRegister := &model.URIRegister{
+		Protocol:    "testMetaDataRegister", //require user provide
+		AppName:     "testURLRegister",      //require user provide
+		ContextPath: "contextPath",          //require user provide
+		RPCType:     constants.RPCTYPE_HTTP, //require user provide
+		Host:        "127.0.0.1",            //require user provide
+		Port:        "8080",                 //require user provide
+	}
+	result, err = clients.UrlRegister(adminToken.AdminTokenData, urlRegister)
+	if err != nil {
+		logger.Warn("UrlRegister has error:", err)
+	}
+	logger.Info("finish UrlRegister ,the result is->", result)
+
+	//do you logic
 }

@@ -43,12 +43,7 @@ func NewShenYuAdminClient(client *model.ShenYuAdminClient) (adminToken model.Adm
 		params[constants.ADMIN_PASSWORD] = client.Password
 	}
 
-	tokenRequest := &model.ShenYuCommonRequest{
-		Url:       constants.DEFAULT_SHENYU_ADMIN_URL + constants.DEFAULT_SHENYU_TOKEN,
-		Header:    headers,
-		Params:    params,
-		TimeoutMs: constants.DEFAULT_REQUEST_TIME,
-	}
+	tokenRequest := initShenYuCommonRequest(headers, params, constants.DEFAULT_SHENYU_TOKEN, "token")
 
 	adminToken, err = admin_client.GetShenYuAdminUser(tokenRequest)
 	if err == nil {
@@ -62,10 +57,7 @@ func NewShenYuAdminClient(client *model.ShenYuAdminClient) (adminToken model.Adm
  * Register metadata to ShenYu Gateway
  **/
 func RegisterMetaData(adminTokenData model.AdminTokenData, metaData *model.MetaDataRegister) (registerResult bool, err error) {
-	headers := map[string][]string{}
-	headers[constants.DEFAULT_CONNECTION] = []string{constants.DEFAULT_CONNECTION_VALUE}
-	headers[constants.DEFAULT_CONTENT_TYPE] = []string{constants.DEFAULT_CONTENT_TYPE_VALUE}
-	headers[constants.DEFAULT_TOKEN_HEADER_KEY] = []string{adminTokenData.Token}
+	headers := adapterHeaders(adminTokenData)
 
 	params := map[string]string{}
 	if metaData.AppName == "" || metaData.Path == "" || metaData.Host == "" || metaData.Port == "" {
@@ -77,12 +69,7 @@ func RegisterMetaData(adminTokenData model.AdminTokenData, metaData *model.MetaD
 	params["port"] = metaData.Port
 	params["rpcType"] = constants.RPCTYPE_HTTP
 
-	tokenRequest := &model.ShenYuCommonRequest{
-		Url:       constants.DEFAULT_SHENYU_ADMIN_URL + constants.DEFAULT_BASE_PATH + constants.REGISTER_METADATA,
-		Header:    headers,
-		Params:    params,
-		TimeoutMs: constants.DEFAULT_REQUEST_TIME,
-	}
+	tokenRequest := initShenYuCommonRequest(headers, params, constants.REGISTER_METADATA, "")
 
 	registerResult, err = http_client.RegisterMetaData(tokenRequest)
 	if err == nil {
@@ -90,4 +77,61 @@ func RegisterMetaData(adminTokenData model.AdminTokenData, metaData *model.MetaD
 	} else {
 		return false, err
 	}
+}
+
+/**
+ * Url Register to ShenYu Gateway
+ **/
+func UrlRegister(adminTokenData model.AdminTokenData, urlMetaData *model.URIRegister) (registerResult bool, err error) {
+	headers := adapterHeaders(adminTokenData)
+
+	params := map[string]string{}
+	if urlMetaData.AppName == "" || urlMetaData.RPCType == "" || urlMetaData.Host == "" || urlMetaData.Port == "" {
+		return false, shenyu_error.NewShenYuError(constants.MISS_PARAM_ERROR_CODE, constants.MISS_PARAM_ERROR_MSG, err)
+	}
+	params["protocol"] = constants.RPCTYPE_HTTP
+	params["appName"] = urlMetaData.AppName
+	params["contextPath"] = urlMetaData.ContextPath
+	params["host"] = urlMetaData.Host
+	params["port"] = urlMetaData.Port
+	params["rpcType"] = urlMetaData.RPCType
+
+	tokenRequest := initShenYuCommonRequest(headers, params, constants.REGISTER_URI, "")
+
+	registerResult, err = http_client.DoUrlRegister(tokenRequest)
+	if err == nil {
+		return registerResult, nil
+	} else {
+		return false, err
+	}
+}
+
+/**
+ * initShenYuCommonRequest
+ **/
+func initShenYuCommonRequest(headers map[string][]string, params map[string]string, requestUrl string, busType string) *model.ShenYuCommonRequest {
+	url := ""
+	if len(busType) > 0 {
+		url = constants.DEFAULT_SHENYU_ADMIN_URL + requestUrl //get Token
+	} else {
+		url = constants.DEFAULT_SHENYU_ADMIN_URL + constants.DEFAULT_BASE_PATH + requestUrl //register
+	}
+	tokenRequest := &model.ShenYuCommonRequest{
+		Url:       url,
+		Header:    headers,
+		Params:    params,
+		TimeoutMs: constants.DEFAULT_REQUEST_TIME,
+	}
+	return tokenRequest
+}
+
+/**
+ * adapter require Headers
+ **/
+func adapterHeaders(adminTokenData model.AdminTokenData) map[string][]string {
+	headers := map[string][]string{}
+	headers[constants.DEFAULT_CONNECTION] = []string{constants.DEFAULT_CONNECTION_VALUE}
+	headers[constants.DEFAULT_CONTENT_TYPE] = []string{constants.DEFAULT_CONTENT_TYPE_VALUE}
+	headers[constants.DEFAULT_TOKEN_HEADER_KEY] = []string{adminTokenData.Token}
+	return headers
 }

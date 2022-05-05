@@ -26,5 +26,5 @@ type URIRegister struct {
 	ContextPath string `json:"contextPath"`
 	RPCType     string `json:"rpcType"`
 	Host        string `json:"host"`
-	Port        int    `json:"port"`
+	Port        string `json:"port"`
 }
