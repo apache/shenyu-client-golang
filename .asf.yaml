@@ -16,7 +16,7 @@
 #
 
 github:
-  description: ShenYu Client SDK fo golang.
+  description: Apache ShenYu Client SDK for golang.
   homepage: https://shenyu.apache.org/
   labels:
     - shenyu
