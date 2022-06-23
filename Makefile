@@ -1,4 +1,4 @@
-PROJECT_NAME := "https://github.com/apache/incubator-shenyu-client-golang"
+PROJECT_NAME := "github.com/apache/incubator-shenyu-client-golang"
 PKG := "$(PROJECT_NAME)"
 PKG_LIST := $(shell go list ${PKG}/... | grep -v /vendor/)
 GO_FILES := $(shell find . -name '*.go' | grep -v /vendor/ | grep -v _test.go)
