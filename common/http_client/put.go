@@ -35,9 +35,7 @@ func put(url string, header http.Header, timeoutMs uint64, params map[string]str
 			body += key + "=" + value + "&"
 		}
 	}
-	if strings.HasSuffix(body, "&") {
-		body = body[:len(body)-1]
-	}
+	body = strings.TrimSuffix(body, "&")
 	request, errNew := http.NewRequest(http.MethodPut, url, strings.NewReader(body))
 	if errNew != nil {
 		err = errNew

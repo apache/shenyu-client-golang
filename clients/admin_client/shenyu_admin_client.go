@@ -19,8 +19,8 @@ package admin_client
 
 import (
 	"encoding/json"
-	"github.com/incubator-shenyu-client-golang/common/constants"
-	"github.com/incubator-shenyu-client-golang/model"
+	"github.com/apache/incubator-shenyu-client-golang/common/constants"
+	"github.com/apache/incubator-shenyu-client-golang/model"
 	"github.com/wonderivan/logger"
 	"io/ioutil"
 	"net/http"

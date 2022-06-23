@@ -18,9 +18,7 @@
 package http_client
 
 import (
-	"encoding/json"
-	"github.com/incubator-shenyu-client-golang/common/constants"
-	"github.com/incubator-shenyu-client-golang/model"
+	"github.com/apache/incubator-shenyu-client-golang/common/constants"
 	"github.com/wonderivan/logger"
 	"io/ioutil"
 	"net/http"
@@ -68,9 +66,9 @@ func TestHttpClientRequest(t *testing.T) {
 	if err != nil {
 		return
 	}
-	var adminToken = model.AdminToken{}
-	err = json.Unmarshal(bytes, &adminToken)
-	logger.Info("Get body is ->", adminToken)
+	/*var adminToken = model.AdminToken{}
+	err = json.Unmarshal(bytes, &adminToken)*/
+	logger.Info("Get body is ->", string(bytes))
 	if response.StatusCode == 200 {
 		return
 	} else {

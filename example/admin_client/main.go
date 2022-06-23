@@ -18,8 +18,8 @@
 package main
 
 import (
-	"github.com/incubator-shenyu-client-golang/clients"
-	"github.com/incubator-shenyu-client-golang/model"
+	"github.com/apache/incubator-shenyu-client-golang/clients"
+	"github.com/apache/incubator-shenyu-client-golang/model"
 	"github.com/wonderivan/logger"
 )
 
