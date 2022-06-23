@@ -16,7 +16,6 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: 1.18
-
       - name: Check out code
         uses: actions/checkout@v1
 
@@ -34,7 +33,6 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: 1.18
-
       - name: Check out code
         uses: actions/checkout@v1
 
@@ -56,7 +54,6 @@ jobs:
         uses: actions/setup-go@v1
         with:
           go-version: 1.18
-
       - name: Check out code
         uses: actions/checkout@v1
 
