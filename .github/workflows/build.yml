@@ -7,22 +7,22 @@ on:
 
 jobs:
 
-  lint:
-    name: Lint
-    runs-on: ubuntu-latest
-    steps:
-      - name: Set up Go
-        uses: actions/setup-go@v1
-        with:
-          go-version: 1.18
-      - name: Check out code
-        uses: actions/checkout@v1
-
-      - name: Lint Go Code
-        run: |
-          export PATH=$PATH:$(go env GOPATH)/bin # temporary fix. See https://github.com/actions/setup-go/issues/14
-          go get -u golang.org/x/lint/golint@latest
-          make lint
+#  lint:
+#    name: Lint
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Set up Go
+#        uses: actions/setup-go@v1
+#        with:
+#          go-version: 1.18
+#      - name: Check out code
+#        uses: actions/checkout@v1
+#
+#      - name: Lint Go Code
+#        run: |
+#          export PATH=$PATH:$(go env GOPATH)/bin # temporary fix. See https://github.com/actions/setup-go/issues/14
+#          go get -u golang.org/x/lint/golint
+#          make lint
 
   test:
     name: Test
@@ -37,9 +37,6 @@ jobs:
 
 #      - name: Run Unit tests.
 #        run: make test-coverage
-
-      - name: Run vendor.
-        run: make vendor
 
       - name: Coverage
         run: bash <(curl -s https://codecov.io/bash)

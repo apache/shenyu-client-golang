@@ -16,9 +16,6 @@ lint: ## Lint Golang files
 vet: ## Run go vet
 	@go vet ${PKG_LIST}
 
-vendor:
-	@go mod vendor
-
 test: ## Run unittests
 	@go test -short ${PKG_LIST}
 
