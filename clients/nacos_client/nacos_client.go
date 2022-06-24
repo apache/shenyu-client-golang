@@ -38,7 +38,7 @@ type NacosClientParam struct {
 /**
  * create nacos client
  **/
-func NewNacosClient(ncp *NacosClientParam) (clientProxy naming_client.INamingClient, err error) {
+func newNacosClient(ncp *NacosClientParam) (clientProxy naming_client.INamingClient, err error) {
 	checkResult := len(ncp.IpAddr) > 0 && len(ncp.NamespaceId) > 0 && ncp.Port > 0
 	if checkResult {
 		client, err := ncp.initNacosClient()
@@ -63,10 +63,7 @@ func (ncp *NacosClientParam) initNacosClient() (clientProxy naming_client.INamin
 	//init ClientConfig
 	cc := *constant.NewClientConfig(
 		constant.WithNamespaceId(ncp.NamespaceId),
-		constant.WithTimeoutMs(5000),
-		constant.WithNotLoadCacheAtStart(true),
-		constant.WithLogDir("/tmp/nacos/log"),
-		constant.WithCacheDir("/tmp/nacos/cache"),
+		constant.WithLogLevel("info"),
 	)
 
 	client, err := clients.NewNamingClient(
@@ -85,7 +82,7 @@ func (ncp *NacosClientParam) initNacosClient() (clientProxy naming_client.INamin
 /**
  * register nacos instance
  **/
-func RegisterNacosInstance(client naming_client.INamingClient, nri model.NacosRegisterInstance) (registerResult bool, err error) {
+func registerNacosInstance(client naming_client.INamingClient, nri model.NacosRegisterInstance) (registerResult bool, err error) {
 	registerResult, err = client.RegisterInstance(nri.RegisterInstance)
 	if err != nil {
 		logger.Fatal("RegisterServiceInstance failure! ,error is :%+v", err)
