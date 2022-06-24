@@ -2,7 +2,7 @@
 
 [English](README.md) | 简体中文
 
-[![build](https://github.com/apache/incubator-shenyu-client-golang/workflows/build/badge.svg?branch=main)](https://github.com/apache/incubator-shenyu-client-golang/actions)
+[![Build and Test](https://github.com/apache/incubator-shenyu-client-golang/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/apache/incubator-shenyu-client-golang/actions)
 [![codecov.io](https://codecov.io/gh/apache/incubator-shenyu-client-golang/coverage.svg?branch=main)](https://app.codecov.io/gh/apache/incubator-shenyu-client-golang?branch=main)
 [![GoDoc](https://godoc.org/github.com/apache/incubator-shenyu-client-golang?status.svg)](https://godoc.org/github.com/apache/incubator-shenyu-client-golang)
 
