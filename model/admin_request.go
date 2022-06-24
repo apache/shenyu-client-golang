@@ -18,7 +18,7 @@
 package model
 
 import (
-	"github.com/incubator-shenyu-client-golang/common/http_client"
+	"github.com/apache/incubator-shenyu-client-golang/common/http_client"
 	"net/http"
 )
 

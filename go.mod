@@ -1,4 +1,4 @@
-module github.com/incubator-shenyu-client-golang
+module github.com/apache/incubator-shenyu-client-golang
 
 go 1.17
 

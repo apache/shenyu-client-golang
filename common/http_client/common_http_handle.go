@@ -33,9 +33,7 @@ func handleCommonUrl(url string, params map[string]string) string {
 	for key, value := range params {
 		url = url + key + "=" + value + "&"
 	}
-	if strings.HasSuffix(url, "&") {
-		url = url[:len(url)-1]
-	}
+	url = strings.TrimSuffix(url, "&")
 	return url
 }
 

@@ -18,11 +18,11 @@
 package clients
 
 import (
-	"github.com/incubator-shenyu-client-golang/clients/admin_client"
-	"github.com/incubator-shenyu-client-golang/clients/http_client"
-	"github.com/incubator-shenyu-client-golang/common/constants"
-	"github.com/incubator-shenyu-client-golang/common/shenyu_error"
-	"github.com/incubator-shenyu-client-golang/model"
+	"github.com/apache/incubator-shenyu-client-golang/clients/admin_client"
+	"github.com/apache/incubator-shenyu-client-golang/clients/http_client"
+	"github.com/apache/incubator-shenyu-client-golang/common/constants"
+	"github.com/apache/incubator-shenyu-client-golang/common/shenyu_error"
+	"github.com/apache/incubator-shenyu-client-golang/model"
 	"reflect"
 )
 
