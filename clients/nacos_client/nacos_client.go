@@ -18,7 +18,6 @@
 package nacos_client
 
 import (
-	"github.com/apache/incubator-shenyu-client-golang/model"
 	"github.com/nacos-group/nacos-sdk-go/clients"
 	"github.com/nacos-group/nacos-sdk-go/clients/naming_client"
 	"github.com/nacos-group/nacos-sdk-go/common/constant"
@@ -76,7 +75,7 @@ func (ncp *NacosClientParam) initNacosClient() (clientProxy naming_client.INamin
 		},
 	)
 
-	if err != nil {
+	if err == nil {
 		return client, nil
 	}
 	return
@@ -85,11 +84,11 @@ func (ncp *NacosClientParam) initNacosClient() (clientProxy naming_client.INamin
 /**
  * register nacos instance
  **/
-func RegisterNacosInstance(client naming_client.INamingClient, nri model.NacosRegisterInstance) (registerResult bool, err error) {
-	registerResult, err = client.RegisterInstance(nri.RegisterInstance)
+func RegisterNacosInstance(client naming_client.INamingClient, rip vo.RegisterInstanceParam) (registerResult bool, err error) {
+	registerResult, err = client.RegisterInstance(rip)
 	if err != nil {
 		logger.Fatal("RegisterServiceInstance failure! ,error is :%+v", err)
 	}
-	logger.Info("RegisterServiceInstance,param:%+v,result:%+v \n\n", nri.RegisterInstance, registerResult)
+	logger.Info("RegisterServiceInstance,param:%+v,result:%+v \n\n", rip, registerResult)
 	return registerResult, nil
 }
