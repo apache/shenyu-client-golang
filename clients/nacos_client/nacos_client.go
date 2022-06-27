@@ -89,6 +89,6 @@ func RegisterNacosInstance(client naming_client.INamingClient, rip vo.RegisterIn
 	if err != nil {
 		logger.Fatal("RegisterServiceInstance failure! ,error is :%+v", err)
 	}
-	logger.Info("RegisterServiceInstance,param:%+v,result:%+v \n\n", rip, registerResult)
+	logger.Info("RegisterServiceInstance,result:%+v\n\n,param:%+v \n\n", registerResult, rip)
 	return registerResult, nil
 }
