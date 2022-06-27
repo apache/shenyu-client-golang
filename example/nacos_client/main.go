@@ -18,7 +18,9 @@
 package main
 
 import (
+	"encoding/json"
 	"github.com/apache/incubator-shenyu-client-golang/clients/nacos_client"
+	"github.com/apache/incubator-shenyu-client-golang/common/constants"
 	"github.com/apache/incubator-shenyu-client-golang/model"
 	"github.com/nacos-group/nacos-sdk-go/vo"
 	"github.com/wonderivan/logger"
@@ -36,18 +38,27 @@ func main() {
 		NamespaceId: "e525eafa-f7d7-4029-83d9-008937f9d468",
 	}
 
+	//metaData is necessary param, this will be register to shenyu gateway to use
+	metaData := &model.URIRegister{
+		Protocol:    "testMetaDataRegister", //require user provide
+		AppName:     "testURLRegister",      //require user provide
+		ContextPath: "contextPath",          //require user provide
+		RPCType:     constants.RPCTYPE_HTTP, //require user provide
+		Host:        "127.0.0.1",            //require user provide
+		Port:        "8080",                 //require user provide
+	}
+	metaDataStringJson, _ := json.Marshal(metaData)
+
 	//init NacosRegisterInstance
-	nacosRegisterInstance := model.NacosRegisterInstance{
-		RegisterInstance: vo.RegisterInstanceParam{
-			Ip:          "10.0.0.10",
-			Port:        8848,
-			ServiceName: "demo.go",
-			Weight:      10,
-			Enable:      true,
-			Healthy:     true,
-			Ephemeral:   true,
-			Metadata:    map[string]string{"idc": "beijing"},
-		},
+	nacosRegisterInstance := vo.RegisterInstanceParam{
+		Ip:          "10.0.0.10", //require user provide
+		Port:        8848,        //require user provide
+		ServiceName: "demo.go",   //require user provide
+		Weight:      10,          //require user provide
+		Enable:      true,        //require user provide
+		Healthy:     true,        //require user provide
+		Ephemeral:   true,        //require user provide
+		Metadata:    map[string]string{"contextPath": "contextPath", "uriMetadata": string(metaDataStringJson)},
 	}
 
 	client, err := nacos_client.NewNacosClient(ncp)
@@ -60,4 +71,5 @@ func main() {
 		logger.Fatal("Register nacos Instance error : %+V", err)
 	}
 
+	//do your logic
 }
