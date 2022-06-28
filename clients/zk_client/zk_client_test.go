@@ -18,6 +18,7 @@
 package zk_client
 
 import (
+	"github.com/apache/incubator-shenyu-client-golang/model"
 	"github.com/stretchr/testify/assert"
 	"testing"
 )
@@ -33,4 +34,108 @@ func TestInitZkClient(t *testing.T) {
 	}
 	defer client.Close()
 	assert.Nil(t, err)
+}
+
+/**
+ * TestRegisterNodeInstanceAndPrint
+ **/
+func TestRegisterNodeInstanceAndPrint(t *testing.T) {
+	servers := []string{"127.0.0.1:2181"}         //require user provide
+	client, err := NewClient(servers, "/api", 10) //zkRoot require user provide
+	if err != nil {
+		panic(err)
+	}
+	defer client.Close()
+	assert.Nil(t, err)
+
+	//init MetaDataRegister
+	metaData1 := &model.MetaDataRegister{
+		AppName: "testMetaDataRegister", //require user provide
+		Path:    "your/path1",           //require user provide
+		Enabled: true,                   //require user provide
+		Host:    "127.0.0.1",            //require user provide
+		Port:    "8080",                 //require user provide
+	}
+
+	metaData2 := &model.MetaDataRegister{
+		AppName: "testMetaDataRegister", //require user provide
+		Path:    "your/path2",           //require user provide
+		Enabled: true,                   //require user provide
+		Host:    "127.0.0.1",            //require user provide
+		Port:    "8181",                 //require user provide
+	}
+
+	metaData3 := &model.MetaDataRegister{
+		AppName: "testMetaDataRegister", //require user provide
+		Path:    "your/path3",           //require user provide
+		Enabled: true,                   //require user provide
+		Host:    "127.0.0.1",            //require user provide
+		Port:    "8282",                 //require user provide
+	}
+
+	//register multiple metaData
+	if err := client.RegisterNodeInstance(metaData1); err != nil {
+		panic(err)
+	}
+	if err := client.RegisterNodeInstance(metaData2); err != nil {
+		panic(err)
+	}
+	if err := client.RegisterNodeInstance(metaData3); err != nil {
+		panic(err)
+	}
+
+	nodes, err := client.GetNodesInfo("testMetaDataRegister")
+	if err != nil {
+		panic(err)
+	}
+
+	assert.NotNil(t, nodes)
+}
+
+/**
+ * TestDeleteNodeInstance
+ **/
+func TestDeleteNodeInstance(t *testing.T) {
+	servers := []string{"127.0.0.1:2181"}         //require user provide
+	client, err := NewClient(servers, "/api", 10) //zkRoot require user provide
+	if err != nil {
+		panic(err)
+	}
+	defer client.Close()
+	assert.Nil(t, err)
+
+	//init MetaDataRegister
+	metaData1 := &model.MetaDataRegister{
+		AppName: "testMetaDataRegister", //require user provide
+		Path:    "your/path1",           //require user provide
+		Enabled: true,                   //require user provide
+		Host:    "127.0.0.1",            //require user provide
+		Port:    "8080",                 //require user provide
+	}
+
+	metaData2 := &model.MetaDataRegister{
+		AppName: "testMetaDataRegister", //require user provide
+		Path:    "your/path2",           //require user provide
+		Enabled: true,                   //require user provide
+		Host:    "127.0.0.1",            //require user provide
+		Port:    "8181",                 //require user provide
+	}
+
+	metaData3 := &model.MetaDataRegister{
+		AppName: "testMetaDataRegister", //require user provide
+		Path:    "your/path3",           //require user provide
+		Enabled: true,                   //require user provide
+		Host:    "127.0.0.1",            //require user provide
+		Port:    "8282",                 //require user provide
+	}
+
+	err = client.DeleteNodeInstance(metaData1)
+	assert.Nil(t, err)
+
+	err = client.DeleteNodeInstance(metaData2)
+	assert.Nil(t, err)
+
+	err = client.DeleteNodeInstance(metaData3)
+	assert.Nil(t, err)
+
 }
