@@ -15,6 +15,8 @@ Shenyu-client-golang是提供了Go语言访问ShenYu网关的功能，并支持�
 ## 已支持注册到ShenYu网关的方式
 * **以Http方式注册**
 * **以Nacos方式注册**
+* **以Zookeeper方式注册**
+
 ---
 
 ## 要求
@@ -200,5 +202,70 @@ metaData := &model.URIRegister{
 2022-06-27 10:56:17 [INFO] [github.com/incubator-shenyu-client-golang/clients/nacos_client/nacos_client.go:92] RegisterServiceInstance,result:true
 
 ,param:{Ip:10.0.0.10 Port:8848 Weight:10 Enable:true Healthy:true Metadata:map[contextPath:contextPath uriMetadata:{"protocol":"testMetaDataRegister","appName":"testURLRegister","contextPath":"contextPath","rpcType":"http","host":"127.0.0.1","port":"8080"}] ClusterName: ServiceName:demo.go GroupName: Ephemeral:true}
+
+```
+
+
+
+
+---
+## The Zookeeper type Register
+
+**1.首先确保你的Zookeeper环境是正确，然后设置这些Zookeeper必要的参数 .**
+```go
+    servers := []string{"127.0.0.1:2181"}             //需要用户提供
+        client, err := NewClient(servers, "/api", 10) //需要用户提供
+        if err != nil {
+            panic(err)
+         }
+        defer client.Close()
+```
+
+**2.  准备你要注册服务的元数据信息**
+```go
+//元数据是必要的参数，这将注册到shenyu网关使用
+        metaData1 := &model.MetaDataRegister{
+            AppName: "testMetaDataRegister", //需要用户提供
+            Path:    "your/path1",           //需要用户提供
+            Enabled: true,                   //需要用户提供
+            Host:    "127.0.0.1",            //需要用户提供
+            Port:    "8080",                 //需要用户提供
+        }
+```
+
+**3.使用客户端进行节点信息注册**
+```go
+   //可以进行多个实例注册
+    if err := client.RegisterNodeInstance(metaData1); err != nil {
+        panic(err)
+    }
+        //做你的逻辑处理
+```
+
+**4.使用客户端进行注册节点信息删除**
+```go
+    //选择性调用
+    err = client.DeleteNodeInstance(metaData1)
+     if err != nil {
+       panic(err)
+}
+```
+
+**5.使用客户端获取注册节点的信息**
+```go
+    //遍历节点
+    for index, node := range nodes {
+        nodeJson, err := json.Marshal(node)
+        if err == nil {
+        logger.Info("GetNodesInfo ,success Index", index, string(nodeJson))
+    }
+}
+```
+
+## 完整的成功日志
+```go
+2022-06-28 15:21:57 [INFO] [github.com/incubator-shenyu-client-golang/example/zk_client/zk_client.go:80] GetNodesInfo ,success Index 0 {"appName":"testMetaDataRegister","path":"your/path1","rpcType":"","enabled":true,"host":"127.0.0.1","port":"8080","pluginNames":null,"registerMetaData":false,"timeMillis":0}
+2022-06-28 15:21:57 [INFO] [github.com/incubator-shenyu-client-golang/example/zk_client/zk_client.go:80] GetNodesInfo ,success Index 1 {"appName":"testMetaDataRegister","path":"your/path3","rpcType":"","enabled":true,"host":"127.0.0.1","port":"8282","pluginNames":null,"registerMetaData":false,"timeMillis":0}
+2022-06-28 15:21:57 [INFO] [github.com/incubator-shenyu-client-golang/example/zk_client/zk_client.go:80] GetNodesInfo ,success Index 2 {"appName":"testMetaDataRegister","path":"your/path2","rpcType":"","enabled":true,"host":"127.0.0.1","port":"8181","pluginNames":null,"registerMetaData":false,"timeMillis":0}
 
 ```
