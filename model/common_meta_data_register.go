@@ -18,7 +18,7 @@
 package model
 
 /**
- * The ShenYu Http MetaDataRegister
+ * The ShenYu common MetaDataRegister
  **/
 type MetaDataRegister struct {
 	AppName          string        `json:"appName"`
