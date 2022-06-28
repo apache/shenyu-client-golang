@@ -51,6 +51,9 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v1
 
+      - name: Start docker compose
+        run: docker-compose -f ./incubator-shenyu-client-golang/docker-compose.yml up -d
+
       - name: Run Unit tests.
         run: |
           go test `go list ./... | grep -v examples` -coverprofile=coverage.txt -covermode=atomic
