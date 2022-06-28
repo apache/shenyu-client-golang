@@ -52,7 +52,7 @@ jobs:
         uses: actions/checkout@v1
 
       - name: Start docker compose
-        run: docker-compose -f ./incubator-shenyu-client-golang/docker-compose.yml up -d
+        run: docker-compose -f  docker-compose.yml up -d
 
       - name: Run Unit tests.
         run: |
