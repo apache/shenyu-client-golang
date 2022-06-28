@@ -18,6 +18,8 @@ Gateway.
 
 * **Http type Register**
 * **Nacos type Register**
+* **Zookeeper type Register**
+
 ---
 
 ## Requirements
@@ -202,5 +204,70 @@ finish register metadata ,the result is-> true
 2022-06-27 10:56:17 [INFO] [github.com/incubator-shenyu-client-golang/clients/nacos_client/nacos_client.go:92] RegisterServiceInstance,result:true
 
 ,param:{Ip:10.0.0.10 Port:8848 Weight:10 Enable:true Healthy:true Metadata:map[contextPath:contextPath uriMetadata:{"protocol":"testMetaDataRegister","appName":"testURLRegister","contextPath":"contextPath","rpcType":"http","host":"127.0.0.1","port":"8080"}] ClusterName: ServiceName:demo.go GroupName: Ephemeral:true}
+
+```
+
+
+
+---
+## The Zookeeper type Register
+
+**1.Fist make sure your Zookeeper env is correct,the set this necessary param.**
+```go
+    servers := []string{"127.0.0.1:2181"}         //require user provide
+        client, err := NewClient(servers, "/api", 10) //zkRoot require user provide
+        if err != nil {
+            panic(err)
+         }
+        defer client.Close()
+```
+
+**2. Prepare your service metaData to register**
+```go
+//metaData is necessary param, this will be register to shenyu gateway to use
+        //init MetaDataRegister
+        metaData1 := &model.MetaDataRegister{
+            AppName: "testMetaDataRegister", //require user provide
+            Path:    "your/path1",           //require user provide
+            Enabled: true,                   //require user provide
+            Host:    "127.0.0.1",            //require user provide
+            Port:    "8080",                 //require user provide
+        }
+```
+
+**3.use client to invoke RegisterNacosInstance**
+```go
+   //register multiple metaData
+    if err := client.RegisterNodeInstance(metaData1); err != nil {
+        panic(err)
+    }
+        //do your logic
+```
+
+**4.use client to invoke DeleteNodeInstance**
+```go
+    //your can chose to invoke,not require
+    err = client.DeleteNodeInstance(metaData1)
+     if err != nil {
+       panic(err)
+}
+```
+
+**5.use client to get zk nodes**
+```go
+    //range nodes
+    for index, node := range nodes {
+        nodeJson, err := json.Marshal(node)
+        if err == nil {
+        logger.Info("GetNodesInfo ,success Index", index, string(nodeJson))
+    }
+}
+```
+
+## Entire Success log
+```go
+2022-06-28 15:21:57 [INFO] [github.com/incubator-shenyu-client-golang/example/zk_client/zk_client.go:80] GetNodesInfo ,success Index 0 {"appName":"testMetaDataRegister","path":"your/path1","rpcType":"","enabled":true,"host":"127.0.0.1","port":"8080","pluginNames":null,"registerMetaData":false,"timeMillis":0}
+2022-06-28 15:21:57 [INFO] [github.com/incubator-shenyu-client-golang/example/zk_client/zk_client.go:80] GetNodesInfo ,success Index 1 {"appName":"testMetaDataRegister","path":"your/path3","rpcType":"","enabled":true,"host":"127.0.0.1","port":"8282","pluginNames":null,"registerMetaData":false,"timeMillis":0}
+2022-06-28 15:21:57 [INFO] [github.com/incubator-shenyu-client-golang/example/zk_client/zk_client.go:80] GetNodesInfo ,success Index 2 {"appName":"testMetaDataRegister","path":"your/path2","rpcType":"","enabled":true,"host":"127.0.0.1","port":"8181","pluginNames":null,"registerMetaData":false,"timeMillis":0}
 
 ```
