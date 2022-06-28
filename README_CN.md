@@ -1,6 +1,6 @@
 # shenyu-client-golang
 
-[English](README.md) | 简体中文
+English | [简体中文](README_CN.md)
 
 [![Build and Test](https://github.com/apache/incubator-shenyu-client-golang/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/apache/incubator-shenyu-client-golang/actions)
 [![codecov.io](https://codecov.io/gh/apache/incubator-shenyu-client-golang/coverage.svg?branch=main)](https://app.codecov.io/gh/apache/incubator-shenyu-client-golang?branch=main)
@@ -9,29 +9,38 @@
 ---
 
 ## Shenyu-client-golang
+Shenyu-client-golang是提供了Go语言访问ShenYu网关的功能，并支持服务注册到ShenYu网关。
 
-Shenyu-client-golang for Go client allows you to access ShenYu Gateway,it supports registory go service to ShenYu
-Gateway.
+---
+## 已支持注册到ShenYu网关的方式
+* **以Http方式注册**
+* **以Nacos方式注册**
+---
 
-## Requirements
+## 要求
 
-Supported Go version **over 1.12**
+要求Go语言版本 **1.12**
 
-Supported ShenYu version **over 2.4.3**
+SDK支持ShenYu的版本 **2.4.3及以上**
 
-## Installation
+## 安装方法
 
-Use `go get` to install SDK：
+使用 `go get命令` 安装 SDK：
 
 ```sh
 $ go get -u github.com/apache/incubator-shenyu-client-golang
 ```
 
-## How to use
+## 代码列子路径
 
-**1.Fist make sure The ShenYuAdmin is Started, and ShenYuAdmin service active port is 9095.**
+* incubator-shenyu-client-golang/example/**_client/main.go
+---
+
+##  以Http方式注册到ShenYu网关
+
+**1.首先确保ShenYuAdmin是启动的，并且ShenYuAdmin服务启动的端口是9095 .**
 ```go
-Or you will see this error :
+如果没启动,你将看到如下错误:
 	
 2022-05-05 15:24:28 [WARN] [github.com/apache/incubator-shenyu-client-golang/example/http_client/main.go:53] MetaDataRegister has error: The errCode is ->:503, The errMsg is  ->:Please check ShenYu admin service status
 
@@ -46,18 +55,18 @@ Post "http://127.0.0.1:9095/shenyu-client/register-uri": dial tcp 127.0.0.1:9095
 	
 ```
 
-**2.Step 1 Get shenyu_admin_client. (Register service need this)**
+**2.获取shenyu_admin_client. (注册服务需要这个实例)**
 
 ```go
-//init ShenYuAdminClient
+//初始化 ShenYuAdminClient
 adminClient := &model.ShenYuAdminClient{
-    UserName: "admin",  //require user provide
-    Password: "123456", //require user provide
+    UserName: "admin",  //需要用户提供
+    Password: "123456", //需要用户提供
 }
 
 adminToken, err := clients.NewShenYuAdminClient(adminClient)
 
-The adminToken like this :
+adminToken像这样 :
 {
     "code":200,
     "message":"login dashboard user success",
@@ -72,57 +81,124 @@ The adminToken like this :
     }
 }
 
-When you success get toekn, you will see this :
+当你成功获取到Token,你将看到这些:
 this is ShenYu Admin client token -> eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwiZXhwIjoxNjUwNjc5OTQ2fQ.K92Il2kmJ0X3FgjY4igW35-pw9nsf5VKdUyqBoyIaF4
 
 ```
 
 
-**3.Step 2 Register MetaData to ShenYu GateWay. (Need step 1 token to invoke)**
+**3.注册元数据到ShenYu网关. (需要上一步的adminToken去调用)**
 ```go
-//MetaDataRegister(Need Step 1 toekn adminToken.AdminTokenData)
+//元数据注册(需要上一步的token: adminToken.AdminTokenData)
 metaData := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister", //require user provide
-		Path:    "/your/path",           //require user provide
-		Enabled: true,                   //require user provide
-		Host:    "127.0.0.1",            //require user provide
-		Port:    "8080",                 //require user provide
+		AppName: "testMetaDataRegister", //需要用户提供
+		Path:    "/your/path",           //需要用户提供
+		Enabled: true,                   //需要用户提供
+		Host:    "127.0.0.1",            //需要用户提供
+		Port:    "8080",                 //需要用户提供
 	}
 	result, err := clients.RegisterMetaData(adminToken.AdminTokenData, metaData)
 	if err != nil {
 		logger.Warn("MetaDataRegister has error:",err)
 	}
 	logger.Info("finish register metadata ,the result is->", result)
-	
-	
-When Register success , you will see this :  
+
+
+当你注册成功,你将看到这些:
 finish register metadata ,the result is-> true
 ```
 
-**4.Step 3  Url  Register  to ShenYu GateWay. (Need step 1 token to invoke)**
+**4.以URL的方式注册到ShenYu网关. (需要上一步的adminToken去调用)**
 ```go
-//URIRegister(Need Step 1 toekn adminToken.AdminTokenData)
-//init urlRegister
+//URI注册(需要上一步的token: adminToken.AdminTokenData)
+//初始化 URI注册
 	urlRegister := &model.URIRegister{
-		Protocol:    "testMetaDataRegister", //require user provide
-		AppName:     "testURLRegister",      //require user provide
-		ContextPath: "contextPath",          //require user provide
-		RPCType:     constants.RPCTYPE_HTTP, //require user provide
-		Host:        "127.0.0.1",            //require user provide
-		Port:        "8080",                 //require user provide
+		Protocol:    "testMetaDataRegister", //需要用户提供
+		AppName:     "testURLRegister",      //需要用户提供
+		ContextPath: "contextPath",          //需要用户提供
+		RPCType:     constants.RPCTYPE_HTTP, //需要用户提供
+		Host:        "127.0.0.1",            //需要用户提供
+		Port:        "8080",                 //需要用户提供
 	}
 	result, err = clients.UrlRegister(adminToken.AdminTokenData, urlRegister)
 	if err != nil {
 		logger.Warn("UrlRegister has error:", err)
 	}
 	logger.Info("finish UrlRegister ,the result is->", result)
+         //做你的逻辑处理
 ```
 
-## Entire Success log
+**5.完整的成功日志**
 ```go
 2022-05-05 15:43:56 [INFO] [github.com/apache/incubator-shenyu-client-golang/clients/admin_client/shenyu_admin_client.go:51] Get ShenYu Admin response, body is -> {200 login dashboard user success {1 admin 1 true 2018-06-23 15:12:22 2022-03-09 15:08:14 eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwiZXhwIjoxNjUxODIzMDM2fQ.gMzPKaNlXEd1Q517qQamOpg358W9L0-0cZN3lkk06WE}}
 2022-05-05 15:43:56 [INFO] [github.com/apache/incubator-shenyu-client-golang/example/http_client/main.go:40] this is ShenYu Admin client token -> eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwiZXhwIjoxNjUxODIzMDM2fQ.gMzPKaNlXEd1Q517qQamOpg358W9L0-0cZN3lkk06WE
 2022-05-05 15:43:57 [INFO] [github.com/apache/incubator-shenyu-client-golang/example/http_client/main.go:55] finish register metadata ,the result is-> true
 2022-05-05 15:43:57 [INFO] [github.com/apache/incubator-shenyu-client-golang/example/http_client/main.go:70] finish UrlRegister ,the result is-> true
+
+```
+
+
+
+---
+## 以Nacos方式注册到ShenYu网关
+
+**1.首先确保你的nacos环境是正确，然后设置这些nacos必要的参数 .**
+```go
+//设置nacos环境配置
+    ncp := &nacos_client.NacosClientParam{
+        IpAddr:      "console.nacos.io",
+        Port:        80,
+        NamespaceId: "e525eafa-f7d7-4029-83d9-008937f9d468",
+}
+```
+
+**2. 准备你要注册服务的元数据信息**
+```go
+//元数据是必要的参数，这将注册到shenyu网关使用
+metaData := &model.URIRegister{
+        Protocol:    "testMetaDataRegister", //需要用户提供
+        AppName:     "testURLRegister",      //需要用户提供
+        ContextPath: "contextPath",          //需要用户提供
+        RPCType:     constants.RPCTYPE_HTTP, //需要用户提供
+        Host:        "127.0.0.1",            //需要用户提供
+        Port:        "8080",                 //需要用户提供
+}
+    metaDataStringJson, _ := json.Marshal(metaData)
+```
+
+**3.准备你要注册服务的实例消息(包括元数据)**
+```go
+//初始化Nacos注册实例信息
+    nacosRegisterInstance := vo.RegisterInstanceParam{
+        Ip:          "10.0.0.10", //需要用户提供
+        Port:        8848,        //需要用户提供
+        ServiceName: "demo.go",   //需要用户提供
+        Weight:      10,          //需要用户提供
+        Enable:      true,        //需要用户提供
+        Healthy:     true,        //需要用户提供
+        Ephemeral:   true,        //需要用户提供
+        Metadata:    map[string]string{"contextPath": "contextPath", "uriMetadata": string(metaDataStringJson)},
+}
+```
+
+**4.使用nacos客户端调用RegisterNacosInstance方法**
+```go
+    client, err := nacos_client.NewNacosClient(ncp)
+        if err != nil {
+        logger.Fatal("create nacos client error : %+V", err)
+}
+
+    registerResult, err := nacos_client.RegisterNacosInstance(client, nacosRegisterInstance)
+        if !registerResult && err != nil {
+        logger.Fatal("Register nacos Instance error : %+V", err)
+}
+        //做你的逻辑处理
+```
+
+**5.完整的成功日志**
+```go
+2022-06-27 10:56:17 [INFO] [github.com/incubator-shenyu-client-golang/clients/nacos_client/nacos_client.go:92] RegisterServiceInstance,result:true
+
+,param:{Ip:10.0.0.10 Port:8848 Weight:10 Enable:true Healthy:true Metadata:map[contextPath:contextPath uriMetadata:{"protocol":"testMetaDataRegister","appName":"testURLRegister","contextPath":"contextPath","rpcType":"http","host":"127.0.0.1","port":"8080"}] ClusterName: ServiceName:demo.go GroupName: Ephemeral:true}
 
 ```

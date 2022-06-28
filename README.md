@@ -13,11 +13,18 @@ English | [简体中文](README_CN.md)
 Shenyu-client-golang for Go client allows you to access ShenYu Gateway,it supports registory go service to ShenYu
 Gateway.
 
+---
+## Supported Register Center to ShenYu Gateway
+
+* **Http type Register**
+* **Nacos type Register**
+---
+
 ## Requirements
 
 Supported Go version **over 1.12**
 
-Supported ShenYu version **over 2.4.3**
+SDK Supported ShenYu version **over 2.4.3**
 
 ## Installation
 
@@ -27,7 +34,12 @@ Use `go get` to install SDK：
 $ go get -u github.com/apache/incubator-shenyu-client-golang
 ```
 
-## How to use
+## The Demo location
+
+* incubator-shenyu-client-golang/example/**_client/main.go
+---
+
+## The Http type Register
 
 **1.Fist make sure The ShenYuAdmin is Started, and ShenYuAdmin service active port is 9095.**
 ```go
@@ -124,5 +136,71 @@ finish register metadata ,the result is-> true
 2022-05-05 15:43:56 [INFO] [github.com/apache/incubator-shenyu-client-golang/example/http_client/main.go:40] this is ShenYu Admin client token -> eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwiZXhwIjoxNjUxODIzMDM2fQ.gMzPKaNlXEd1Q517qQamOpg358W9L0-0cZN3lkk06WE
 2022-05-05 15:43:57 [INFO] [github.com/apache/incubator-shenyu-client-golang/example/http_client/main.go:55] finish register metadata ,the result is-> true
 2022-05-05 15:43:57 [INFO] [github.com/apache/incubator-shenyu-client-golang/example/http_client/main.go:70] finish UrlRegister ,the result is-> true
+
+```
+
+
+
+---
+## The Nacos type Register
+
+**1.Fist make sure your nacos env is correct,the set this necessary param.**
+```go
+//set nacos env configuration
+    ncp := &nacos_client.NacosClientParam{
+        IpAddr:      "console.nacos.io",
+        Port:        80,
+        NamespaceId: "e525eafa-f7d7-4029-83d9-008937f9d468",
+}
+```
+
+**2. Prepare your service metaData to register**
+```go
+//metaData is necessary param, this will be register to shenyu gateway to use
+    metaData := &model.URIRegister{
+        Protocol:    "testMetaDataRegister", //require user provide
+        AppName:     "testURLRegister",      //require user provide
+        ContextPath: "contextPath",          //require user provide
+        RPCType:     constants.RPCTYPE_HTTP, //require user provide
+        Host:        "127.0.0.1",            //require user provide
+        Port:        "8080",                 //require user provide
+}
+    metaDataStringJson, _ := json.Marshal(metaData)
+```
+
+**3. Prepare your service Instance message(include metaData)**
+```go
+//init NacosRegisterInstance
+    nacosRegisterInstance := vo.RegisterInstanceParam{
+        Ip:          "10.0.0.10", //require user provide
+        Port:        8848,        //require user provide
+        ServiceName: "demo.go",   //require user provide
+        Weight:      10,          //require user provide
+        Enable:      true,        //require user provide
+        Healthy:     true,        //require user provide
+        Ephemeral:   true,        //require user provide
+        Metadata:    map[string]string{"contextPath": "contextPath", "uriMetadata": string(metaDataStringJson)},
+}
+```
+
+**4.use client to invoke RegisterNacosInstance**
+```go
+    client, err := nacos_client.NewNacosClient(ncp)
+        if err != nil {
+        logger.Fatal("create nacos client error : %+V", err)
+}
+
+    registerResult, err := nacos_client.RegisterNacosInstance(client, nacosRegisterInstance)
+        if !registerResult && err != nil {
+        logger.Fatal("Register nacos Instance error : %+V", err)
+}
+        //do your logic
+```
+
+## Entire Success log
+```go
+2022-06-27 10:56:17 [INFO] [github.com/incubator-shenyu-client-golang/clients/nacos_client/nacos_client.go:92] RegisterServiceInstance,result:true
+
+,param:{Ip:10.0.0.10 Port:8848 Weight:10 Enable:true Healthy:true Metadata:map[contextPath:contextPath uriMetadata:{"protocol":"testMetaDataRegister","appName":"testURLRegister","contextPath":"contextPath","rpcType":"http","host":"127.0.0.1","port":"8080"}] ClusterName: ServiceName:demo.go GroupName: Ephemeral:true}
 
 ```
