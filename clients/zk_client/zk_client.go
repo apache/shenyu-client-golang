@@ -34,9 +34,9 @@ type ServiceNode struct {
 }
 
 /**
- * zkServer
+ * ZkClient
  **/
-type zkServer struct {
+type ZkClient struct {
 	zkServers []string // zkServers ex: 127.0.0.1
 	zkRoot    string   // zkClient Root
 	zkClient  *zk.Conn // zkClient
@@ -45,8 +45,8 @@ type zkServer struct {
 /**
  * init NewClient
  **/
-func NewClient(zkServers []string, zkRoot string, timeout int) (*zkServer, error) {
-	client := new(zkServer)
+func NewClient(zkServers []string, zkRoot string, timeout int) (*ZkClient, error) {
+	client := new(ZkClient)
 	client.zkServers = zkServers
 	if len(zkRoot) == 0 {
 		logger.Fatal("The param zkRoot must set a value!")
@@ -67,14 +67,14 @@ func NewClient(zkServers []string, zkRoot string, timeout int) (*zkServer, error
 /**
  * close zkClient
  **/
-func (s *zkServer) Close() {
+func (s *ZkClient) Close() {
 	s.zkClient.Close()
 }
 
 /**
  * ensure zkRoot avoid create error
  **/
-func (s *zkServer) ensureRoot() error {
+func (s *ZkClient) ensureRoot() error {
 	exists, _, err := s.zkClient.Exists(s.zkRoot)
 	if err != nil {
 		return err
@@ -91,7 +91,7 @@ func (s *zkServer) ensureRoot() error {
 /**
  * RegisterNodeInstance zk node
  **/
-func (s *zkServer) RegisterNodeInstance(metaData *model.MetaDataRegister) error {
+func (s *ZkClient) RegisterNodeInstance(metaData *model.MetaDataRegister) error {
 	if err := s.ensureName(metaData.AppName); err != nil {
 		return err
 	}
@@ -110,7 +110,7 @@ func (s *zkServer) RegisterNodeInstance(metaData *model.MetaDataRegister) error 
 /**
  * DeleteNodeInstance
  **/
-func (s *zkServer) DeleteNodeInstance(metaData *model.MetaDataRegister) error {
+func (s *ZkClient) DeleteNodeInstance(metaData *model.MetaDataRegister) error {
 	if err := s.ensureName(metaData.AppName); err != nil {
 		return err
 	}
@@ -132,7 +132,7 @@ func (s *zkServer) DeleteNodeInstance(metaData *model.MetaDataRegister) error {
 /**
  *  * ensure zkRoot&nodeName
  **/
-func (s *zkServer) ensureName(name string) error {
+func (s *ZkClient) ensureName(name string) error {
 	path := s.zkRoot + "/" + name
 	exists, _, err := s.zkClient.Exists(path) //avoid create error
 	if err != nil {
@@ -150,7 +150,7 @@ func (s *zkServer) ensureName(name string) error {
 /**
  * get zk nodes metaData
  **/
-func (s *zkServer) GetNodesInfo(name string) ([]*model.MetaDataRegister, error) {
+func (s *ZkClient) GetNodesInfo(name string) ([]*model.MetaDataRegister, error) {
 	path := s.zkRoot + "/" + name
 	childs, _, err := s.zkClient.Children(path)
 	if err != nil {
