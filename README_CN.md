@@ -2,7 +2,6 @@
 
 English | [简体中文](README_CN.md)
 
-[![OSCS Status](https://www.oscs1024.com/platform/badge/apache/incubator-shenyu-client-golang.svg?size=small)](https://www.oscs1024.com/project/apache/incubator-shenyu-client-golang?ref=badge_small)
 [![Build and Test](https://github.com/apache/incubator-shenyu-client-golang/actions/workflows/build.yml/badge.svg?branch=main)](https://github.com/apache/incubator-shenyu-client-golang/actions)
 [![codecov.io](https://codecov.io/gh/apache/incubator-shenyu-client-golang/coverage.svg?branch=main)](https://app.codecov.io/gh/apache/incubator-shenyu-client-golang?branch=main)
 [![GoDoc](https://godoc.org/github.com/apache/incubator-shenyu-client-golang?status.svg)](https://godoc.org/github.com/apache/incubator-shenyu-client-golang)
