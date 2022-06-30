@@ -15,9 +15,10 @@
  * limitations under the License.
  */
 
-package zk_client
+package main
 
 import (
+	"github.com/apache/incubator-shenyu-client-golang/clients/zk_client"
 	"github.com/apache/incubator-shenyu-client-golang/model"
 	"github.com/stretchr/testify/assert"
 	"testing"
@@ -27,8 +28,8 @@ import (
  * TestInitZkClient
  **/
 func TestInitZkClient(t *testing.T) {
-	servers := []string{"127.0.0.1:2181"}         //require user provide
-	client, err := NewClient(servers, "/api", 10) //zkRoot require user provide
+	servers := []string{"127.0.0.1:2181"}                   //require user provide
+	client, err := zk_client.NewClient(servers, "/api", 10) //zkRoot require user provide
 	if err != nil {
 		panic(err)
 	}
@@ -40,8 +41,8 @@ func TestInitZkClient(t *testing.T) {
  * TestRegisterNodeInstanceAndPrint
  **/
 func TestRegisterNodeInstanceAndPrint(t *testing.T) {
-	servers := []string{"127.0.0.1:2181"}         //require user provide
-	client, err := NewClient(servers, "/api", 10) //zkRoot require user provide
+	servers := []string{"127.0.0.1:2181"}                   //require user provide
+	client, err := zk_client.NewClient(servers, "/api", 10) //zkRoot require user provide
 	if err != nil {
 		panic(err)
 	}
@@ -96,8 +97,8 @@ func TestRegisterNodeInstanceAndPrint(t *testing.T) {
  * TestDeleteNodeInstance
  **/
 func TestDeleteNodeInstance(t *testing.T) {
-	servers := []string{"127.0.0.1:2181"}         //require user provide
-	client, err := NewClient(servers, "/api", 10) //zkRoot require user provide
+	servers := []string{"127.0.0.1:2181"}                   //require user provide
+	client, err := zk_client.NewClient(servers, "/api", 10) //zkRoot require user provide
 	if err != nil {
 		panic(err)
 	}
