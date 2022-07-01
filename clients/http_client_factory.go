@@ -65,9 +65,21 @@ func RegisterMetaData(adminTokenData model.AdminTokenData, metaData *model.MetaD
 	}
 	params["appName"] = metaData.AppName
 	params["path"] = metaData.Path
+	params["contextPath"] = metaData.ContextPath
 	params["host"] = metaData.Host
 	params["port"] = metaData.Port
-	params["rpcType"] = constants.RPCTYPE_HTTP
+
+	if metaData.RPCType != "" {
+		params["rpcType"] = metaData.RPCType
+	} else {
+		params["rpcType"] = constants.RPCTYPE_HTTP
+	}
+
+	if metaData.RuleName != "" {
+		params["ruleName"] = metaData.RuleName
+	} else {
+		params["ruleName"] = metaData.Path
+	}
 
 	tokenRequest := initShenYuCommonRequest(headers, params, constants.REGISTER_METADATA, "")
 
@@ -89,7 +101,7 @@ func UrlRegister(adminTokenData model.AdminTokenData, urlMetaData *model.URIRegi
 	if urlMetaData.AppName == "" || urlMetaData.RPCType == "" || urlMetaData.Host == "" || urlMetaData.Port == "" {
 		return false, shenyu_error.NewShenYuError(constants.MISS_PARAM_ERROR_CODE, constants.MISS_PARAM_ERROR_MSG, err)
 	}
-	params["protocol"] = constants.RPCTYPE_HTTP
+	params["protocol"] = urlMetaData.Protocol
 	params["appName"] = urlMetaData.AppName
 	params["contextPath"] = urlMetaData.ContextPath
 	params["host"] = urlMetaData.Host
