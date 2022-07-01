@@ -78,8 +78,8 @@ func main() {
 		Metadata:    map[string]string{"contextPath": "contextPath", "uriMetadata": string(metaDataStringJson)},
 	}
 
-	instance, err := nc.RegisterServiceInstance(nacosRegisterInstance)
-	if !instance && err != nil {
+	registerResult, err := nc.RegisterServiceInstance(nacosRegisterInstance)
+	if !registerResult && err != nil {
 		logger.Fatal("Register nacos Instance error : %+V", err)
 	}
 	//RegisterServiceInstance end
@@ -93,7 +93,7 @@ func main() {
 	}
 
 	instanceInfo, result, err := nc.GetServiceInstanceInfo(queryData)
-	if !instance && err != nil {
+	if result != false && err != nil {
 		logger.Fatal("Register nacos Instance error : %+V", err)
 	}
 	logger.Info(instanceInfo)
