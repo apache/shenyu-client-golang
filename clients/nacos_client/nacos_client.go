@@ -18,12 +18,19 @@
 package nacos_client
 
 import (
-	"github.com/nacos-group/nacos-sdk-go/clients"
+	oriNc "github.com/nacos-group/nacos-sdk-go/clients"
 	"github.com/nacos-group/nacos-sdk-go/clients/naming_client"
 	"github.com/nacos-group/nacos-sdk-go/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/vo"
 	"github.com/wonderivan/logger"
 )
+
+/**
+ * ShenYuNacosClient
+ **/
+type ShenYuNacosClient struct {
+	NacosClient *naming_client.NamingClient
+}
 
 /**
  * NacosClientParam
@@ -37,14 +44,18 @@ type NacosClientParam struct {
 /**
  * create nacos client
  **/
-func NewNacosClient(ncp *NacosClientParam) (clientProxy naming_client.INamingClient, err error) {
+func (nc *ShenYuNacosClient) NewClient(clientParam interface{}) (client interface{}, createResult bool, err error) {
+	ncp, ok := clientParam.(*NacosClientParam)
+	if !ok {
+		logger.Fatal("init nacos client error %+v:", err)
+	}
 	checkResult := len(ncp.IpAddr) > 0 && len(ncp.NamespaceId) > 0 && ncp.Port > 0
 	if checkResult {
 		client, err := ncp.initNacosClient()
 		if err != nil {
 			logger.Fatal("init nacos client error %+v:", err)
 		}
-		return client, nil
+		return client, true, nil
 	} else {
 		logger.Fatal("init nacos client param is missing please check")
 	}
@@ -68,7 +79,7 @@ func (ncp *NacosClientParam) initNacosClient() (clientProxy naming_client.INamin
 		constant.WithCacheDir("/tmp/nacos/cache"),
 	)
 
-	client, err := clients.NewNamingClient(
+	client, err := oriNc.NewNamingClient(
 		vo.NacosClientParam{
 			ClientConfig:  &cc,
 			ServerConfigs: sc,
@@ -82,13 +93,49 @@ func (ncp *NacosClientParam) initNacosClient() (clientProxy naming_client.INamin
 }
 
 /**
- * register nacos instance
+ * Register Instance to Nacos
  **/
-func RegisterNacosInstance(client naming_client.INamingClient, rip vo.RegisterInstanceParam) (registerResult bool, err error) {
-	registerResult, err = client.RegisterInstance(rip)
+func (nc *ShenYuNacosClient) RegisterServiceInstance(metaData interface{}) (registerResult bool, err error) {
+	rip, ok := metaData.(vo.RegisterInstanceParam)
+	if !ok {
+		logger.Fatal("init nacos client error %+v:", err)
+	}
+	registerResult, err = nc.NacosClient.RegisterInstance(rip)
 	if err != nil {
 		logger.Fatal("RegisterServiceInstance failure! ,error is :%+v", err)
 	}
 	logger.Info("RegisterServiceInstance,result:%+v\n\n,param:%+v \n\n", registerResult, rip)
 	return registerResult, nil
+}
+
+/**
+ * DeregisterServiceInstance
+ **/
+func (nc *ShenYuNacosClient) DeregisterServiceInstance(metaData interface{}) (registerResult bool, err error) {
+	rip, ok := metaData.(vo.DeregisterInstanceParam)
+	if !ok {
+		logger.Fatal("init nacos client error %+v:", err)
+	}
+	registerResult, err = nc.NacosClient.DeregisterInstance(rip)
+	if err != nil {
+		logger.Fatal("DeregisterServiceInstance failure! ,error is :%+v", err)
+	}
+	logger.Info("DeregisterServiceInstance,result:%+v\n\n,param:%+v \n\n", registerResult, rip)
+	return registerResult, nil
+}
+
+/**
+ * GetServiceInstanceInfo
+ **/
+func (nc *ShenYuNacosClient) GetServiceInstanceInfo(metaData interface{}) (instances interface{}, registerResult bool, err error) {
+	rip, ok := metaData.(vo.SelectInstancesParam)
+	if !ok {
+		logger.Fatal("init nacos client error %+v:", err)
+	}
+	instances, err = nc.NacosClient.SelectInstances(rip)
+	if err != nil {
+		logger.Fatal("GetServiceInstanceInfo failure! ,error is :%+v", err)
+	}
+	logger.Info("GetServiceInstanceInfo,result:%+v\n\n,param:%+v \n\n", instances, rip)
+	return instances, true, nil
 }

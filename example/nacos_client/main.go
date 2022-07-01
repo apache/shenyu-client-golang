@@ -21,9 +21,12 @@ import (
 	"encoding/json"
 	"github.com/apache/incubator-shenyu-client-golang/clients/nacos_client"
 	"github.com/apache/incubator-shenyu-client-golang/common/constants"
+	"github.com/apache/incubator-shenyu-client-golang/common/shenyu_sdk_client"
 	"github.com/apache/incubator-shenyu-client-golang/model"
+	"github.com/nacos-group/nacos-sdk-go/clients/naming_client"
 	"github.com/nacos-group/nacos-sdk-go/vo"
 	"github.com/wonderivan/logger"
+	"time"
 )
 
 /**
@@ -31,6 +34,7 @@ import (
  **/
 func main() {
 
+	//Create nacos client start
 	//set nacos env configuration
 	ncp := &nacos_client.NacosClientParam{
 		IpAddr:      "console.nacos.io",
@@ -38,6 +42,18 @@ func main() {
 		NamespaceId: "e525eafa-f7d7-4029-83d9-008937f9d468",
 	}
 
+	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.NACOS_CLIENT)
+	result, createResult, err := sdkClient.NewClient(ncp)
+	if !createResult && err != nil {
+		logger.Fatal("Create nacos client error : %+V", err)
+	}
+
+	nc := &nacos_client.ShenYuNacosClient{
+		NacosClient: result.(*naming_client.NamingClient),
+	}
+	//Create nacos client end
+
+	//RegisterServiceInstance start
 	//metaData is necessary param, this will be register to shenyu gateway to use
 	metaData := &model.URIRegister{
 		Protocol:    "testMetaDataRegister", //require user provide
@@ -58,18 +74,48 @@ func main() {
 		Enable:      true,        //require user provide
 		Healthy:     true,        //require user provide
 		Ephemeral:   true,        //require user provide
+		GroupName:   "group-a",   //require user provide
 		Metadata:    map[string]string{"contextPath": "contextPath", "uriMetadata": string(metaDataStringJson)},
 	}
 
-	client, err := nacos_client.NewNacosClient(ncp)
-	if err != nil {
-		logger.Fatal("create nacos client error : %+V", err)
-	}
-
-	registerResult, err := nacos_client.RegisterNacosInstance(client, nacosRegisterInstance)
-	if !registerResult && err != nil {
+	instance, err := nc.RegisterServiceInstance(nacosRegisterInstance)
+	if !instance && err != nil {
 		logger.Fatal("Register nacos Instance error : %+V", err)
 	}
+	//RegisterServiceInstance end
+
+	//GetServiceInstanceInfo start
+	queryData := vo.SelectInstancesParam{
+		ServiceName: "demo.go",
+		GroupName:   "group-a", //default: DEFAULT_GROUP
+		//Clusters:    []string{"cluster-a"}, // default: DEFAULT
+		HealthyOnly: true,
+	}
+
+	instanceInfo, result, err := nc.GetServiceInstanceInfo(queryData)
+	if !instance && err != nil {
+		logger.Fatal("Register nacos Instance error : %+V", err)
+	}
+	logger.Info(instanceInfo)
+	//GetServiceInstanceInfo end
+
+	time.Sleep(time.Second)
+
+	//DeregisterServiceInstance start
+	deregisterInstanceParam := vo.DeregisterInstanceParam{
+		Ip:          "10.0.0.10",
+		Port:        8848,
+		ServiceName: "demo.go",
+		Ephemeral:   true,
+		//Cluster:     "cluster-a", // default value is DEFAULT
+		GroupName: "group-a", // default value is DEFAULT_GROUP
+	}
+
+	serviceInstance, err := nc.DeregisterServiceInstance(deregisterInstanceParam)
+	if !serviceInstance && err != nil {
+		logger.Info("DeregisterServiceInstance result : %+V", serviceInstance)
+	}
+	//DeregisterServiceInstance end
 
 	//do your logic
 }
