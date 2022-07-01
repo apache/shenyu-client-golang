@@ -42,11 +42,12 @@ func main() {
 
 	//init MetaDataRegister
 	metaData := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister", //require user provide
-		Path:    "/your/path",           //require user provide
-		Enabled: true,                   //require user provide
-		Host:    "127.0.0.1",            //require user provide
-		Port:    "8080",                 //require user provide
+		AppName:     "testGoAppName",     //require user provide
+		Path:        "/golang/your/path", //require user provide
+		ContextPath: "/golang",           //require user provide
+		Enabled:     true,                //require user provide
+		Host:        "127.0.0.1",         //require user provide
+		Port:        "8080",              //require user provide
 	}
 	result, err := clients.RegisterMetaData(adminToken.AdminTokenData, metaData)
 	if err != nil {
@@ -56,9 +57,9 @@ func main() {
 
 	//init urlRegister
 	urlRegister := &model.URIRegister{
-		Protocol:    "testMetaDataRegister", //require user provide
-		AppName:     "testURLRegister",      //require user provide
-		ContextPath: "contextPath",          //require user provide
+		Protocol:    "http://",              //require user provide
+		AppName:     "testGoAppName",        //require user provide
+		ContextPath: "/golang",              //require user provide
 		RPCType:     constants.RPCTYPE_HTTP, //require user provide
 		Host:        "127.0.0.1",            //require user provide
 		Port:        "8080",                 //require user provide
