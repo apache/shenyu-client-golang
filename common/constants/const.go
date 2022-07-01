@@ -26,6 +26,8 @@ const (
 	DEFAULT_ADMIN_ACCOUNT    = "admin"
 	DEFAULT_REQUEST_TIME     = 1000
 	DEFAULT_ADMIN_SUCCESS    = "success"
+	NACOS_CLIENT             = "Nacos"
+	ZOOKEEPER_CLIENT         = "Zookeeper"
 
 	//System default key
 	ADMIN_USERNAME                  = "userName"

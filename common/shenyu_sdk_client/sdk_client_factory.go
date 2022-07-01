@@ -17,17 +17,21 @@
 
 package shenyu_sdk_client
 
-//mockgen -destination /mock_***_client.go  -package ***_client -source common/client_interface.go
+import (
+	"github.com/apache/incubator-shenyu-client-golang/clients/nacos_client"
+	"github.com/apache/incubator-shenyu-client-golang/common/constants"
+)
 
 /**
- * common SdkClient interface(except http client)
+ * Get client by clientName
  **/
-type SdkClient interface {
-	NewClient(clientParam interface{}) (client interface{}, createResult bool, err error)
-
-	DeregisterServiceInstance(metaData interface{}) (registerResult bool, err error)
-
-	GetServiceInstanceInfo(metaData interface{}) (Instances interface{}, registerResult bool, err error)
-
-	RegisterServiceInstance(metaData interface{}) (registerResult bool, err error)
+func GetFactoryClient(clientName string) SdkClient {
+	switch clientName {
+	case constants.NACOS_CLIENT:
+		return &nacos_client.ShenYuNacosClient{}
+	//case constants.Zookeeper_CLIENT:
+	//	return &zk_client.ZkClient{}
+	default:
+		return nil
+	}
 }
