@@ -23,6 +23,8 @@ package model
 type MetaDataRegister struct {
 	AppName          string        `json:"appName"`
 	Path             string        `json:"path"`
+	ContextPath      string        `json:"contextPath"`
+	RuleName         string        `json:"ruleName"`
 	RPCType          string        `json:"rpcType"`
 	Enabled          bool          `json:"enabled"`
 	Host             string        `json:"host"`
