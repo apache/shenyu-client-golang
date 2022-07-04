@@ -75,6 +75,7 @@ func main() {
 		Healthy:     true,        //require user provide
 		Ephemeral:   true,        //require user provide
 		GroupName:   "group-a",   //require user provide
+		ClusterName: "cluster-a", // default value is DEFAULT
 		Metadata:    map[string]string{"contextPath": "contextPath", "uriMetadata": string(metaDataStringJson)},
 	}
 
@@ -84,11 +85,13 @@ func main() {
 	}
 	//RegisterServiceInstance end
 
+	time.Sleep(time.Second)
+
 	//GetServiceInstanceInfo start
 	queryData := vo.SelectInstancesParam{
 		ServiceName: "demo.go",
-		GroupName:   "group-a", //default: DEFAULT_GROUP
-		//Clusters:    []string{"cluster-a"}, // default: DEFAULT
+		GroupName:   "group-a",             //default: DEFAULT_GROUP
+		Clusters:    []string{"cluster-a"}, // default: DEFAULT
 		HealthyOnly: true,
 	}
 
@@ -107,8 +110,8 @@ func main() {
 		Port:        8848,
 		ServiceName: "demo.go",
 		Ephemeral:   true,
-		//Cluster:     "cluster-a", // default value is DEFAULT
-		GroupName: "group-a", // default value is DEFAULT_GROUP
+		Cluster:     "cluster-a", // default value is DEFAULT
+		GroupName:   "group-a",   // default value is DEFAULT_GROUP
 	}
 
 	serviceInstance, err := nc.DeregisterServiceInstance(deregisterInstanceParam)
