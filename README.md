@@ -185,17 +185,54 @@ finish register metadata ,the result is-> true
 }
 ```
 
-**4.use client to invoke RegisterNacosInstance**
+**4. Get shenyu nacos client**
 ```go
-    client, err := nacos_client.NewNacosClient(ncp)
-        if err != nil {
-        logger.Fatal("create nacos client error : %+V", err)
+    sdkClient := shenyu_sdk_client.GetFactoryClient(constants.NACOS_CLIENT)
+    result, createResult, err := sdkClient.NewClient(ncp)
+        if !createResult && err != nil {
+        logger.Fatal("Create nacos client error : %+V", err)
+    }
+
+	nc := &nacos_client.ShenYuNacosClient{
+		NacosClient: result.(*naming_client.NamingClient),
+	}
+```
+
+
+**5.Use client to invoke RegisterNacosInstance**
+```go
+    registerResult, err := nc.RegisterServiceInstance(nacosRegisterInstance)
+        if !registerResult && err != nil {
+    logger.Fatal("Register nacos Instance error : %+V", err)
+}
+        //do your logic
+```
+
+**6.Use client to invoke DeregisterServiceInstance**
+```go
+//DeregisterServiceInstance start
+    deregisterInstanceParam := vo.DeregisterInstanceParam{
+    Ip:          "10.0.0.10",
+    Port:        8848,
+    ServiceName: "demo.go",
+    Ephemeral:   true,
+    //Cluster:     "cluster-a", // default value is DEFAULT
+    GroupName: "group-a", // default value is DEFAULT_GROUP
 }
 
-    registerResult, err := nacos_client.RegisterNacosInstance(client, nacosRegisterInstance)
-        if !registerResult && err != nil {
-        logger.Fatal("Register nacos Instance error : %+V", err)
+    serviceInstance, err := nc.DeregisterServiceInstance(deregisterInstanceParam)
+        if !serviceInstance && err != nil {
+        logger.Info("DeregisterServiceInstance result : %+V", serviceInstance)
 }
+        //do your logic
+```
+
+**7.Use client to invoke GetServiceInstanceInfo**
+```go
+        instanceInfo, result, err := nc.GetServiceInstanceInfo(queryData)
+            if result != false && err != nil {
+            logger.Fatal("Register nacos Instance error : %+V", err)
+        }
         //do your logic
 ```
 
