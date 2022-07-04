@@ -149,6 +149,8 @@ func TestRegisterAndGetInstance(t *testing.T) {
 	assert.Nil(t, err)
 	assert.NotNil(t, instance)
 
+	time.Sleep(time.Second)
+
 	queryData := vo.SelectInstancesParam{
 		ServiceName: "demo.go",
 		GroupName:   "group-a", //default: DEFAULT_GROUP
