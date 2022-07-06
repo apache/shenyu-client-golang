@@ -78,9 +78,9 @@ func (zc *ShenYuZkClient) DeregisterServiceInstance(metaData interface{}) (deReg
 	if !ok {
 		logger.Fatal("get zk client metaData error %+v:", err)
 	}
-	//if err := zc.ensureName(mdr.AppName); err != nil {
-	//	return false, err
-	//}
+	if err := zc.ensureName(mdr.AppName); err != nil {
+		return false, err
+	}
 	path := zc.Zcp.ZkRoot + "/" + mdr.AppName
 	childs, stat, err := zc.ZkClient.Children(path)
 	if err != nil {

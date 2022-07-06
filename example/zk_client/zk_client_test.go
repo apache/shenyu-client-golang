@@ -112,9 +112,9 @@ func TestRegisterNodeInstanceAndPrint(t *testing.T) {
 }
 
 /**
-* TestDeleteNodeInstance
+* TestRegisterInstance
 **/
-func TestRegisterAndDeleteNodeInstance(t *testing.T) {
+func TestRegisterInstance(t *testing.T) {
 	zcp := &zk_client.ZkClientParam{
 		ZkServers: []string{"127.0.0.1:2181"}, //require user provide
 		ZkRoot:    "/api",                     //require user provide
@@ -169,17 +169,5 @@ func TestRegisterAndDeleteNodeInstance(t *testing.T) {
 
 	time.Sleep(time.Second)
 	fmt.Println("Finish RegisterServiceInstance ..")
-
-	deRegisterResult1, err := zc.DeregisterServiceInstance(metaData1)
-	assert.Nil(t, err)
-	assert.True(t, deRegisterResult1)
-
-	deRegisterResult2, err := zc.DeregisterServiceInstance(metaData2)
-	assert.Nil(t, err)
-	assert.True(t, deRegisterResult2)
-
-	deRegisterResult3, err := zc.DeregisterServiceInstance(metaData3)
-	assert.Nil(t, err)
-	assert.True(t, deRegisterResult3)
 
 }
