@@ -142,7 +142,7 @@ func (zc *ShenYuZkClient) RegisterServiceInstance(metaData interface{}) (registe
 	if err != nil {
 		return false, err
 	}
-	_, err = zc.ZkClient.CreateProtectedEphemeralSequential(path, data, zk.WorldACL(zk.PermAll))
+	_, err = zc.ZkClient.Create(path, data, 0, zk.WorldACL(zk.PermAll))
 	if err != nil {
 		return false, err
 	}
