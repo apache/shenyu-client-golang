@@ -18,6 +18,7 @@
 package main
 
 import (
+	"fmt"
 	"github.com/apache/incubator-shenyu-client-golang/clients/zk_client"
 	"github.com/apache/incubator-shenyu-client-golang/common/constants"
 	"github.com/apache/incubator-shenyu-client-golang/common/shenyu_sdk_client"
@@ -111,7 +112,7 @@ func TestRegisterNodeInstanceAndPrint(t *testing.T) {
 /**
 * TestDeleteNodeInstance
 **/
-func TestDeleteNodeInstance(t *testing.T) {
+func TestRegisterAndDeleteNodeInstance(t *testing.T) {
 	zcp := &zk_client.ZkClientParam{
 		ZkServers: []string{"127.0.0.1:2181"}, //require user provide
 		ZkRoot:    "/api",                     //require user provide
@@ -151,6 +152,21 @@ func TestDeleteNodeInstance(t *testing.T) {
 		Host:    "127.0.0.1",            //require user provide
 		Port:    "8282",                 //require user provide
 	}
+	//register multiple metaData
+	registerResult1, err := zc.RegisterServiceInstance(metaData1)
+	assert.Nil(t, err)
+	assert.True(t, registerResult1)
+
+	registerResult2, err := zc.RegisterServiceInstance(metaData2)
+	assert.Nil(t, err)
+	assert.True(t, registerResult2)
+
+	registerResult3, err := zc.RegisterServiceInstance(metaData3)
+	assert.Nil(t, err)
+	assert.True(t, registerResult3)
+
+	time.Sleep(time.Second)
+	fmt.Println("Finish RegisterServiceInstance ..")
 
 	deRegisterResult1, err := zc.DeregisterServiceInstance(metaData1)
 	assert.Nil(t, err)
