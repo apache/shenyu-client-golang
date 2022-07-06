@@ -227,10 +227,17 @@ metaData := &model.URIRegister{
 
 **7.使用客户端调用GetServiceInstanceInfo方法**
 ```go
+<<<<<<< main
          instanceInfo, err := nc.GetServiceInstanceInfo(queryData)
             if instanceInfo == nil {
             	logger.Fatal("Register nacos Instance error : %+V", err)
             }
+=======
+        instanceInfo, result, err := nc.GetServiceInstanceInfo(queryData)
+            if result != false && err != nil {
+            logger.Fatal("Register nacos Instance error : %+V", err)
+        }
+>>>>>>> main
         //do your logic
 ```
 
