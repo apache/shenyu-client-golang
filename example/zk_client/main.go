@@ -112,18 +112,24 @@ func main() {
 	//DeregisterServiceInstance start
 	//your can chose to invoke,not require
 	deRegisterResult1, err := zc.DeregisterServiceInstance(metaData1)
+	if err != nil {
+		panic(err)
+	}
 
 	deRegisterResult2, err := zc.DeregisterServiceInstance(metaData2)
+	if err != nil {
+		panic(err)
+	}
 
 	deRegisterResult3, err := zc.DeregisterServiceInstance(metaData3)
+	if err != nil {
+		panic(err)
+	}
 
 	if deRegisterResult1 && deRegisterResult2 && deRegisterResult3 {
 		logger.Info("DeregisterServiceInstance success !")
 	}
 
-	if err != nil {
-		panic(err)
-	}
 	//DeregisterServiceInstance end
 
 	//do your logic

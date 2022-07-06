@@ -24,6 +24,7 @@ import (
 	"github.com/apache/incubator-shenyu-client-golang/model"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
 /**
@@ -100,8 +101,11 @@ func TestRegisterNodeInstanceAndPrint(t *testing.T) {
 	assert.Nil(t, err)
 	assert.True(t, registerResult3)
 
+	time.Sleep(time.Second)
+
 	instanceDetail, err := zc.GetServiceInstanceInfo(metaData1)
 	assert.NotNil(t, instanceDetail)
+	assert.Nil(t, err)
 }
 
 /**
