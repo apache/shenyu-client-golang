@@ -19,6 +19,7 @@ package zk_client
 
 import (
 	"encoding/json"
+	"github.com/apache/incubator-shenyu-client-golang/common/constants"
 	"github.com/apache/incubator-shenyu-client-golang/model"
 	"github.com/samuel/go-zookeeper/zk"
 	"github.com/wonderivan/logger"
@@ -53,7 +54,7 @@ func (zc *ShenYuZkClient) NewClient(clientParam interface{}) (client interface{}
 	if len(zcp.ZkRoot) == 0 {
 		logger.Fatal("The param zkRoot must set a value!")
 	}
-	conn, _, err := zk.Connect(zcp.ZkServers, time.Duration(3)*time.Second)
+	conn, _, err := zk.Connect(zcp.ZkServers, time.Duration(constants.DEFAULT_ZOOKEEPER_CLIENT_TIME)*time.Second)
 	if err != nil {
 		if err := zc.ensureRoot(); err != nil {
 			zc.Close()
@@ -188,6 +189,7 @@ func (zc *ShenYuZkClient) ensureRoot() error {
  **/
 func (zc *ShenYuZkClient) ensureName(name string) error {
 	path := zc.Zcp.ZkRoot + "/" + name
+	logger.Info("ensureName check, path is ->", path)
 	exists, _, err := zc.ZkClient.Exists(path) //avoid create error
 	if err != nil {
 		return err

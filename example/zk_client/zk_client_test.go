@@ -43,6 +43,8 @@ func TestInitZkClient(t *testing.T) {
 	assert.NotNil(t, client)
 	assert.True(t, createResult)
 	assert.Nil(t, err)
+	zc := client.(*zk_client.ShenYuZkClient)
+	defer zc.Close()
 }
 
 /**

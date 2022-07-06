@@ -21,13 +21,14 @@ package constants
  * The sdk const
  **/
 const (
-	DEFAULT_SHENYU_ADMIN_URL = "http://127.0.0.1:9095"
-	DEFAULT_ADMIN_PASSWORD   = "123456"
-	DEFAULT_ADMIN_ACCOUNT    = "admin"
-	DEFAULT_REQUEST_TIME     = 1000
-	DEFAULT_ADMIN_SUCCESS    = "success"
-	NACOS_CLIENT             = "Nacos"
-	ZOOKEEPER_CLIENT         = "Zookeeper"
+	DEFAULT_SHENYU_ADMIN_URL      = "http://127.0.0.1:9095"
+	DEFAULT_ADMIN_PASSWORD        = "123456"
+	DEFAULT_ADMIN_ACCOUNT         = "admin"
+	DEFAULT_REQUEST_TIME          = 1000
+	DEFAULT_ADMIN_SUCCESS         = "success"
+	NACOS_CLIENT                  = "Nacos"
+	ZOOKEEPER_CLIENT              = "Zookeeper"
+	DEFAULT_ZOOKEEPER_CLIENT_TIME = 10
 
 	//System default key
 	ADMIN_USERNAME                  = "userName"
