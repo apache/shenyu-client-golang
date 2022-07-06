@@ -191,6 +191,7 @@ func (zc *ShenYuZkClient) ensureName(name string) error {
 	path := zc.Zcp.ZkRoot + "/" + name
 	logger.Info("ensureName check, path is ->", path)
 	exists, _, err := zc.ZkClient.Exists(path) //avoid create error
+	logger.Info("ensureName check result is ->", exists)
 	if err != nil {
 		return err
 	}
@@ -199,6 +200,7 @@ func (zc *ShenYuZkClient) ensureName(name string) error {
 		if err != nil && err != zk.ErrNodeExists {
 			return err
 		}
+		logger.Info("ensureName inner create success")
 	}
 	return nil
 }
