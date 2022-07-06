@@ -34,7 +34,7 @@ import (
  **/
 func main() {
 
-	//Create nacos client start
+	//Create ShenYuNacosClient start
 	//set nacos env configuration
 	ncp := &nacos_client.NacosClientParam{
 		IpAddr:      "console.nacos.io",
@@ -45,13 +45,13 @@ func main() {
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.NACOS_CLIENT)
 	result, createResult, err := sdkClient.NewClient(ncp)
 	if !createResult && err != nil {
-		logger.Fatal("Create nacos client error : %+V", err)
+		logger.Fatal("Create ShenYuNacosClient error : %+V", err)
 	}
 
 	nc := &nacos_client.ShenYuNacosClient{
 		NacosClient: result.(*naming_client.NamingClient),
 	}
-	//Create nacos client end
+	//Create ShenYuNacosClient end
 
 	//RegisterServiceInstance start
 	//metaData is necessary param, this will be register to shenyu gateway to use
@@ -95,8 +95,8 @@ func main() {
 		HealthyOnly: true,
 	}
 
-	instanceInfo, result, err := nc.GetServiceInstanceInfo(queryData)
-	if result != false && err != nil {
+	instanceInfo, err := nc.GetServiceInstanceInfo(queryData)
+	if instanceInfo == nil {
 		logger.Fatal("Register nacos Instance error : %+V", err)
 	}
 	logger.Info(instanceInfo)
