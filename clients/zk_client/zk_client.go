@@ -104,6 +104,9 @@ func (zc *ShenYuZkClient) GetServiceInstanceInfo(metaData interface{}) (instance
 	path := zc.Zcp.ZkRoot + "/" + mdr.AppName
 	var nodes []*model.MetaDataRegister
 	data, _, err := zc.ZkClient.Get(path)
+	if err != nil {
+		logger.Fatal("zk Get node failure, err:", err)
+	}
 	node := new(model.MetaDataRegister)
 	err = json.Unmarshal(data, node)
 	if err != nil {
@@ -152,6 +155,9 @@ func (zc *ShenYuZkClient) GetEphemeralServiceInstanceInfo(metaData interface{}) 
 func (zc *ShenYuZkClient) RegisterServiceInstance(metaData interface{}) (registerResult bool, err error) {
 	mdr := zc.checkCommonParam(metaData, err)
 	err = zc.ensureRoot()
+	if err != nil {
+		logger.Fatal("ensureRoot failure, err:", err)
+	}
 	path := zc.Zcp.ZkRoot + "/" + mdr.AppName
 	data, err := json.Marshal(metaData)
 	if err != nil {
