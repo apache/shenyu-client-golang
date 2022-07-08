@@ -18,36 +18,53 @@
 package main
 
 import (
+	"fmt"
 	"github.com/apache/incubator-shenyu-client-golang/clients/zk_client"
+	"github.com/apache/incubator-shenyu-client-golang/common/constants"
+	"github.com/apache/incubator-shenyu-client-golang/common/shenyu_sdk_client"
 	"github.com/apache/incubator-shenyu-client-golang/model"
 	"github.com/stretchr/testify/assert"
 	"testing"
+	"time"
 )
 
 /**
  * TestInitZkClient
  **/
 func TestInitZkClient(t *testing.T) {
-	servers := []string{"127.0.0.1:2181"}                   //require user provide
-	client, err := zk_client.NewClient(servers, "/api", 10) //zkRoot require user provide
-	if err != nil {
-		panic(err)
+	zcp := &zk_client.ZkClientParam{
+		ZkServers: []string{"127.0.0.1:2181"}, //require user provide
+		ZkRoot:    "/api",                     //require user provide
 	}
-	defer client.Close()
+
+	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ZOOKEEPER_CLIENT)
+	client, createResult, err := sdkClient.NewClient(zcp)
+
+	assert.NotNil(t, client)
+	assert.True(t, createResult)
 	assert.Nil(t, err)
+	zc := client.(*zk_client.ShenYuZkClient)
+	defer zc.Close()
 }
 
 /**
- * TestRegisterNodeInstanceAndPrint
+ * TestRegisterServiceInstanceAndGetServiceInstanceInfo
  **/
-func TestRegisterNodeInstanceAndPrint(t *testing.T) {
-	servers := []string{"127.0.0.1:2181"}                   //require user provide
-	client, err := zk_client.NewClient(servers, "/api", 10) //zkRoot require user provide
-	if err != nil {
-		panic(err)
+func TestRegisterServiceInstanceAndGetServiceInstanceInfo(t *testing.T) {
+	zcp := &zk_client.ZkClientParam{
+		ZkServers: []string{"127.0.0.1:2181"}, //require user provide
+		ZkRoot:    "/api",                     //require user provide
 	}
-	defer client.Close()
+
+	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ZOOKEEPER_CLIENT)
+	client, createResult, err := sdkClient.NewClient(zcp)
+
+	assert.NotNil(t, client)
+	assert.True(t, createResult)
 	assert.Nil(t, err)
+
+	zc := client.(*zk_client.ShenYuZkClient)
+	defer zc.Close()
 
 	//init MetaDataRegister
 	metaData1 := &model.MetaDataRegister{
@@ -75,35 +92,43 @@ func TestRegisterNodeInstanceAndPrint(t *testing.T) {
 	}
 
 	//register multiple metaData
-	if err := client.RegisterNodeInstance(metaData1); err != nil {
-		panic(err)
-	}
-	if err := client.RegisterNodeInstance(metaData2); err != nil {
-		panic(err)
-	}
-	if err := client.RegisterNodeInstance(metaData3); err != nil {
-		panic(err)
-	}
+	registerResult1, err := zc.RegisterServiceInstance(metaData1)
+	assert.Nil(t, err)
+	assert.True(t, registerResult1)
 
-	nodes, err := client.GetNodesInfo("testMetaDataRegister")
-	if err != nil {
-		panic(err)
-	}
+	registerResult2, err := zc.RegisterServiceInstance(metaData2)
+	assert.Nil(t, err)
+	assert.True(t, registerResult2)
 
-	assert.NotNil(t, nodes)
+	registerResult3, err := zc.RegisterServiceInstance(metaData3)
+	assert.Nil(t, err)
+	assert.True(t, registerResult3)
+
+	time.Sleep(time.Second)
+
+	instanceDetail, err := zc.GetServiceInstanceInfo(metaData1)
+	assert.NotNil(t, instanceDetail)
+	assert.Nil(t, err)
 }
 
 /**
- * TestDeleteNodeInstance
- **/
-func TestDeleteNodeInstance(t *testing.T) {
-	servers := []string{"127.0.0.1:2181"}                   //require user provide
-	client, err := zk_client.NewClient(servers, "/api", 10) //zkRoot require user provide
-	if err != nil {
-		panic(err)
+* TestRegisterInstance
+**/
+func TestRegisterInstance(t *testing.T) {
+	zcp := &zk_client.ZkClientParam{
+		ZkServers: []string{"127.0.0.1:2181"}, //require user provide
+		ZkRoot:    "/api",                     //require user provide
 	}
-	defer client.Close()
+
+	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ZOOKEEPER_CLIENT)
+	client, createResult, err := sdkClient.NewClient(zcp)
+
+	assert.NotNil(t, client)
+	assert.True(t, createResult)
 	assert.Nil(t, err)
+
+	zc := client.(*zk_client.ShenYuZkClient)
+	defer zc.Close()
 
 	//init MetaDataRegister
 	metaData1 := &model.MetaDataRegister{
@@ -129,14 +154,20 @@ func TestDeleteNodeInstance(t *testing.T) {
 		Host:    "127.0.0.1",            //require user provide
 		Port:    "8282",                 //require user provide
 	}
-
-	err = client.DeleteNodeInstance(metaData1)
+	//register multiple metaData
+	registerResult1, err := zc.RegisterServiceInstance(metaData1)
 	assert.Nil(t, err)
+	assert.True(t, registerResult1)
 
-	err = client.DeleteNodeInstance(metaData2)
+	registerResult2, err := zc.RegisterServiceInstance(metaData2)
 	assert.Nil(t, err)
+	assert.True(t, registerResult2)
 
-	err = client.DeleteNodeInstance(metaData3)
+	registerResult3, err := zc.RegisterServiceInstance(metaData3)
 	assert.Nil(t, err)
+	assert.True(t, registerResult3)
+
+	time.Sleep(time.Second)
+	fmt.Println("Finish RegisterServiceInstance ..")
 
 }

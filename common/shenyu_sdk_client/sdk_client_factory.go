@@ -19,6 +19,7 @@ package shenyu_sdk_client
 
 import (
 	"github.com/apache/incubator-shenyu-client-golang/clients/nacos_client"
+	"github.com/apache/incubator-shenyu-client-golang/clients/zk_client"
 	"github.com/apache/incubator-shenyu-client-golang/common/constants"
 )
 
@@ -29,8 +30,8 @@ func GetFactoryClient(clientName string) SdkClient {
 	switch clientName {
 	case constants.NACOS_CLIENT:
 		return &nacos_client.ShenYuNacosClient{}
-	//case constants.Zookeeper_CLIENT:
-	//	return &zk_client.ZkClient{}
+	case constants.ZOOKEEPER_CLIENT:
+		return &zk_client.ShenYuZkClient{}
 	default:
 		return nil
 	}
