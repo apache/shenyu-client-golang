@@ -73,7 +73,6 @@ func main() {
 	}
 
 	//register multiple metaData
-	logger.Info("> RegisterServiceInstance start")
 	registerResult1, err := zc.RegisterServiceInstance(metaData1)
 	if !registerResult1 && err != nil {
 		logger.Fatal("Register zk Instance error : %+V", err)
