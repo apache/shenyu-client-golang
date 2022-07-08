@@ -135,7 +135,7 @@ func (zc *ShenYuZkClient) GetServiceInstanceInfo(metaData interface{}) (instance
 func (zc *ShenYuZkClient) RegisterServiceInstance(metaData interface{}) (registerResult bool, err error) {
 	mdr := zc.checkCommonParam(metaData, err)
 	if err := zc.ensureName(mdr.AppName); err != nil {
-		logger.Fatal("zk client DeregisterServiceInstance ensureName error %+v:", err)
+		logger.Fatal("zk client RegisterServiceInstance ensureName error %+v:", err)
 	}
 	path := zc.Zcp.ZkRoot + "/" + mdr.AppName + "/n"
 	data, err := json.Marshal(metaData)
