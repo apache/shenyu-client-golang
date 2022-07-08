@@ -171,3 +171,74 @@ func TestRegisterInstance(t *testing.T) {
 	fmt.Println("Finish RegisterServiceInstance ..")
 
 }
+
+/**
+* TestRegisterInstanceAndDeregisterServiceInstance
+**/
+func TestRegisterInstanceAndDeregisterServiceInstance(t *testing.T) {
+	zcp := &zk_client.ZkClientParam{
+		ZkServers: []string{"127.0.0.1:2181"}, //require user provide
+		ZkRoot:    "/api",                     //require user provide
+	}
+
+	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ZOOKEEPER_CLIENT)
+	client, createResult, err := sdkClient.NewClient(zcp)
+
+	assert.NotNil(t, client)
+	assert.True(t, createResult)
+	assert.Nil(t, err)
+
+	zc := client.(*zk_client.ShenYuZkClient)
+	//defer zc.Close()
+
+	//init MetaDataRegister
+	metaData1 := &model.MetaDataRegister{
+		AppName: "testMetaDataRegister", //require user provide
+		Path:    "your/path1",           //require user provide
+		Enabled: true,                   //require user provide
+		Host:    "127.0.0.1",            //require user provide
+		Port:    "8080",                 //require user provide
+	}
+
+	metaData2 := &model.MetaDataRegister{
+		AppName: "testMetaDataRegister", //require user provide
+		Path:    "your/path2",           //require user provide
+		Enabled: true,                   //require user provide
+		Host:    "127.0.0.1",            //require user provide
+		Port:    "8181",                 //require user provide
+	}
+
+	metaData3 := &model.MetaDataRegister{
+		AppName: "testMetaDataRegister", //require user provide
+		Path:    "your/path3",           //require user provide
+		Enabled: true,                   //require user provide
+		Host:    "127.0.0.1",            //require user provide
+		Port:    "8282",                 //require user provide
+	}
+	//register multiple metaData
+	registerResult1, err := zc.RegisterServiceInstance(metaData1)
+	assert.Nil(t, err)
+	assert.True(t, registerResult1)
+
+	registerResult2, err := zc.RegisterServiceInstance(metaData2)
+	assert.Nil(t, err)
+	assert.True(t, registerResult2)
+
+	time.Sleep(time.Second)
+	fmt.Println("Finish RegisterServiceInstance ..")
+
+	deRegisterResult1, err := zc.DeregisterServiceInstance(metaData1)
+	assert.Nil(t, err)
+	assert.True(t, deRegisterResult1)
+
+	deRegisterResult2, err := zc.DeregisterServiceInstance(metaData2)
+	assert.Nil(t, err)
+	assert.True(t, deRegisterResult2)
+
+	deRegisterResult3, err := zc.DeregisterServiceInstance(metaData3)
+	assert.Nil(t, err)
+	assert.True(t, deRegisterResult3)
+
+	fmt.Println("Finish DeregisterServiceInstance ..")
+
+}

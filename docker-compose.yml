@@ -14,15 +14,46 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 version: "3.1"
+
 services:
-  shenyu-zk:
-    container_name: shenyu-zk
+  shenyu1:
+    container_name: shenyu-zk1
     image: zookeeper
     restart: always
+    hostname: shenyu1
     ports:
-      - "2181:2181"
+      - 2181:2181
     networks:
       - shenyu
+    environment:
+      ZOO_MY_ID: 1
+      ZOO_SERVERS: server.1=shenyu1:2888:3888;2181 server.2=shenyu2:2888:3888;2181 server.3=shenyu3:2888:3888;2181
+
+  shenyu2:
+    container_name: shenyu-zk2
+    image: zookeeper
+    restart: always
+    hostname: shenyu2
+    ports:
+      - 2182:2181
+    networks:
+      - shenyu
+    environment:
+      ZOO_MY_ID: 2
+      ZOO_SERVERS: server.1=shenyu1:2888:3888;2181 server.2=shenyu2:2888:3888;2181 server.3=shenyu3:2888:3888;2181
+
+  shenyu3:
+    container_name: shenyu-zk3
+    image: zookeeper
+    restart: always
+    hostname: shenyu3
+    ports:
+      - 2183:2181
+    networks:
+      - shenyu
+    environment:
+      ZOO_MY_ID: 3
+      ZOO_SERVERS: server.1=shenyu1:2888:3888;2181 server.2=shenyu2:2888:3888;2181 server.3=shenyu3:2888:3888;2181
 
 networks:
   shenyu:

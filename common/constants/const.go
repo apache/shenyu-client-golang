@@ -29,6 +29,8 @@ const (
 	NACOS_CLIENT                  = "Nacos"
 	ZOOKEEPER_CLIENT              = "Zookeeper"
 	DEFAULT_ZOOKEEPER_CLIENT_TIME = 10
+	DEFAULT_OP_REGISTER           = "Register"
+	DEFAULT_OP_DEREGISTER         = "DeRegister"
 
 	//System default key
 	ADMIN_USERNAME                  = "userName"

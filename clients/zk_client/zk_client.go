@@ -78,7 +78,7 @@ func (zc *ShenYuZkClient) DeregisterServiceInstance(metaData interface{}) (deReg
 	if !ok {
 		logger.Fatal("get zk client metaData error %+v:", err)
 	}
-	if err := zc.ensureName(mdr.AppName); err != nil {
+	if err := zc.ensureName(mdr.AppName, constants.DEFAULT_OP_DEREGISTER); err != nil {
 		return false, err
 	}
 	path := zc.Zcp.ZkRoot + "/" + mdr.AppName
@@ -134,7 +134,7 @@ func (zc *ShenYuZkClient) GetServiceInstanceInfo(metaData interface{}) (instance
  **/
 func (zc *ShenYuZkClient) RegisterServiceInstance(metaData interface{}) (registerResult bool, err error) {
 	mdr := zc.checkCommonParam(metaData, err)
-	if err := zc.ensureName(mdr.AppName); err != nil {
+	if err := zc.ensureName(mdr.AppName, constants.DEFAULT_OP_REGISTER); err != nil {
 		logger.Fatal("zk client RegisterServiceInstance ensureName error %+v:", err)
 	}
 	path := zc.Zcp.ZkRoot + "/" + mdr.AppName + "/n"
@@ -187,7 +187,7 @@ func (zc *ShenYuZkClient) ensureRoot() error {
 /**
  * ensure zkRoot&nodeName
  **/
-func (zc *ShenYuZkClient) ensureName(name string) error {
+func (zc *ShenYuZkClient) ensureName(name, op string) error {
 	path := zc.Zcp.ZkRoot + "/" + name
 	logger.Info("ensureName check, path is ->", path)
 	exists, _, err := zc.ZkClient.Exists(path) //avoid create error
@@ -196,7 +196,13 @@ func (zc *ShenYuZkClient) ensureName(name string) error {
 		return err
 	}
 	if !exists {
-		_, err := zc.ZkClient.Create(path, []byte(""), 0, zk.WorldACL(zk.PermAll))
+		switch op {
+		case constants.DEFAULT_OP_REGISTER:
+			_, err = zc.ZkClient.Create(zc.Zcp.ZkRoot, []byte(""), 0, zk.WorldACL(zk.PermAll))
+			break
+		case constants.DEFAULT_OP_DEREGISTER:
+			_, err = zc.ZkClient.Create(path, []byte(""), 0, zk.WorldACL(zk.PermAll))
+		}
 		if err != nil && err != zk.ErrNodeExists {
 			return err
 		}
