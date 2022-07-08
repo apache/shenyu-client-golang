@@ -158,9 +158,8 @@ func TestRegisterAndGetInstance(t *testing.T) {
 		HealthyOnly: true,
 	}
 
-	instanceInfo, result, err := nc.GetServiceInstanceInfo(queryData)
+	instanceInfo, err := nc.GetServiceInstanceInfo(queryData)
 	assert.Nil(t, err)
-	assert.True(t, result)
 	assert.NotNil(t, instanceInfo)
 }
 

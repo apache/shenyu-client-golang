@@ -201,10 +201,10 @@ finish register metadata ,the result is-> true
 
 **5.Use client to invoke RegisterNacosInstance**
 ```go
-    registerResult, err := nc.RegisterServiceInstance(nacosRegisterInstance)
-        if !registerResult && err != nil {
-    logger.Fatal("Register nacos Instance error : %+V", err)
-}
+   instanceInfo, err := nc.GetServiceInstanceInfo(queryData)
+    if instanceInfo == nil {
+        logger.Fatal("Register nacos Instance error : %+V", err)
+    }
         //do your logic
 ```
 

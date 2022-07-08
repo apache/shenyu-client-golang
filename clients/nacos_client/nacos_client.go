@@ -111,23 +111,23 @@ func (nc *ShenYuNacosClient) RegisterServiceInstance(metaData interface{}) (regi
 /**
  * DeregisterServiceInstance
  **/
-func (nc *ShenYuNacosClient) DeregisterServiceInstance(metaData interface{}) (registerResult bool, err error) {
+func (nc *ShenYuNacosClient) DeregisterServiceInstance(metaData interface{}) (deRegisterResult bool, err error) {
 	rip, ok := metaData.(vo.DeregisterInstanceParam)
 	if !ok {
 		logger.Fatal("init nacos client error %+v:", err)
 	}
-	registerResult, err = nc.NacosClient.DeregisterInstance(rip)
+	deRegisterResult, err = nc.NacosClient.DeregisterInstance(rip)
 	if err != nil {
 		logger.Fatal("DeregisterServiceInstance failure! ,error is :%+v", err)
 	}
-	logger.Info("DeregisterServiceInstance,result:%+v\n\n,param:%+v \n\n", registerResult, rip)
-	return registerResult, nil
+	logger.Info("DeregisterServiceInstance,result:%+v\n\n,param:%+v \n\n", deRegisterResult, rip)
+	return deRegisterResult, nil
 }
 
 /**
  * GetServiceInstanceInfo
  **/
-func (nc *ShenYuNacosClient) GetServiceInstanceInfo(metaData interface{}) (instances interface{}, registerResult bool, err error) {
+func (nc *ShenYuNacosClient) GetServiceInstanceInfo(metaData interface{}) (instances interface{}, err error) {
 	rip, ok := metaData.(vo.SelectInstancesParam)
 	if !ok {
 		logger.Fatal("init nacos client error %+v:", err)
@@ -137,5 +137,5 @@ func (nc *ShenYuNacosClient) GetServiceInstanceInfo(metaData interface{}) (insta
 		logger.Fatal("GetServiceInstanceInfo failure! ,error is :%+v", err)
 	}
 	logger.Info("GetServiceInstanceInfo,result:%+v\n\n,param:%+v \n\n", instances, rip)
-	return instances, true, nil
+	return instances, nil
 }
