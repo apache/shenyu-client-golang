@@ -13,11 +13,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-version: "3.9"
+version: "3.1"
 services:
   shenyu-zk:
     container_name: shenyu-zk
-    image: zookeeper:3.5
+    image: zookeeper
     restart: always
     ports:
       - "2181:2181"
