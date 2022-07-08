@@ -102,6 +102,23 @@ func (zc *ShenYuZkClient) DeregisterServiceInstance(metaData interface{}) (deReg
 func (zc *ShenYuZkClient) GetServiceInstanceInfo(metaData interface{}) (instances interface{}, err error) {
 	mdr := zc.checkCommonParam(metaData, err)
 	path := zc.Zcp.ZkRoot + "/" + mdr.AppName
+	var nodes []*model.MetaDataRegister
+	data, _, err := zc.ZkClient.Get(path)
+	node := new(model.MetaDataRegister)
+	err = json.Unmarshal(data, node)
+	if err != nil {
+		return nil, err
+	}
+	nodes = append(nodes, node)
+	return nodes, nil
+}
+
+/**
+ * GetEphemeralServiceInstanceInfo
+ **/
+func (zc *ShenYuZkClient) GetEphemeralServiceInstanceInfo(metaData interface{}) (instances interface{}, err error) {
+	mdr := zc.checkCommonParam(metaData, err)
+	path := zc.Zcp.ZkRoot + "/" + mdr.AppName
 	childs, _, err := zc.ZkClient.Children(path)
 	if err != nil {
 		if err == zk.ErrNoNode {
@@ -134,15 +151,13 @@ func (zc *ShenYuZkClient) GetServiceInstanceInfo(metaData interface{}) (instance
  **/
 func (zc *ShenYuZkClient) RegisterServiceInstance(metaData interface{}) (registerResult bool, err error) {
 	mdr := zc.checkCommonParam(metaData, err)
-	if err := zc.ensureName(mdr.AppName, constants.DEFAULT_OP_REGISTER); err != nil {
-		logger.Fatal("zk client RegisterServiceInstance ensureName error %+v:", err)
-	}
-	path := zc.Zcp.ZkRoot + "/" + mdr.AppName + "/n"
+	err = zc.ensureRoot()
+	path := zc.Zcp.ZkRoot + "/" + mdr.AppName
 	data, err := json.Marshal(metaData)
 	if err != nil {
 		return false, err
 	}
-	_, err = zc.ZkClient.CreateProtectedEphemeralSequential(path, data, zk.WorldACL(zk.PermAll))
+	_, err = zc.ZkClient.Create(path, data, 0, zk.WorldACL(zk.PermAll))
 	if err != nil {
 		return false, err
 	}
@@ -196,17 +211,11 @@ func (zc *ShenYuZkClient) ensureName(name, op string) error {
 		return err
 	}
 	if !exists {
-		switch op {
-		case constants.DEFAULT_OP_REGISTER:
-			_, err = zc.ZkClient.Create(zc.Zcp.ZkRoot, []byte(""), 0, zk.WorldACL(zk.PermAll))
-			break
-		case constants.DEFAULT_OP_DEREGISTER:
-			_, err = zc.ZkClient.Create(path, []byte(""), 0, zk.WorldACL(zk.PermAll))
+		_, err = zc.ZkClient.Create(path, []byte(""), 0, zk.WorldACL(zk.PermAll))
+		if err != nil && err == zk.ErrNodeExists {
+			logger.Info("ensureName inner create success")
+			return nil
 		}
-		if err != nil && err != zk.ErrNodeExists {
-			return err
-		}
-		logger.Info("ensureName inner create success")
 	}
 	return nil
 }

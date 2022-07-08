@@ -49,30 +49,31 @@ func main() {
 	//RegisterServiceInstance start
 	//init MetaDataRegister
 	metaData1 := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister", //require user provide
-		Path:    "your/path1",           //require user provide
-		Enabled: true,                   //require user provide
-		Host:    "127.0.0.1",            //require user provide
-		Port:    "8080",                 //require user provide
+		AppName: "testMetaDataRegister1", //require user provide
+		Path:    "your/path1",            //require user provide
+		Enabled: true,                    //require user provide
+		Host:    "127.0.0.1",             //require user provide
+		Port:    "8080",                  //require user provide
 	}
 
 	metaData2 := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister", //require user provide
-		Path:    "your/path2",           //require user provide
-		Enabled: true,                   //require user provide
-		Host:    "127.0.0.1",            //require user provide
-		Port:    "8181",                 //require user provide
+		AppName: "testMetaDataRegister2", //require user provide
+		Path:    "your/path2",            //require user provide
+		Enabled: true,                    //require user provide
+		Host:    "127.0.0.1",             //require user provide
+		Port:    "8181",                  //require user provide
 	}
 
 	metaData3 := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister", //require user provide
-		Path:    "your/path3",           //require user provide
-		Enabled: true,                   //require user provide
-		Host:    "127.0.0.1",            //require user provide
-		Port:    "8282",                 //require user provide
+		AppName: "testMetaDataRegister3", //require user provide
+		Path:    "your/path3",            //require user provide
+		Enabled: true,                    //require user provide
+		Host:    "127.0.0.1",             //require user provide
+		Port:    "8282",                  //require user provide
 	}
 
 	//register multiple metaData
+	logger.Info("> RegisterServiceInstance start")
 	registerResult1, err := zc.RegisterServiceInstance(metaData1)
 	if !registerResult1 && err != nil {
 		logger.Fatal("Register zk Instance error : %+V", err)
@@ -93,13 +94,40 @@ func main() {
 
 	//GetServiceInstanceInfo start
 	instanceDetail, err := zc.GetServiceInstanceInfo(metaData1)
-	nodes, ok := instanceDetail.([]*model.MetaDataRegister)
+	nodes1, ok := instanceDetail.([]*model.MetaDataRegister)
 	if !ok {
 		logger.Fatal("get zk client metaData error %+v:", err)
 	}
 
 	//range nodes
-	for index, node := range nodes {
+	for index, node := range nodes1 {
+		nodeJson, err := json.Marshal(node)
+		if err == nil {
+			logger.Info("GetNodesInfo ,success Index", index, string(nodeJson))
+		}
+	}
+
+	instanceDetail2, err := zc.GetServiceInstanceInfo(metaData2)
+	nodes2, ok := instanceDetail2.([]*model.MetaDataRegister)
+	if !ok {
+		logger.Fatal("get zk client metaData error %+v:", err)
+	}
+
+	//range nodes1
+	for index, node := range nodes2 {
+		nodeJson, err := json.Marshal(node)
+		if err == nil {
+			logger.Info("GetNodesInfo ,success Index", index, string(nodeJson))
+		}
+	}
+
+	instanceDetail3, err := zc.GetServiceInstanceInfo(metaData3)
+	nodes3, ok := instanceDetail3.([]*model.MetaDataRegister)
+	if !ok {
+		logger.Fatal("get zk client metaData error %+v:", err)
+	}
+
+	for index, node := range nodes3 {
 		nodeJson, err := json.Marshal(node)
 		if err == nil {
 			logger.Info("GetNodesInfo ,success Index", index, string(nodeJson))
@@ -109,7 +137,7 @@ func main() {
 
 	//DeregisterServiceInstance start
 	//your can chose to invoke,not require
-	//logger.Info("> DeregisterServiceInstance start")
+	logger.Info("> DeregisterServiceInstance start")
 	deRegisterResult1, err := zc.DeregisterServiceInstance(metaData1)
 	if err != nil {
 		panic(err)

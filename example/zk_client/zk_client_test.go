@@ -68,27 +68,27 @@ func TestRegisterServiceInstanceAndGetServiceInstanceInfo(t *testing.T) {
 
 	//init MetaDataRegister
 	metaData1 := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister", //require user provide
-		Path:    "your/path1",           //require user provide
-		Enabled: true,                   //require user provide
-		Host:    "127.0.0.1",            //require user provide
-		Port:    "8080",                 //require user provide
+		AppName: "testMetaDataRegister1", //require user provide
+		Path:    "your/path1",            //require user provide
+		Enabled: true,                    //require user provide
+		Host:    "127.0.0.1",             //require user provide
+		Port:    "8080",                  //require user provide
 	}
 
 	metaData2 := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister", //require user provide
-		Path:    "your/path2",           //require user provide
-		Enabled: true,                   //require user provide
-		Host:    "127.0.0.1",            //require user provide
-		Port:    "8181",                 //require user provide
+		AppName: "testMetaDataRegister2", //require user provide
+		Path:    "your/path2",            //require user provide
+		Enabled: true,                    //require user provide
+		Host:    "127.0.0.1",             //require user provide
+		Port:    "8181",                  //require user provide
 	}
 
 	metaData3 := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister", //require user provide
-		Path:    "your/path3",           //require user provide
-		Enabled: true,                   //require user provide
-		Host:    "127.0.0.1",            //require user provide
-		Port:    "8282",                 //require user provide
+		AppName: "testMetaDataRegister3", //require user provide
+		Path:    "your/path3",            //require user provide
+		Enabled: true,                    //require user provide
+		Host:    "127.0.0.1",             //require user provide
+		Port:    "8282",                  //require user provide
 	}
 
 	//register multiple metaData
@@ -109,73 +109,20 @@ func TestRegisterServiceInstanceAndGetServiceInstanceInfo(t *testing.T) {
 	instanceDetail, err := zc.GetServiceInstanceInfo(metaData1)
 	assert.NotNil(t, instanceDetail)
 	assert.Nil(t, err)
-}
 
-/**
-* TestRegisterInstance
-**/
-func TestRegisterInstance(t *testing.T) {
-	zcp := &zk_client.ZkClientParam{
-		ZkServers: []string{"127.0.0.1:2181"}, //require user provide
-		ZkRoot:    "/api",                     //require user provide
-	}
-
-	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ZOOKEEPER_CLIENT)
-	client, createResult, err := sdkClient.NewClient(zcp)
-
-	assert.NotNil(t, client)
-	assert.True(t, createResult)
+	instanceDetail2, err := zc.GetServiceInstanceInfo(metaData2)
+	assert.NotNil(t, instanceDetail2)
 	assert.Nil(t, err)
 
-	zc := client.(*zk_client.ShenYuZkClient)
-	defer zc.Close()
-
-	//init MetaDataRegister
-	metaData1 := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister", //require user provide
-		Path:    "your/path1",           //require user provide
-		Enabled: true,                   //require user provide
-		Host:    "127.0.0.1",            //require user provide
-		Port:    "8080",                 //require user provide
-	}
-
-	metaData2 := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister", //require user provide
-		Path:    "your/path2",           //require user provide
-		Enabled: true,                   //require user provide
-		Host:    "127.0.0.1",            //require user provide
-		Port:    "8181",                 //require user provide
-	}
-
-	metaData3 := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister", //require user provide
-		Path:    "your/path3",           //require user provide
-		Enabled: true,                   //require user provide
-		Host:    "127.0.0.1",            //require user provide
-		Port:    "8282",                 //require user provide
-	}
-	//register multiple metaData
-	registerResult1, err := zc.RegisterServiceInstance(metaData1)
+	instanceDetail3, err := zc.GetServiceInstanceInfo(metaData3)
+	assert.NotNil(t, instanceDetail3)
 	assert.Nil(t, err)
-	assert.True(t, registerResult1)
-
-	registerResult2, err := zc.RegisterServiceInstance(metaData2)
-	assert.Nil(t, err)
-	assert.True(t, registerResult2)
-
-	registerResult3, err := zc.RegisterServiceInstance(metaData3)
-	assert.Nil(t, err)
-	assert.True(t, registerResult3)
-
-	time.Sleep(time.Second)
-	fmt.Println("Finish RegisterServiceInstance ..")
-
 }
 
 /**
 * TestRegisterInstanceAndDeregisterServiceInstance
 **/
-func TestRegisterInstanceAndDeregisterServiceInstance(t *testing.T) {
+func TestDeregisterServiceInstance(t *testing.T) {
 	zcp := &zk_client.ZkClientParam{
 		ZkServers: []string{"127.0.0.1:2181"}, //require user provide
 		ZkRoot:    "/api",                     //require user provide
@@ -193,39 +140,28 @@ func TestRegisterInstanceAndDeregisterServiceInstance(t *testing.T) {
 
 	//init MetaDataRegister
 	metaData1 := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister", //require user provide
-		Path:    "your/path1",           //require user provide
-		Enabled: true,                   //require user provide
-		Host:    "127.0.0.1",            //require user provide
-		Port:    "8080",                 //require user provide
+		AppName: "testMetaDataRegister1", //require user provide
+		Path:    "your/path1",            //require user provide
+		Enabled: true,                    //require user provide
+		Host:    "127.0.0.1",             //require user provide
+		Port:    "8080",                  //require user provide
 	}
 
 	metaData2 := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister", //require user provide
-		Path:    "your/path2",           //require user provide
-		Enabled: true,                   //require user provide
-		Host:    "127.0.0.1",            //require user provide
-		Port:    "8181",                 //require user provide
+		AppName: "testMetaDataRegister2", //require user provide
+		Path:    "your/path2",            //require user provide
+		Enabled: true,                    //require user provide
+		Host:    "127.0.0.1",             //require user provide
+		Port:    "8181",                  //require user provide
 	}
 
 	metaData3 := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister", //require user provide
-		Path:    "your/path3",           //require user provide
-		Enabled: true,                   //require user provide
-		Host:    "127.0.0.1",            //require user provide
-		Port:    "8282",                 //require user provide
+		AppName: "testMetaDataRegister3", //require user provide
+		Path:    "your/path3",            //require user provide
+		Enabled: true,                    //require user provide
+		Host:    "127.0.0.1",             //require user provide
+		Port:    "8282",                  //require user provide
 	}
-	//register multiple metaData
-	registerResult1, err := zc.RegisterServiceInstance(metaData1)
-	assert.Nil(t, err)
-	assert.True(t, registerResult1)
-
-	registerResult2, err := zc.RegisterServiceInstance(metaData2)
-	assert.Nil(t, err)
-	assert.True(t, registerResult2)
-
-	time.Sleep(time.Second)
-	fmt.Println("Finish RegisterServiceInstance ..")
 
 	deRegisterResult1, err := zc.DeregisterServiceInstance(metaData1)
 	assert.Nil(t, err)
