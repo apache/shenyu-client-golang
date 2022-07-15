@@ -24,8 +24,8 @@ services:
       - shenyu
     command: agent -server -client=0.0.0.0 -bootstrap-expect=3 -node=consul1
     volumes:
-      - /data/consulconsul1/data:/consul/data
-      - /data/consulconsul1/config:/consul/config
+      - ./data/consul/consul1/data:/consul/data
+      - ./data/consul/consul1/config:/consul/config
 
   consul2:
     image: consul:latest
@@ -35,8 +35,8 @@ services:
       - shenyu
     command: agent -server -client=0.0.0.0 -retry-join=consul1 -node=consul2
     volumes:
-      - /data/consulconsul2/data:/consul/data
-      - /data/consulconsul2/config:/consul/config
+      - ./data/consul/consul2/data:/consul/data
+      - ./data/consul/consul2/config:/consul/config
 
   consul3:
     image: consul:latest
@@ -46,8 +46,8 @@ services:
       - shenyu
     command: agent -server -client=0.0.0.0 -retry-join=consul1 -node=consul3
     volumes:
-      - /data/consulconsul3/data:/consul/data
-      - /data/consulconsul3/config:/consul/config
+      - ./data/consul/consul3/data:/consul/data
+      - ./data/consul/consul3/config:/consul/config
 
   consul4:
     image: consul:latest
@@ -59,8 +59,8 @@ services:
       - shenyu
     command: agent -client=0.0.0.0 -retry-join=consul1 -ui -node=client1
     volumes:
-      - /data/consulconsul4/data:/consul/data
-      - /data/consulconsul4/config:/consul/config
+      - ./data/consul/consul4/data:/consul/data
+      - ./data/consul/consul4/config:/consul/config
 
 networks:
   shenyu:
