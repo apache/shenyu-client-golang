@@ -16,3 +16,25 @@
  */
 
 package consul_client
+
+type ShenYuConsulClient struct {
+}
+
+type ConsulClientParam struct {
+}
+
+func (s ShenYuConsulClient) NewClient(clientParam interface{}) (client interface{}, createResult bool, err error) {
+	panic("implement me")
+}
+
+func (s ShenYuConsulClient) DeregisterServiceInstance(metaData interface{}) (deRegisterResult bool, err error) {
+	panic("implement me")
+}
+
+func (s ShenYuConsulClient) GetServiceInstanceInfo(metaData interface{}) (instances interface{}, err error) {
+	panic("implement me")
+}
+
+func (s ShenYuConsulClient) RegisterServiceInstance(metaData interface{}) (registerResult bool, err error) {
+	panic("implement me")
+}

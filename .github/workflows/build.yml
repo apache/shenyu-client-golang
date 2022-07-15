@@ -51,8 +51,11 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v1
 
-      - name: Start docker compose
-        run: docker-compose -f  docker-compose.yml up -d
+      - name: Start Zookeeper Docker Compose
+        run: docker-compose -f  docker-compose-zk.yml up -d
+
+      - name: Start Consul Docker Compose
+        run: docker-compose -f  docker-compose-consul.yml up -d
 
       - name: Run Unit tests.
         run: |
