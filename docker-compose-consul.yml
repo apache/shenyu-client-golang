@@ -1,0 +1,67 @@
+# Licensed to the Apache Software Foundation (ASF) under one
+# or more contributor license agreements.  See the NOTICE file
+# distributed with this work for additional information
+# regarding copyright ownership.  The ASF licenses this file
+# to you under the Apache License, Version 2.0 (the
+# "License"); you may not use this file except in compliance
+# with the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+version: "3.1"
+
+services:
+  consul1:
+    image: consul:latest
+    container_name: consul1
+    restart: always
+    networks:
+      - shenyu
+    command: agent -server -client=0.0.0.0 -bootstrap-expect=3 -node=consul1
+    volumes:
+      - ./data/consul/consul1/data:/consul/data
+      - ./data/consul/consul1/config:/consul/config
+
+  consul2:
+    image: consul:latest
+    container_name: consul2
+    restart: always
+    networks:
+      - shenyu
+    command: agent -server -client=0.0.0.0 -retry-join=consul1 -node=consul2
+    volumes:
+      - ./data/consul/consul2/data:/consul/data
+      - ./data/consul/consul2/config:/consul/config
+
+  consul3:
+    image: consul:latest
+    container_name: consul3
+    restart: always
+    networks:
+      - shenyu
+    command: agent -server -client=0.0.0.0 -retry-join=consul1 -node=consul3
+    volumes:
+      - ./data/consul/consul3/data:/consul/data
+      - ./data/consul/consul3/config:/consul/config
+
+  consul4:
+    image: consul:latest
+    container_name: consul4
+    restart: always
+    ports:
+      - 8500:8500
+    networks:
+      - shenyu
+    command: agent -client=0.0.0.0 -retry-join=consul1 -ui -node=client1
+    volumes:
+      - ./data/consul/consul4/data:/consul/data
+      - ./data/consul/consul4/config:/consul/config
+
+networks:
+  shenyu:
+    name: shenyu

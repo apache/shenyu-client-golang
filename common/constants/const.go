@@ -28,6 +28,7 @@ const (
 	DEFAULT_ADMIN_SUCCESS         = "success"
 	NACOS_CLIENT                  = "Nacos"
 	ZOOKEEPER_CLIENT              = "Zookeeper"
+	CONSUL_CLIENT                 = "Consul"
 	DEFAULT_ZOOKEEPER_CLIENT_TIME = 10
 	DEFAULT_OP_REGISTER           = "Register"
 	DEFAULT_OP_DEREGISTER         = "DeRegister"
