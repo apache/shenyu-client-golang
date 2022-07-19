@@ -27,15 +27,21 @@ import (
 	"strconv"
 )
 
+/**
+ * ShenYuConsulClient
+ **/
 type ShenYuConsulClient struct {
 	Ccp          *ConsulClientParam //ConsulClientParam
 	ConsulClient *api.Client        //consulClient
 }
 
+/**
+ * ConsulClientParam
+ **/
 type ConsulClientParam struct {
-	host  string //the customer consul server address
-	token string //the customer consul server token
-	port  int    //the customer consul server port
+	Host  string //the customer consul server address
+	Token string //the customer consul server Token
+	Port  int    //the customer consul server Port
 }
 
 /**
@@ -46,18 +52,18 @@ func (scc *ShenYuConsulClient) NewClient(clientParam interface{}) (client interf
 	if !ok {
 		logger.Fatal("init consul client error %+v:", err)
 	}
-	if len(ccp.host) > 0 && len(ccp.token) > 0 && ccp.port > 0 {
+	if len(ccp.Host) > 0 && len(ccp.Token) > 0 && ccp.Port > 0 {
 		//use customer param to create client
 		config := api.DefaultConfig()
-		config.Address = ccp.host + ":" + strconv.Itoa(ccp.port)
-		config.Token = ccp.token
+		config.Address = ccp.Host + ":" + strconv.Itoa(ccp.Port)
+		config.Token = ccp.Token
 		client, err := api.NewClient(config)
 		if err == nil {
 			return &ShenYuConsulClient{
 				Ccp: &ConsulClientParam{
-					host:  ccp.host,
-					token: ccp.token,
-					port:  ccp.port,
+					Host:  ccp.Host,
+					Token: ccp.Token,
+					Port:  ccp.Port,
 				},
 				ConsulClient: client,
 			}, true, nil
@@ -69,9 +75,9 @@ func (scc *ShenYuConsulClient) NewClient(clientParam interface{}) (client interf
 		if err == nil {
 			return &ShenYuConsulClient{
 				Ccp: &ConsulClientParam{
-					host:  ccp.host,
-					token: ccp.token,
-					port:  ccp.port,
+					Host:  ccp.Host,
+					Token: ccp.Token,
+					Port:  ccp.Port,
 				},
 				ConsulClient: client,
 			}, true, nil
@@ -89,7 +95,7 @@ func (scc *ShenYuConsulClient) DeregisterServiceInstance(metaData interface{}) (
 	if err != nil {
 		logger.Fatal("DeregisterServiceInstance failure! ,error is :%+v", err)
 	}
-	logger.Info("DeregisterServiceInstance,result:%+v\n\n,param:%+v \n\n", true)
+	logger.Info("DeregisterServiceInstance,result:%+v", true)
 	return true, nil
 }
 
@@ -100,7 +106,18 @@ func (scc *ShenYuConsulClient) GetServiceInstanceInfo(metaData interface{}) (ins
 	mdr := scc.checkCommonParam(metaData, err)
 	catalogService, _, err := scc.ConsulClient.Catalog().Service(mdr.AppName, "", nil)
 	if len(catalogService) > 0 && err == nil {
-		return catalogService, nil
+		result := make([]*model.MetaDataRegister, len(catalogService))
+		for index, consulInstance := range catalogService {
+			instance := &model.MetaDataRegister{
+				ServiceId: consulInstance.ServiceID,
+				AppName:   consulInstance.ServiceName,
+				Host:      consulInstance.Address,
+				Port:      strconv.Itoa(consulInstance.ServicePort),
+				//metaData:  consulInstance.ServiceMeta,  todo  shenYu java MetaDataRegisterDTO boolean -> map
+			}
+			result[index] = instance
+		}
+		return result, nil
 	}
 	return nil, err
 }
@@ -137,7 +154,7 @@ func (scc *ShenYuConsulClient) RegisterServiceInstance(metaData interface{}) (re
 	if err != nil {
 		logger.Fatal("RegisterServiceInstance failure! ,error is :%+v", err)
 	}
-	logger.Info("RegisterServiceInstance,result:%+v\n\n,param:%+v \n\n", true)
+	logger.Info("RegisterServiceInstance,result:%+v", true)
 	return true, nil
 }
 
