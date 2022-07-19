@@ -127,7 +127,7 @@ func (scc *ShenYuConsulClient) GetServiceInstanceInfo(metaData interface{}) (ins
  **/
 func (scc *ShenYuConsulClient) RegisterServiceInstance(metaData interface{}) (registerResult bool, err error) {
 	mdr := scc.checkCommonParam(metaData, err)
-	port, err := strconv.Atoi(mdr.Port)
+	port, _ := strconv.Atoi(mdr.Port)
 	metaDataStringJson, _ := json.Marshal(metaData)
 
 	//Integrate with MetaDataRegister
