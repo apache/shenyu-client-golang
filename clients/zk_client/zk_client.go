@@ -78,7 +78,7 @@ func (zc *ShenYuZkClient) DeregisterServiceInstance(metaData interface{}) (deReg
 	if !ok {
 		logger.Fatal("get zk client metaData error %+v:", err)
 	}
-	if err := zc.ensureName(mdr.AppName, constants.DEFAULT_OP_DEREGISTER); err != nil {
+	if err := zc.ensureName(mdr.AppName); err != nil {
 		return false, err
 	}
 	path := zc.Zcp.ZkRoot + "/" + mdr.AppName
@@ -208,7 +208,7 @@ func (zc *ShenYuZkClient) ensureRoot() error {
 /**
  * ensure zkRoot&nodeName
  **/
-func (zc *ShenYuZkClient) ensureName(name, op string) error {
+func (zc *ShenYuZkClient) ensureName(name string) error {
 	path := zc.Zcp.ZkRoot + "/" + name
 	logger.Info("ensureName check, path is ->", path)
 	exists, _, err := zc.ZkClient.Exists(path) //avoid create error
