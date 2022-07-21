@@ -59,6 +59,7 @@ func (scc *ShenYuConsulClient) NewClient(clientParam interface{}) (client interf
 		config.Token = ccp.Token
 		client, err := api.NewClient(config)
 		if err == nil {
+			logger.Info("Create customer consul client success!")
 			return &ShenYuConsulClient{
 				Ccp: &ConsulClientParam{
 					Host:  ccp.Host,
@@ -73,6 +74,7 @@ func (scc *ShenYuConsulClient) NewClient(clientParam interface{}) (client interf
 		config := api.DefaultConfig()
 		client, err := api.NewClient(config)
 		if err == nil {
+			logger.Info("Create default consul client success!")
 			return &ShenYuConsulClient{
 				Ccp: &ConsulClientParam{
 					Host:  ccp.Host,
@@ -116,6 +118,7 @@ func (scc *ShenYuConsulClient) GetServiceInstanceInfo(metaData interface{}) (ins
 				//metaData:  consulInstance.ServiceMeta,  todo  shenYu java MetaDataRegisterDTO boolean -> map
 			}
 			result[index] = instance
+			logger.Info("GetServiceInstanceInfo,instance:%+v", instance)
 		}
 		return result, nil
 	}
