@@ -272,16 +272,19 @@ func TestGetServiceInstanceInfo(t *testing.T) {
 	nodes1, ok := instanceDetail.([]*model.MetaDataRegister)
 	assert.NotNil(t, nodes1)
 	assert.True(t, ok)
+	assert.Nil(t, err)
 
 	instanceDetail2, err := scc.GetServiceInstanceInfo(metaData2)
 	nodes2, ok := instanceDetail2.([]*model.MetaDataRegister)
 	assert.NotNil(t, nodes2)
 	assert.True(t, ok)
+	assert.Nil(t, err)
 
 	instanceDetail3, err := scc.GetServiceInstanceInfo(metaData3)
 	nodes3, ok := instanceDetail3.([]*model.MetaDataRegister)
 	assert.NotNil(t, nodes3)
 	assert.True(t, ok)
+	assert.Nil(t, err)
 
 }
 
@@ -298,6 +301,7 @@ func TestEntireConsulFunction(t *testing.T) {
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.CONSUL_CLIENT)
 	client, createResult, err := sdkClient.NewClient(ccp)
 
+	assert.Nil(t, err)
 	assert.True(t, createResult)
 
 	scc := client.(*consul_client.ShenYuConsulClient)
@@ -358,16 +362,19 @@ func TestEntireConsulFunction(t *testing.T) {
 	nodes1, ok := instanceDetail.([]*model.MetaDataRegister)
 	assert.NotNil(t, nodes1)
 	assert.True(t, ok)
+	assert.Nil(t, err)
 
 	instanceDetail2, err := scc.GetServiceInstanceInfo(metaData2)
 	nodes2, ok := instanceDetail2.([]*model.MetaDataRegister)
 	assert.NotNil(t, nodes2)
 	assert.True(t, ok)
+	assert.Nil(t, err)
 
 	instanceDetail3, err := scc.GetServiceInstanceInfo(metaData3)
 	nodes3, ok := instanceDetail3.([]*model.MetaDataRegister)
 	assert.NotNil(t, nodes3)
 	assert.True(t, ok)
+	assert.Nil(t, err)
 
 	//DeregisterServiceInstance
 	deRegisterResult1, err := scc.DeregisterServiceInstance(metaData1)
