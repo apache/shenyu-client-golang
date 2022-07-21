@@ -59,6 +59,7 @@ func TestRegisterServiceInstance(t *testing.T) {
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.CONSUL_CLIENT)
 	client, createResult, err := sdkClient.NewClient(ccp)
 
+	assert.Nil(t, err)
 	assert.True(t, createResult)
 
 	scc := client.(*consul_client.ShenYuConsulClient)
@@ -126,6 +127,7 @@ func TestDeregisterServiceInstance(t *testing.T) {
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.CONSUL_CLIENT)
 	client, createResult, err := sdkClient.NewClient(ccp)
 
+	assert.Nil(t, err)
 	assert.True(t, createResult)
 
 	scc := client.(*consul_client.ShenYuConsulClient)
@@ -209,6 +211,7 @@ func TestGetServiceInstanceInfo(t *testing.T) {
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.CONSUL_CLIENT)
 	client, createResult, err := sdkClient.NewClient(ccp)
 
+	assert.Nil(t, err)
 	assert.True(t, createResult)
 
 	scc := client.(*consul_client.ShenYuConsulClient)
