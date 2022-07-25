@@ -20,8 +20,8 @@ package consul_client
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/apache/incubator-shenyu-client-golang/common/constants"
-	"github.com/apache/incubator-shenyu-client-golang/model"
+	"github.com/apache/shenyu-client-golang/common/constants"
+	"github.com/apache/shenyu-client-golang/model"
 	"github.com/hashicorp/consul/api"
 	"github.com/wonderivan/logger"
 	"strconv"

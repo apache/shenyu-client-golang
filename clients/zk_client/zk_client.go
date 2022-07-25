@@ -19,8 +19,8 @@ package zk_client
 
 import (
 	"encoding/json"
-	"github.com/apache/incubator-shenyu-client-golang/common/constants"
-	"github.com/apache/incubator-shenyu-client-golang/model"
+	"github.com/apache/shenyu-client-golang/common/constants"
+	"github.com/apache/shenyu-client-golang/model"
 	"github.com/samuel/go-zookeeper/zk"
 	"github.com/wonderivan/logger"
 	"time"

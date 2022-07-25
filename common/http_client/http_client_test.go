@@ -18,7 +18,7 @@
 package http_client
 
 import (
-	"github.com/apache/incubator-shenyu-client-golang/common/constants"
+	"github.com/apache/shenyu-client-golang/common/constants"
 	"github.com/wonderivan/logger"
 	"io/ioutil"
 	"net/http"
