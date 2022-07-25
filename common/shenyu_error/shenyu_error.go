@@ -22,7 +22,7 @@ package shenyu_error
  **/
 import (
 	"fmt"
-	"github.com/apache/incubator-shenyu-client-golang/common/constants"
+	"github.com/apache/shenyu-client-golang/common/constants"
 )
 
 type ShenYuError struct {

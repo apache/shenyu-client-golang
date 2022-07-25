@@ -19,10 +19,10 @@ package main
 
 import (
 	"encoding/json"
-	"github.com/apache/incubator-shenyu-client-golang/clients/consul_client"
-	"github.com/apache/incubator-shenyu-client-golang/common/constants"
-	"github.com/apache/incubator-shenyu-client-golang/common/shenyu_sdk_client"
-	"github.com/apache/incubator-shenyu-client-golang/model"
+	"github.com/apache/shenyu-client-golang/clients/consul_client"
+	"github.com/apache/shenyu-client-golang/common/constants"
+	"github.com/apache/shenyu-client-golang/common/shenyu_sdk_client"
+	"github.com/apache/shenyu-client-golang/model"
 	"github.com/hashicorp/go-uuid"
 	"github.com/wonderivan/logger"
 	"time"

@@ -18,10 +18,10 @@
 package shenyu_sdk_client
 
 import (
-	"github.com/apache/incubator-shenyu-client-golang/clients/consul_client"
-	"github.com/apache/incubator-shenyu-client-golang/clients/nacos_client"
-	"github.com/apache/incubator-shenyu-client-golang/clients/zk_client"
-	"github.com/apache/incubator-shenyu-client-golang/common/constants"
+	"github.com/apache/shenyu-client-golang/clients/consul_client"
+	"github.com/apache/shenyu-client-golang/clients/nacos_client"
+	"github.com/apache/shenyu-client-golang/clients/zk_client"
+	"github.com/apache/shenyu-client-golang/common/constants"
 )
 
 /**

@@ -18,9 +18,9 @@
 package main
 
 import (
-	"github.com/apache/incubator-shenyu-client-golang/clients"
-	"github.com/apache/incubator-shenyu-client-golang/common/constants"
-	"github.com/apache/incubator-shenyu-client-golang/model"
+	"github.com/apache/shenyu-client-golang/clients"
+	"github.com/apache/shenyu-client-golang/common/constants"
+	"github.com/apache/shenyu-client-golang/model"
 	"github.com/wonderivan/logger"
 )
 

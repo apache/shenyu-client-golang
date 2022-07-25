@@ -18,9 +18,9 @@
 package http_client
 
 import (
-	"github.com/apache/incubator-shenyu-client-golang/common/constants"
-	"github.com/apache/incubator-shenyu-client-golang/common/shenyu_error"
-	"github.com/apache/incubator-shenyu-client-golang/model"
+	"github.com/apache/shenyu-client-golang/common/constants"
+	"github.com/apache/shenyu-client-golang/common/shenyu_error"
+	"github.com/apache/shenyu-client-golang/model"
 	"io/ioutil"
 	"net/http"
 	"strconv"
