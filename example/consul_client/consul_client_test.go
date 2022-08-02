@@ -358,8 +358,8 @@ func TestEntireConsulFunction(t *testing.T) {
 	time.Sleep(time.Second)
 
 	//get nodes
-	instanceDetail, err := scc.GetServiceInstanceInfo(metaData1)
-	nodes1, ok := instanceDetail.([]*model.MetaDataRegister)
+	instanceDetail1, err := scc.GetServiceInstanceInfo(metaData1)
+	nodes1, ok := instanceDetail1.([]*model.MetaDataRegister)
 	assert.NotNil(t, nodes1)
 	assert.True(t, ok)
 	assert.Nil(t, err)

@@ -122,7 +122,7 @@ func main() {
 		logger.Fatal("get consul client metaData error %+v:", err)
 	}
 
-	//range nodes1
+	//range nodes2
 	for index, node := range nodes2 {
 		nodeJson, err := json.Marshal(node)
 		if err == nil {
@@ -130,6 +130,7 @@ func main() {
 		}
 	}
 
+	//range nodes3
 	instanceDetail3, err := scc.GetServiceInstanceInfo(metaData3)
 	nodes3, ok := instanceDetail3.([]*model.MetaDataRegister)
 	if !ok {
