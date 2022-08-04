@@ -19,6 +19,7 @@ package shenyu_sdk_client
 
 import (
 	"github.com/apache/shenyu-client-golang/clients/consul_client"
+	"github.com/apache/shenyu-client-golang/clients/etcd_client"
 	"github.com/apache/shenyu-client-golang/clients/nacos_client"
 	"github.com/apache/shenyu-client-golang/clients/zk_client"
 	"github.com/apache/shenyu-client-golang/common/constants"
@@ -35,6 +36,8 @@ func GetFactoryClient(clientName string) SdkClient {
 		return &zk_client.ShenYuZkClient{}
 	case constants.CONSUL_CLIENT:
 		return &consul_client.ShenYuConsulClient{}
+	case constants.ETCD_CLIENT:
+		return &etcd_client.ShenYuEtcdClient{}
 	default:
 		return nil
 	}

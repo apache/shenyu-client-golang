@@ -15,21 +15,34 @@
  * limitations under the License.
  */
 
-package model
+package etcd_client
 
 /**
- * The ShenYu common MetaDataRegister
+ * ShenYuEtcdClient
  **/
-type MetaDataRegister struct {
-	AppName          string        `json:"appName"`
-	Path             string        `json:"path"`
-	ContextPath      string        `json:"contextPath"`
-	RuleName         string        `json:"ruleName"`
-	RPCType          string        `json:"rpcType"`
-	Enabled          bool          `json:"enabled"`
-	Host             string        `json:"host"`
-	Port             string        `json:"port"`
-	PluginNames      []interface{} `json:"pluginNames"`
-	RegisterMetaData bool          `json:"registerMetaData"`
-	TimeMillis       int64         `json:"timeMillis"`
+type ShenYuEtcdClient struct {
+	Ecp *EtcdClientParam //EtcdClientParam
+
+}
+
+/**
+ * ConsulClientParam
+ **/
+type EtcdClientParam struct {
+}
+
+func (sec ShenYuEtcdClient) NewClient(clientParam interface{}) (client interface{}, createResult bool, err error) {
+	panic("implement me")
+}
+
+func (sec ShenYuEtcdClient) DeregisterServiceInstance(metaData interface{}) (deRegisterResult bool, err error) {
+	panic("implement me")
+}
+
+func (sec ShenYuEtcdClient) GetServiceInstanceInfo(metaData interface{}) (instances interface{}, err error) {
+	panic("implement me")
+}
+
+func (sec ShenYuEtcdClient) RegisterServiceInstance(metaData interface{}) (registerResult bool, err error) {
+	panic("implement me")
 }

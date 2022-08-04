@@ -29,6 +29,7 @@ const (
 	NACOS_CLIENT                    = "Nacos"
 	ZOOKEEPER_CLIENT                = "Zookeeper"
 	CONSUL_CLIENT                   = "Consul"
+	ETCD_CLIENT                     = "Etcd"
 	DEFAULT_ZOOKEEPER_CLIENT_TIME   = 10
 	DEFAULT_CONSUL_CHECK_TIMEOUT    = "1s"
 	DEFAULT_CONSUL_CHECK_INTERVAL   = "3s"
