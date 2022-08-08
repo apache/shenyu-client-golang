@@ -93,7 +93,7 @@ func (scc *ShenYuConsulClient) NewClient(clientParam interface{}) (client interf
  **/
 func (scc *ShenYuConsulClient) DeregisterServiceInstance(metaData interface{}) (deRegisterResult bool, err error) {
 	mdr := scc.checkCommonParam(metaData, err)
-	err = scc.ConsulClient.Agent().ServiceDeregister(mdr.AppName)
+	err = scc.ConsulClient.Agent().ServiceDeregister(mdr.ShenYuMetaData.AppName)
 	if err != nil {
 		logger.Fatal("DeregisterServiceInstance failure! ,error is :%+v", err)
 	}
@@ -106,16 +106,18 @@ func (scc *ShenYuConsulClient) DeregisterServiceInstance(metaData interface{}) (
  **/
 func (scc *ShenYuConsulClient) GetServiceInstanceInfo(metaData interface{}) (instances interface{}, err error) {
 	mdr := scc.checkCommonParam(metaData, err)
-	catalogService, _, err := scc.ConsulClient.Catalog().Service(mdr.AppName, "", nil)
+	catalogService, _, err := scc.ConsulClient.Catalog().Service(mdr.ShenYuMetaData.AppName, "", nil)
 	if len(catalogService) > 0 && err == nil {
-		result := make([]*model.MetaDataRegister, len(catalogService))
+		result := make([]*model.ConsulMetaDataRegister, len(catalogService))
 		for index, consulInstance := range catalogService {
-			instance := &model.MetaDataRegister{
+			instance := &model.ConsulMetaDataRegister{
 				ServiceId: consulInstance.ServiceID,
-				AppName:   consulInstance.ServiceName,
-				Host:      consulInstance.Address,
-				Port:      strconv.Itoa(consulInstance.ServicePort),
-				//metaData:  consulInstance.ServiceMeta,  todo  shenYu java MetaDataRegisterDTO boolean -> map
+				ShenYuMetaData: &model.MetaDataRegister{
+					AppName: consulInstance.ServiceName,
+					Host:    consulInstance.Address,
+					Port:    strconv.Itoa(consulInstance.ServicePort),
+					//metaData:  consulInstance.ServiceMeta,  todo  shenYu java MetaDataRegisterDTO boolean -> map
+				},
 			}
 			result[index] = instance
 			logger.Info("GetServiceInstanceInfo,instance:%+v", instance)
@@ -130,16 +132,16 @@ func (scc *ShenYuConsulClient) GetServiceInstanceInfo(metaData interface{}) (ins
  **/
 func (scc *ShenYuConsulClient) RegisterServiceInstance(metaData interface{}) (registerResult bool, err error) {
 	mdr := scc.checkCommonParam(metaData, err)
-	port, _ := strconv.Atoi(mdr.Port)
+	port, _ := strconv.Atoi(mdr.ShenYuMetaData.Port)
 	metaDataStringJson, _ := json.Marshal(metaData)
 
 	//Integrate with MetaDataRegister
 	registration := &api.AgentServiceRegistration{
-		ID:        mdr.AppName,
-		Name:      mdr.AppName,
+		ID:        mdr.ShenYuMetaData.AppName,
+		Name:      mdr.ShenYuMetaData.AppName,
 		Port:      port,
-		Address:   mdr.Host,
-		Namespace: mdr.ContextPath,
+		Address:   mdr.ShenYuMetaData.Host,
+		Namespace: mdr.ShenYuMetaData.ContextPath,
 		Meta:      map[string]string{"uriMetadata": string(metaDataStringJson)},
 	}
 
@@ -148,7 +150,7 @@ func (scc *ShenYuConsulClient) RegisterServiceInstance(metaData interface{}) (re
 		Timeout:                        constants.DEFAULT_CONSUL_CHECK_TIMEOUT,
 		Interval:                       constants.DEFAULT_CONSUL_CHECK_INTERVAL,
 		DeregisterCriticalServiceAfter: constants.DEFAULT_CONSUL_CHECK_DEREGISTER,
-		HTTP:                           fmt.Sprintf("%s://%s:%d/actuator/health", mdr.RPCType, registration.Address, registration.Port),
+		HTTP:                           fmt.Sprintf("%s://%s:%d/actuator/health", mdr.ShenYuMetaData.RPCType, registration.Address, registration.Port),
 	}
 	registration.Check = check
 
@@ -164,10 +166,10 @@ func (scc *ShenYuConsulClient) RegisterServiceInstance(metaData interface{}) (re
 /**
  * check common MetaDataRegister
  **/
-func (scc *ShenYuConsulClient) checkCommonParam(metaData interface{}, err error) *model.MetaDataRegister {
-	mdr, ok := metaData.(*model.MetaDataRegister)
+func (scc *ShenYuConsulClient) checkCommonParam(metaData interface{}, err error) *model.ConsulMetaDataRegister {
+	mdr, ok := metaData.(*model.ConsulMetaDataRegister)
 	if !ok {
-		logger.Fatal("get zk client metaData error %+v:", err)
+		logger.Fatal("get consul client metaData error %+v:", err)
 	}
 	return mdr
 }

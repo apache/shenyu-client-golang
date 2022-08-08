@@ -52,34 +52,40 @@ func main() {
 
 	//RegisterServiceInstance start
 	//init MetaDataRegister
-	metaData1 := &model.MetaDataRegister{
+	metaData1 := &model.ConsulMetaDataRegister{
 		ServiceId: uuid1,
-		AppName:   "testMetaDataRegister1", //require user provide
-		Path:      "/your/path1",           //require user provide
-		Enabled:   true,                    //require user provide
-		Host:      "127.0.0.1",             //require user provide
-		Port:      "8080",                  //require user provide
-		RPCType:   "http",                  //require user provide
+		ShenYuMetaData: &model.MetaDataRegister{
+			AppName: "testMetaDataRegister1", //require user provide
+			Path:    "/your/path1",           //require user provide
+			Enabled: true,                    //require user provide
+			Host:    "127.0.0.1",             //require user provide
+			Port:    "8080",                  //require user provide
+			RPCType: "http",                  //require user provide
+		},
 	}
 
-	metaData2 := &model.MetaDataRegister{
+	metaData2 := &model.ConsulMetaDataRegister{
 		ServiceId: uuid2,
-		AppName:   "testMetaDataRegister2", //require user provide
-		Path:      "/your/path2",           //require user provide
-		Enabled:   true,                    //require user provide
-		Host:      "127.0.0.1",             //require user provide
-		Port:      "8181",                  //require user provide
-		RPCType:   "http",                  //require user provide
+		ShenYuMetaData: &model.MetaDataRegister{
+			AppName: "testMetaDataRegister2", //require user provide
+			Path:    "/your/path2",           //require user provide
+			Enabled: true,                    //require user provide
+			Host:    "127.0.0.1",             //require user provide
+			Port:    "8181",                  //require user provide
+			RPCType: "http",                  //require user provide
+		},
 	}
 
-	metaData3 := &model.MetaDataRegister{
+	metaData3 := &model.ConsulMetaDataRegister{
 		ServiceId: uuid3,
-		AppName:   "testMetaDataRegister3", //require user provide
-		Path:      "/your/path3",           //require user provide
-		Enabled:   true,                    //require user provide
-		Host:      "127.0.0.1",             //require user provide
-		Port:      "8282",                  //require user provide
-		RPCType:   "http",                  //require user provide
+		ShenYuMetaData: &model.MetaDataRegister{
+			AppName: "testMetaDataRegister3", //require user provide
+			Path:    "/your/path3",           //require user provide
+			Enabled: true,                    //require user provide
+			Host:    "127.0.0.1",             //require user provide
+			Port:    "8282",                  //require user provide
+			RPCType: "http",                  //require user provide
+		},
 	}
 
 	//register multiple metaData
@@ -103,7 +109,7 @@ func main() {
 
 	//GetServiceInstanceInfo start
 	instanceDetail, err := scc.GetServiceInstanceInfo(metaData1)
-	nodes1, ok := instanceDetail.([]*model.MetaDataRegister)
+	nodes1, ok := instanceDetail.([]*model.ConsulMetaDataRegister)
 	if !ok {
 		logger.Fatal("get consul client metaData error %+v:", err)
 	}
@@ -117,7 +123,7 @@ func main() {
 	}
 
 	instanceDetail2, err := scc.GetServiceInstanceInfo(metaData2)
-	nodes2, ok := instanceDetail2.([]*model.MetaDataRegister)
+	nodes2, ok := instanceDetail2.([]*model.ConsulMetaDataRegister)
 	if !ok {
 		logger.Fatal("get consul client metaData error %+v:", err)
 	}
@@ -132,7 +138,7 @@ func main() {
 
 	//range nodes3
 	instanceDetail3, err := scc.GetServiceInstanceInfo(metaData3)
-	nodes3, ok := instanceDetail3.([]*model.MetaDataRegister)
+	nodes3, ok := instanceDetail3.([]*model.ConsulMetaDataRegister)
 	if !ok {
 		logger.Fatal("get consul client metaData error %+v:", err)
 	}

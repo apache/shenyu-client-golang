@@ -18,18 +18,8 @@
 package model
 
 /**
- * The ShenYu common MetaDataRegister
+ * The EtcdMetaDataRegister
  **/
-type MetaDataRegister struct {
-	AppName          string        `json:"appName"`
-	Path             string        `json:"path"`
-	ContextPath      string        `json:"contextPath"`
-	RuleName         string        `json:"ruleName"`
-	RPCType          string        `json:"rpcType"`
-	Enabled          bool          `json:"enabled"`
-	Host             string        `json:"host"`
-	Port             string        `json:"port"`
-	PluginNames      []interface{} `json:"pluginNames"`
-	RegisterMetaData bool          `json:"registerMetaData"`
-	TimeMillis       int64         `json:"timeMillis"`
+type EtcdMetaDataRegister struct {
+	ShenYuMetaData *MetaDataRegister `json:"metaData"`
 }

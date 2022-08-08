@@ -22,7 +22,7 @@ services:
     restart: always
     networks:
       - shenyu
-    command: agent -server -client=0.0.0.0 -bootstrap-expect=3 -node=consul1
+    command: agent -server -client=0.0.0.0 -bind 0.0.0.0 -bootstrap-expect=3 -node=consul1
     volumes:
       - ./data/consul/consul1/data:/consul/data
       - ./data/consul/consul1/config:/consul/config
@@ -33,7 +33,7 @@ services:
     restart: always
     networks:
       - shenyu
-    command: agent -server -client=0.0.0.0 -retry-join=consul1 -node=consul2
+    command: agent -server -client=0.0.0.0 -bind 0.0.0.0 -retry-join=consul1 -node=consul2
     volumes:
       - ./data/consul/consul2/data:/consul/data
       - ./data/consul/consul2/config:/consul/config
@@ -44,7 +44,7 @@ services:
     restart: always
     networks:
       - shenyu
-    command: agent -server -client=0.0.0.0 -retry-join=consul1 -node=consul3
+    command: agent -server -client=0.0.0.0 -bind 0.0.0.0 -retry-join=consul1 -node=consul3
     volumes:
       - ./data/consul/consul3/data:/consul/data
       - ./data/consul/consul3/config:/consul/config
@@ -57,7 +57,7 @@ services:
       - 8500:8500
     networks:
       - shenyu
-    command: agent -client=0.0.0.0 -retry-join=consul1 -ui -node=client1
+    command: agent -client=0.0.0.0 -bind 0.0.0.0 -retry-join=consul1 -ui -node=client1
     volumes:
       - ./data/consul/consul4/data:/consul/data
       - ./data/consul/consul4/config:/consul/config
