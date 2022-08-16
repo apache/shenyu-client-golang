@@ -36,7 +36,7 @@ type ShenYuEtcdClient struct {
 }
 
 /**
- * ConsulClientParam
+ * EtcdClientParam
  **/
 type EtcdClientParam struct {
 	EtcdServers  []string //the customer etcd server address
