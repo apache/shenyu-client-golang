@@ -81,8 +81,9 @@ func (sec *ShenYuEtcdClient) NewClient(clientParam interface{}) (client interfac
 				EtcdClient: client,
 			}, true, nil
 		}
+		logger.Fatal("init etcd client error %+v:", err)
 	}
-	return &ShenYuEtcdClient{}, false, err
+	return
 }
 
 /**
@@ -115,6 +116,7 @@ func (sec *ShenYuEtcdClient) GetServiceInstanceInfo(metaData interface{}) (insta
 	resp,err := sec.EtcdClient.Get(ctx,key)
 	if err != nil {
 		logger.Error("etcd Get data failure, err:", err)
+		return nil,err
 	}
 	node := new(model.MetaDataRegister)
 	err = json.Unmarshal(resp.Kvs[0].Value, node)
@@ -154,7 +156,7 @@ func (sec *ShenYuEtcdClient) GenLeaseId() clientv3.LeaseID {
 	//grant lease
 	lease, err := sec.EtcdClient.Grant(ctx, sec.Ecp.TTL)
 	if err != nil {
-		logger.Error("Grant lease failed: %v\n", err)
+		logger.Fatal("Grant lease failed: %v\n", err)
 	}
 	return lease.ID
 }
@@ -169,7 +171,7 @@ func (sec *ShenYuEtcdClient) KeepAlive()  {
 	//keep alive
 	kaCh, err := sec.EtcdClient.KeepAlive(ctx, sec.GlobalLease)
 	if err != nil {
-		logger.Error("Keep alive with lease[%s] failed: %v\n",sec.GlobalLease, err)
+		logger.Fatal("Keep alive with lease[%s] failed: %v\n",sec.GlobalLease, err)
 	}
 	for {
 		kaResp := <-kaCh
