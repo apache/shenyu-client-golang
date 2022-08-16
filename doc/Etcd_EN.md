@@ -7,8 +7,9 @@
     //Create ShenYuEtcdClient  start
     ecp := &etcd_client.EtcdClientParam{
     EtcdServers: []string{"http://127.0.0.1:2379"}, // require user provider
-    TTL:    50,
-    TimeOut: 1000,
+    UserName : "" // optional param etcd userName
+    Password : "" // optional param etcd pwd
+    TTL:    50, // optional param key live
     }
     
     sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)

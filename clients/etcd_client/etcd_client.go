@@ -42,9 +42,16 @@ type EtcdClientParam struct {
 	EtcdServers  []string //the customer etcd server address
 	UserName string //the customer etcd server userName
 	Password  string    //the customer etcd server pwd
-	TimeOut int64   //the customer etcd server timeout
 	TTL int64 //the customer etcd key rent
 }
+
+/**
+ * EtcdClient Const
+**/
+const (
+	//etcd connect dialTimeOut
+	timeOut = 5
+)
 
 /**
  * init NewClient
@@ -52,16 +59,13 @@ type EtcdClientParam struct {
 func (sec *ShenYuEtcdClient) NewClient(clientParam interface{}) (client interface{}, createResult bool, err error) {
 	ecp, ok := clientParam.(*EtcdClientParam)
 	if !ok {
-		logger.Fatal("init etcd client error %+v:", err)
+		logger.Fatal("The clientParam  must not nil!")
 	}
 	if len(ecp.EtcdServers) > 0 {
-		if ecp.TimeOut == 0 {
-			ecp.TimeOut = 5
-		}
 		//use customer param to create client
 		client, err := clientv3.New(clientv3.Config{
 			Endpoints:   ecp.EtcdServers,
-			DialTimeout: time.Duration(ecp.TimeOut) * time.Second,
+			DialTimeout: timeOut * time.Second,
 			Username:    ecp.UserName,
 			Password:    ecp.Password,
 		})
@@ -78,7 +82,6 @@ func (sec *ShenYuEtcdClient) NewClient(clientParam interface{}) (client interfac
 					EtcdServers: ecp.EtcdServers,
 					UserName: ecp.UserName,
 					Password: ecp.Password,
-					TimeOut: ecp.TimeOut,
 					TTL: ecp.TTL,
 				},
 				EtcdClient: client,

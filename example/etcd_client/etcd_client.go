@@ -31,7 +31,6 @@ func main(){
 	ecp := &etcd_client.EtcdClientParam{
 		EtcdServers: []string{"http://127.0.0.1:2379"}, //require user provide
 		TTL:    50,
-		TimeOut: 1000,
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)

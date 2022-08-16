@@ -36,7 +36,6 @@ func TestInitEtcdClient(t *testing.T) {
 	ecp := &etcd_client.EtcdClientParam{
 		EtcdServers: []string{"http://127.0.0.1:2379"}, //require user provide
 		TTL:    50,
-		TimeOut: 100000,
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
@@ -62,7 +61,6 @@ func TestRegisterServiceInstanceAndGetServiceInstanceInfo(t *testing.T) {
 	ecp := &etcd_client.EtcdClientParam{
 		EtcdServers: []string{"http://127.0.0.1:2379"}, //require user provide
 		TTL:    50,
-		TimeOut: 100000,
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
@@ -122,7 +120,6 @@ func TestDeRegisterServiceInstance(t *testing.T) {
 	ecp := &etcd_client.EtcdClientParam{
 		EtcdServers: []string{"http://127.0.0.1:2379"}, //require user provide
 		TTL:    50,
-		TimeOut: 100000,
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
@@ -170,7 +167,6 @@ func TestGenAndGetLeaseId(t *testing.T){
 	ecp := &etcd_client.EtcdClientParam{
 		EtcdServers: []string{"http://127.0.0.1:2379"}, //require user provide
 		TTL:    50,
-		TimeOut: 100000,
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
