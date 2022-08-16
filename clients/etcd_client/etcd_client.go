@@ -46,6 +46,9 @@ type EtcdClientParam struct {
 	TTL int64 //the customer etcd key rent
 }
 
+/**
+ * init NewClient
+ **/
 func (sec *ShenYuEtcdClient) NewClient(clientParam interface{}) (client interface{}, createResult bool, err error) {
 	ecp, ok := clientParam.(*EtcdClientParam)
 	if !ok {
