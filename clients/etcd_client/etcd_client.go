@@ -141,7 +141,8 @@ func (sec *ShenYuEtcdClient) RegisterServiceInstance(metaData interface{}) (regi
 	defer cancel()
 	_,err = sec.EtcdClient.Put(ctx, key, string(data))
 	if err != nil {
-		logger.Fatal("RegisterServiceInstance failure! ,error is :%+v", err)
+		logger.Error("RegisterServiceInstance failure! ,error is :%+v", err)
+		return false,err
 	}
 	logger.Info("RegisterServiceInstance,result:%+v", true)
 	return true, nil
@@ -150,15 +151,16 @@ func (sec *ShenYuEtcdClient) RegisterServiceInstance(metaData interface{}) (regi
 /**
 * GenLeaseId //get etcd  grant leaseId
 **/
-func (sec *ShenYuEtcdClient) GenLeaseId() clientv3.LeaseID {
+func (sec *ShenYuEtcdClient) GenLeaseId() (clientv3.LeaseID,error) {
 	ctx, cancel := context.WithTimeout(context.Background(),timeOut* time.Second)
 	defer cancel()
 	//grant lease
 	lease, err := sec.EtcdClient.Grant(ctx, sec.Ecp.TTL)
 	if err != nil {
-		logger.Fatal("Grant lease failed: %v\n", err)
+		logger.Error("Grant lease failed: %v\n", err)
+		return 0,err
 	}
-	return lease.ID
+	return lease.ID,nil
 }
 
 

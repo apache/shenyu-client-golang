@@ -18,13 +18,11 @@
 package main
 
 import (
-	"context"
 	"github.com/apache/shenyu-client-golang/clients/etcd_client"
 	"github.com/apache/shenyu-client-golang/common/constants"
 	"github.com/apache/shenyu-client-golang/common/shenyu_sdk_client"
 	"github.com/apache/shenyu-client-golang/model"
 	"github.com/stretchr/testify/assert"
-	clientv3 "go.etcd.io/etcd/client/v3"
 	"testing"
 	"time"
 )
@@ -179,15 +177,15 @@ func TestGenAndGetLeaseId(t *testing.T){
 	etcd := client.(*etcd_client.ShenYuEtcdClient)
 	defer etcd.Close()
 
-	leaseId := etcd.GenLeaseId()
+	leaseId,_ := etcd.GenLeaseId()
 
 	etcd.GlobalLease = leaseId
-	ctx, cancel := context.WithTimeout(context.Background(),5* time.Second)
-	defer cancel()
-	_,err = etcd.EtcdClient.Put(ctx,"key1","key111",clientv3.WithLease(etcd.GlobalLease))
-	assert.Nil(t, err)
-	_,err = etcd.EtcdClient.Put(ctx,"key2","key13333",clientv3.WithLease(etcd.GlobalLease))
-	assert.Nil(t, err)
+	//ctx, cancel := context.WithTimeout(context.Background(),5* time.Second)
+	//defer cancel()
+	//_,err = etcd.EtcdClient.Put(ctx,"key1","key111",clientv3.WithLease(etcd.GlobalLease))
+	//assert.Nil(t, err)
+	//_,err = etcd.EtcdClient.Put(ctx,"key2","key13333",clientv3.WithLease(etcd.GlobalLease))
+	//assert.Nil(t, err)
 	////rent
 	//go func() {
 	//	etcd.KeepAlive()
