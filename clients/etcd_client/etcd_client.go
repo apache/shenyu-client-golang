@@ -71,12 +71,6 @@ func (sec *ShenYuEtcdClient) NewClient(clientParam interface{}) (client interfac
 		})
 		if err == nil {
 			logger.Info("Create customer etcd client success!")
-			////wheather gen leaseId is with by user
-			//leaseId := sec.getLocalLeaseId(client,ccp)
-			////keep live
-			//go func() {
-			//	sec.keepLocalAlive(client,leaseId)
-			//}()
 			return &ShenYuEtcdClient{
 				Ecp: &EtcdClientParam{
 					EtcdServers: ecp.EtcdServers,
@@ -85,7 +79,6 @@ func (sec *ShenYuEtcdClient) NewClient(clientParam interface{}) (client interfac
 					TTL: ecp.TTL,
 				},
 				EtcdClient: client,
-				//GlobalLease: leaseId,
 			}, true, nil
 		}
 	}
@@ -101,9 +94,9 @@ func (sec *ShenYuEtcdClient) DeregisterServiceInstance(metaData interface{}) (de
 		logger.Fatal("get etcd client metaData error %+v:", err)
 	}
 	key :=  mdr.AppName
-	_,err = sec.EtcdClient.Delete(context.TODO(),key)
-	// revoke by LeaseId
-	//_,err = sec.EtcdClient.Revoke(context.TODO(),sec.GlobalLease)
+	ctx, cancel := context.WithTimeout(context.Background(),timeOut* time.Second)
+	defer cancel()
+	_,err = sec.EtcdClient.Delete(ctx,key)
     if err != nil{
     	return false, err
 	}
@@ -117,7 +110,9 @@ func (sec *ShenYuEtcdClient) GetServiceInstanceInfo(metaData interface{}) (insta
 	mdr := sec.checkCommonParam(metaData, err)
 	key := mdr.AppName
 	var nodes []*model.MetaDataRegister
-	resp,err := sec.EtcdClient.Get(context.TODO(),key)
+	ctx, cancel := context.WithTimeout(context.Background(),timeOut* time.Second)
+	defer cancel()
+	resp,err := sec.EtcdClient.Get(ctx,key)
 	if err != nil {
 		logger.Error("etcd Get data failure, err:", err)
 	}
@@ -140,9 +135,9 @@ func (sec *ShenYuEtcdClient) RegisterServiceInstance(metaData interface{}) (regi
 		return false, err
 	}
 	key := mdr.AppName
-	//register  put with lease
-	//_,err = sec.EtcdClient.Put(context.TODO(), key, string(data), clientv3.WithLease(sec.GlobalLease))
-	_,err = sec.EtcdClient.Put(context.TODO(), key, string(data))
+	ctx, cancel := context.WithTimeout(context.Background(),timeOut* time.Second)
+	defer cancel()
+	_,err = sec.EtcdClient.Put(ctx, key, string(data))
 	if err != nil {
 		logger.Fatal("RegisterServiceInstance failure! ,error is :%+v", err)
 	}
@@ -154,8 +149,10 @@ func (sec *ShenYuEtcdClient) RegisterServiceInstance(metaData interface{}) (regi
 * GenLeaseId //get etcd  grant leaseId
 **/
 func (sec *ShenYuEtcdClient) GenLeaseId() clientv3.LeaseID {
+	ctx, cancel := context.WithTimeout(context.Background(),timeOut* time.Second)
+	defer cancel()
 	//grant lease
-	lease, err := sec.EtcdClient.Grant(context.TODO(), sec.Ecp.TTL)
+	lease, err := sec.EtcdClient.Grant(ctx, sec.Ecp.TTL)
 	if err != nil {
 		logger.Error("Grant lease failed: %v\n", err)
 	}
@@ -167,8 +164,10 @@ func (sec *ShenYuEtcdClient) GenLeaseId() clientv3.LeaseID {
 * KeepAlive
  */
 func (sec *ShenYuEtcdClient) KeepAlive()  {
+	ctx, cancel := context.WithTimeout(context.Background(),timeOut* time.Second)
+	defer cancel()
 	//keep alive
-	kaCh, err := sec.EtcdClient.KeepAlive(context.Background(), sec.GlobalLease)
+	kaCh, err := sec.EtcdClient.KeepAlive(ctx, sec.GlobalLease)
 	if err != nil {
 		logger.Error("Keep alive with lease[%s] failed: %v\n",sec.GlobalLease, err)
 	}

@@ -182,9 +182,11 @@ func TestGenAndGetLeaseId(t *testing.T){
 	leaseId := etcd.GenLeaseId()
 
 	etcd.GlobalLease = leaseId
-	_,err = etcd.EtcdClient.Put(context.TODO(),"key1","key111",clientv3.WithLease(etcd.GlobalLease))
+	ctx, cancel := context.WithTimeout(context.Background(),5* time.Second)
+	defer cancel()
+	_,err = etcd.EtcdClient.Put(ctx,"key1","key111",clientv3.WithLease(etcd.GlobalLease))
 	assert.Nil(t, err)
-	_,err = etcd.EtcdClient.Put(context.TODO(),"key2","key13333",clientv3.WithLease(etcd.GlobalLease))
+	_,err = etcd.EtcdClient.Put(ctx,"key2","key13333",clientv3.WithLease(etcd.GlobalLease))
 	assert.Nil(t, err)
 	////rent
 	//go func() {
