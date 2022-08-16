@@ -17,32 +17,172 @@
 
 package etcd_client
 
+import (
+	"context"
+	"encoding/json"
+	"github.com/apache/shenyu-client-golang/model"
+	"github.com/wonderivan/logger"
+	clientv3 "go.etcd.io/etcd/client/v3"
+	"time"
+)
+
 /**
  * ShenYuEtcdClient
  **/
 type ShenYuEtcdClient struct {
 	Ecp *EtcdClientParam //EtcdClientParam
-
+    EtcdClient *clientv3.Client //EtcdClient
+    GlobalLease clientv3.LeaseID //global lease
 }
 
 /**
  * ConsulClientParam
  **/
 type EtcdClientParam struct {
+	EtcdServers  []string //the customer etcd server address
+	UserName string //the customer etcd server userName
+	Password  string    //the customer etcd server pwd
+	TimeOut int64   //the customer etcd server timeout
+	TTL int64 //the customer etcd key rent
 }
 
-func (sec ShenYuEtcdClient) NewClient(clientParam interface{}) (client interface{}, createResult bool, err error) {
-	panic("implement me")
+func (sec *ShenYuEtcdClient) NewClient(clientParam interface{}) (client interface{}, createResult bool, err error) {
+	ccp, ok := clientParam.(*EtcdClientParam)
+	if !ok {
+		logger.Fatal("init etcd client error %+v:", err)
+	}
+	if len(ccp.EtcdServers) > 0 {
+		if ccp.TimeOut == 0 {
+			ccp.TimeOut = 5
+		}
+		//use customer param to create client
+		client, err := clientv3.New(clientv3.Config{
+			Endpoints:   ccp.EtcdServers,
+			DialTimeout: time.Duration(ccp.TimeOut) * time.Second,
+			Username:    ccp.UserName,
+			Password:    ccp.Password,
+		})
+		if err == nil {
+			logger.Info("Create customer etcd client success!")
+			////wheather gen leaseId is with by user
+			//leaseId := sec.getLocalLeaseId(client,ccp)
+			////keep live
+			//go func() {
+			//	sec.keepLocalAlive(client,leaseId)
+			//}()
+			return &ShenYuEtcdClient{
+				Ecp: &EtcdClientParam{
+					EtcdServers: ccp.EtcdServers,
+					UserName: ccp.UserName,
+					Password: ccp.Password,
+					TimeOut: ccp.TimeOut,
+					TTL: ccp.TTL,
+				},
+				EtcdClient: client,
+				//GlobalLease: leaseId,
+			}, true, nil
+		}
+	}
+	return &ShenYuEtcdClient{}, false, err
 }
 
-func (sec ShenYuEtcdClient) DeregisterServiceInstance(metaData interface{}) (deRegisterResult bool, err error) {
-	panic("implement me")
+/**
+DeregisterServiceInstance
+ */
+func (sec *ShenYuEtcdClient) DeregisterServiceInstance(metaData interface{}) (deRegisterResult bool, err error) {
+	mdr, ok := metaData.(*model.MetaDataRegister)
+	if !ok {
+		logger.Fatal("get etcd client metaData error %+v:", err)
+	}
+	key :=  mdr.AppName
+	_,err = sec.EtcdClient.Delete(context.TODO(),key)
+	// revoke by LeaseId
+	//_,err = sec.EtcdClient.Revoke(context.TODO(),sec.GlobalLease)
+    if err != nil{
+    	return false, err
+	}
+	return true, nil
 }
 
-func (sec ShenYuEtcdClient) GetServiceInstanceInfo(metaData interface{}) (instances interface{}, err error) {
-	panic("implement me")
+/**
+* RegisterServiceInstance
+ */
+func (sec *ShenYuEtcdClient) GetServiceInstanceInfo(metaData interface{}) (instances interface{}, err error) {
+	mdr := sec.checkCommonParam(metaData, err)
+	key := mdr.AppName
+	var nodes []*model.MetaDataRegister
+	resp,err := sec.EtcdClient.Get(context.TODO(),key)
+	if err != nil {
+		logger.Error("etcd Get data failure, err:", err)
+	}
+	node := new(model.MetaDataRegister)
+	err = json.Unmarshal(resp.Kvs[0].Value, node)
+	if err != nil {
+		return nil, err
+	}
+	nodes = append(nodes, node)
+	return nodes, nil
 }
 
-func (sec ShenYuEtcdClient) RegisterServiceInstance(metaData interface{}) (registerResult bool, err error) {
-	panic("implement me")
+/**
+* RegisterServiceInstance
+ **/
+func (sec *ShenYuEtcdClient) RegisterServiceInstance(metaData interface{}) (registerResult bool, err error) {
+	mdr := sec.checkCommonParam(metaData, err)
+	data, _ := json.Marshal(metaData)
+	if err != nil {
+		return false, err
+	}
+	key := mdr.AppName
+	//register  put with lease
+	//_,err = sec.EtcdClient.Put(context.TODO(), key, string(data), clientv3.WithLease(sec.GlobalLease))
+	_,err = sec.EtcdClient.Put(context.TODO(), key, string(data))
+	if err != nil {
+		logger.Fatal("RegisterServiceInstance failure! ,error is :%+v", err)
+	}
+	logger.Info("RegisterServiceInstance,result:%+v", true)
+	return true, nil
+}
+
+/**
+* GenLeaseId //get etcd  grant leaseId
+**/
+func (sec *ShenYuEtcdClient) GenLeaseId() clientv3.LeaseID {
+	//grant lease
+	lease, err := sec.EtcdClient.Grant(context.TODO(), sec.Ecp.TTL)
+	if err != nil {
+		logger.Error("Grant lease failed: %v\n", err)
+	}
+	return lease.ID
+}
+
+
+/**
+* KeepAlive
+ */
+func (sec *ShenYuEtcdClient) KeepAlive()  {
+	//keep alive
+	kaCh, err := sec.EtcdClient.KeepAlive(context.Background(), sec.GlobalLease)
+	if err != nil {
+		logger.Error("Keep alive with lease[%s] failed: %v\n",sec.GlobalLease, err)
+	}
+	for {
+		kaResp := <-kaCh
+		logger.Info("ttl: ", kaResp.TTL)
+	}
+}
+
+/**
+ * check common MetaDataRegister
+ **/
+func (sec *ShenYuEtcdClient) checkCommonParam(metaData interface{}, err error) *model.MetaDataRegister {
+	mdr, ok := metaData.(*model.MetaDataRegister)
+	if !ok {
+		logger.Fatal("get etcd client metaData error %+v:", err)
+	}
+	return mdr
+}
+
+func (sec *ShenYuEtcdClient) Close()  {
+	sec.Close()
 }
