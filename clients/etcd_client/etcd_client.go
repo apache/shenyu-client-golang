@@ -47,20 +47,20 @@ type EtcdClientParam struct {
 }
 
 func (sec *ShenYuEtcdClient) NewClient(clientParam interface{}) (client interface{}, createResult bool, err error) {
-	ccp, ok := clientParam.(*EtcdClientParam)
+	ecp, ok := clientParam.(*EtcdClientParam)
 	if !ok {
 		logger.Fatal("init etcd client error %+v:", err)
 	}
-	if len(ccp.EtcdServers) > 0 {
-		if ccp.TimeOut == 0 {
-			ccp.TimeOut = 5
+	if len(ecp.EtcdServers) > 0 {
+		if ecp.TimeOut == 0 {
+			ecp.TimeOut = 5
 		}
 		//use customer param to create client
 		client, err := clientv3.New(clientv3.Config{
-			Endpoints:   ccp.EtcdServers,
-			DialTimeout: time.Duration(ccp.TimeOut) * time.Second,
-			Username:    ccp.UserName,
-			Password:    ccp.Password,
+			Endpoints:   ecp.EtcdServers,
+			DialTimeout: time.Duration(ecp.TimeOut) * time.Second,
+			Username:    ecp.UserName,
+			Password:    ecp.Password,
 		})
 		if err == nil {
 			logger.Info("Create customer etcd client success!")
@@ -72,11 +72,11 @@ func (sec *ShenYuEtcdClient) NewClient(clientParam interface{}) (client interfac
 			//}()
 			return &ShenYuEtcdClient{
 				Ecp: &EtcdClientParam{
-					EtcdServers: ccp.EtcdServers,
-					UserName: ccp.UserName,
-					Password: ccp.Password,
-					TimeOut: ccp.TimeOut,
-					TTL: ccp.TTL,
+					EtcdServers: ecp.EtcdServers,
+					UserName: ecp.UserName,
+					Password: ecp.Password,
+					TimeOut: ecp.TimeOut,
+					TTL: ecp.TTL,
 				},
 				EtcdClient: client,
 				//GlobalLease: leaseId,
@@ -183,6 +183,10 @@ func (sec *ShenYuEtcdClient) checkCommonParam(metaData interface{}, err error) *
 	return mdr
 }
 
+
+/**
+ * close etcdClient
+ **/
 func (sec *ShenYuEtcdClient) Close()  {
-	sec.Close()
+	sec.EtcdClient.Close()
 }

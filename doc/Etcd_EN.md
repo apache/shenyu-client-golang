@@ -5,14 +5,14 @@
 **1.Fist make sure your Zookeeper env is correct,the set this necessary param.**
 ```go
     //Create ShenYuEtcdClient  start
-    ccp := &etcd_client.EtcdClientParam{
+    ecp := &etcd_client.EtcdClientParam{
     EtcdServers: []string{"http://127.0.0.1:2379"}, // require user provider
     TTL:    50,
     TimeOut: 1000,
     }
     
     sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
-    client, createResult, err := sdkClient.NewClient(ccp)
+    client, createResult, err := sdkClient.NewClient(ecp)
     if !createResult && err != nil {
     logger.Fatal("Create ShenYuEtcdClient error : %+V", err)
     }

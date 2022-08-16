@@ -5,14 +5,14 @@
 **1.首先确保你的Etcd环境是正确，然后设置这些Etcd必要的参数 .**
 ```go
     //开始创建ShenYuEtcdClient 
-    ccp := &etcd_client.EtcdClientParam{
+    ecp := &etcd_client.EtcdClientParam{
     EtcdServers: []string{"http://127.0.0.1:2379"}, //需要用户提供
     TTL:    50,
     TimeOut: 1000,
     }
 
     sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
-    client, createResult, err := sdkClient.NewClient(ccp)
+    client, createResult, err := sdkClient.NewClient(ecp)
     if !createResult && err != nil {
     logger.Fatal("Create ShenYuEtcdClient error : %+V", err)
     }

@@ -33,14 +33,14 @@ import (
  * TestInitEtcdClient
  **/
 func TestInitEtcdClient(t *testing.T) {
-	ccp := &etcd_client.EtcdClientParam{
+	ecp := &etcd_client.EtcdClientParam{
 		EtcdServers: []string{"http://127.0.0.1:2379"}, //require user provide
 		TTL:    50,
 		TimeOut: 100000,
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
-	client, createResult, err := sdkClient.NewClient(ccp)
+	client, createResult, err := sdkClient.NewClient(ecp)
 
 	assert.NotNil(t, client)
 	assert.True(t, createResult)
@@ -59,14 +59,14 @@ func TestInitEtcdClient(t *testing.T) {
  * TestRegisterServiceInstanceAndGetServiceInstanceInfo
  **/
 func TestRegisterServiceInstanceAndGetServiceInstanceInfo(t *testing.T) {
-	ccp := &etcd_client.EtcdClientParam{
+	ecp := &etcd_client.EtcdClientParam{
 		EtcdServers: []string{"http://127.0.0.1:2379"}, //require user provide
 		TTL:    50,
 		TimeOut: 100000,
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
-	client, createResult, err := sdkClient.NewClient(ccp)
+	client, createResult, err := sdkClient.NewClient(ecp)
 
 	assert.NotNil(t, client)
 	assert.True(t, createResult)
@@ -119,14 +119,14 @@ func TestRegisterServiceInstanceAndGetServiceInstanceInfo(t *testing.T) {
  * TestDeRegisterServiceInstance
  **/
 func TestDeRegisterServiceInstance(t *testing.T) {
-	ccp := &etcd_client.EtcdClientParam{
+	ecp := &etcd_client.EtcdClientParam{
 		EtcdServers: []string{"http://127.0.0.1:2379"}, //require user provide
 		TTL:    50,
 		TimeOut: 100000,
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
-	client, createResult, err := sdkClient.NewClient(ccp)
+	client, createResult, err := sdkClient.NewClient(ecp)
 
 	assert.NotNil(t, client)
 	assert.True(t, createResult)
@@ -167,14 +167,14 @@ func TestDeRegisterServiceInstance(t *testing.T) {
 ** TestGenAndGetLeaseId
  */
 func TestGenAndGetLeaseId(t *testing.T){
-	ccp := &etcd_client.EtcdClientParam{
+	ecp := &etcd_client.EtcdClientParam{
 		EtcdServers: []string{"http://127.0.0.1:2379"}, //require user provide
 		TTL:    50,
 		TimeOut: 100000,
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
-	client, createResult, err := sdkClient.NewClient(ccp)
+	client, createResult, err := sdkClient.NewClient(ecp)
 
 	assert.NotNil(t, client)
 	assert.True(t, createResult)
@@ -186,15 +186,17 @@ func TestGenAndGetLeaseId(t *testing.T){
 	leaseId := etcd.GenLeaseId()
 
 	etcd.GlobalLease = leaseId
-	etcd.EtcdClient.Put(context.TODO(),"key1","key111",clientv3.WithLease(etcd.GlobalLease))
-	etcd.EtcdClient.Put(context.TODO(),"key2","key13333",clientv3.WithLease(etcd.GlobalLease))
-	//rent
-	go func() {
-		etcd.KeepAlive()
-	}()
-	select {
-
-	}
+	_,err = etcd.EtcdClient.Put(context.TODO(),"key1","key111",clientv3.WithLease(etcd.GlobalLease))
+	assert.Nil(t, err)
+	_,err = etcd.EtcdClient.Put(context.TODO(),"key2","key13333",clientv3.WithLease(etcd.GlobalLease))
+	assert.Nil(t, err)
+	////rent
+	//go func() {
+	//	etcd.KeepAlive()
+	//}()
+	//select {
+	//
+	//}
 }
 
 
