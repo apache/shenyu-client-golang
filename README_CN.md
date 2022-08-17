@@ -17,6 +17,7 @@ Shenyu-client-golang是提供了Go语言访问ShenYu网关的功能，并支持�
 * **以Nacos方式注册**
 * **以Zookeeper方式注册**
 * **以Consul方式注册**
+* **以Etcd方式注册**
 
 ---
 
@@ -45,6 +46,6 @@ $ go get -u github.com/apache/shenyu-client-golang
 * Nacos 示例 [简体中文](doc/NACOS_CN.md) | [English](doc/NACOS_EN.md)
 * Zookeeper 示例 [简体中文](doc/ZK_CN.md) | [English](doc/ZK_EN.md)
 * Consul 示例  [简体中文](doc/CONSUL_CN.md) | [English](doc/CONSUL_EN.md)
-
+* Etcd 示例  [简体中文](doc/Etcd_CN.md) | [English](doc/Etcd_EN.md)
 ---
 
