@@ -43,12 +43,6 @@ func TestInitEtcdClient(t *testing.T) {
 	assert.True(t, createResult)
 	assert.Nil(t, err)
 	etcd := client.(*etcd_client.ShenYuEtcdClient)
-	////leaseId
-	//var leaseId = etcd.GetLeaseId()
-	//etcd.GlobalLease = leaseId
-	//go func() {
-	//	etcd.KeepAlive()
-	//}()
 	defer etcd.Close()
 }
 
@@ -156,43 +150,6 @@ func TestDeRegisterServiceInstance(t *testing.T) {
 	registerResult2, err := etcd.DeregisterServiceInstance(metaData2)
 	assert.Nil(t, err)
 	assert.True(t, registerResult2)
-}
-
-/**
-** TestGenAndGetLeaseId
- */
-func TestGenAndGetLeaseId(t *testing.T){
-	ecp := &etcd_client.EtcdClientParam{
-		EtcdServers: []string{"http://127.0.0.1:2379"}, //require user provide
-		TTL:    50,
-	}
-
-	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
-	client, createResult, err := sdkClient.NewClient(ecp)
-
-	assert.NotNil(t, client)
-	assert.True(t, createResult)
-	assert.Nil(t, err)
-
-	etcd := client.(*etcd_client.ShenYuEtcdClient)
-	defer etcd.Close()
-
-	leaseId,_ := etcd.GenLeaseId()
-
-	etcd.GlobalLease = leaseId
-	//ctx, cancel := context.WithTimeout(context.Background(),5* time.Second)
-	//defer cancel()
-	//_,err = etcd.EtcdClient.Put(ctx,"key1","key111",clientv3.WithLease(etcd.GlobalLease))
-	//assert.Nil(t, err)
-	//_,err = etcd.EtcdClient.Put(ctx,"key2","key13333",clientv3.WithLease(etcd.GlobalLease))
-	//assert.Nil(t, err)
-	////rent
-	//go func() {
-	//	etcd.KeepAlive()
-	//}()
-	//select {
-	//
-	//}
 }
 
 

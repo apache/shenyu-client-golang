@@ -1,8 +1,8 @@
 
 ---
-## The Zookeeper type Register
+## The Etcd type Register
 
-**1.Fist make sure your Zookeeper env is correct,the set this necessary param.**
+**1.Fist make sure your Etcd env is correct,the set this necessary param.**
 ```go
     //Create ShenYuEtcdClient  start
     ecp := &etcd_client.EtcdClientParam{

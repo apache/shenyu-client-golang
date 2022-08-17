@@ -32,7 +32,7 @@ import (
 type ShenYuEtcdClient struct {
 	Ecp *EtcdClientParam //EtcdClientParam
     EtcdClient *clientv3.Client //EtcdClient
-    GlobalLease clientv3.LeaseID //global lease
+   // GlobalLease clientv3.LeaseID //global lease
 }
 
 /**
@@ -146,39 +146,6 @@ func (sec *ShenYuEtcdClient) RegisterServiceInstance(metaData interface{}) (regi
 	}
 	logger.Info("RegisterServiceInstance,result:%+v", true)
 	return true, nil
-}
-
-/**
-* GenLeaseId //get etcd  grant leaseId
-**/
-func (sec *ShenYuEtcdClient) GenLeaseId() (clientv3.LeaseID,error) {
-	ctx, cancel := context.WithTimeout(context.Background(),timeOut* time.Second)
-	defer cancel()
-	//grant lease
-	lease, err := sec.EtcdClient.Grant(ctx, sec.Ecp.TTL)
-	if err != nil {
-		logger.Error("Grant lease failed: %v\n", err)
-		return 0,err
-	}
-	return lease.ID,nil
-}
-
-
-/**
-* KeepAlive
- */
-func (sec *ShenYuEtcdClient) KeepAlive()  {
-	ctx, cancel := context.WithTimeout(context.Background(),timeOut* time.Second)
-	defer cancel()
-	//keep alive
-	kaCh, err := sec.EtcdClient.KeepAlive(ctx, sec.GlobalLease)
-	if err != nil {
-		logger.Fatal("Keep alive with lease[%s] failed: %v\n",sec.GlobalLease, err)
-	}
-	for {
-		kaResp := <-kaCh
-		logger.Info("ttl: ", kaResp.TTL)
-	}
 }
 
 /**
