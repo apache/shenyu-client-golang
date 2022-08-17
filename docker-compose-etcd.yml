@@ -54,7 +54,7 @@ services:
     networks:
       - shenyu
     ports:
-      - 2379:2379
+      - 2380:2379
     volumes:
       - ./store/etcd2/data:/etcd_data
 
@@ -75,7 +75,7 @@ services:
     networks:
       - shenyu
     ports:
-      - 2379:2379
+      - 2381:2379
     volumes:
       - ./store/etcd3/data:/etcd_data
 

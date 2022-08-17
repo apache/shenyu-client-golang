@@ -20,6 +20,7 @@ Gateway.
 * **Nacos type Register**
 * **Zookeeper type Register**
 * **Consul type Register**
+* **Etcd type Register**
 
 ---
 
@@ -48,6 +49,7 @@ $ go get -u github.com/apache/shenyu-client-golang
 * Nacos Example [English](doc/NACOS_EN.md)  | [简体中文](doc/NACOS_CN.md)
 * Zookeeper Example [English](doc/ZK_EN.md)  | [简体中文](doc/ZK_CN.md)
 * Consul Example [English](doc/CONSUL_EN.md)  | [简体中文](doc/CONSUL_CN.md)
+* Etcd Example [English](doc/Etcd_EN.md)  | [简体中文](doc/Etcd_CN.md)
 
 ---
 
