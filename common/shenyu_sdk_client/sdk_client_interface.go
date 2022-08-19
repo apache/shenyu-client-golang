@@ -25,9 +25,9 @@ package shenyu_sdk_client
 type SdkClient interface {
 	NewClient(clientParam interface{}) (client interface{}, createResult bool, err error)
 
-	DeregisterServiceInstance(metaData interface{}) (deRegisterResult bool, err error)
+	PersistInterface(metaData interface{})(registerResult bool, err error)
 
-	GetServiceInstanceInfo(metaData interface{}) (instances interface{}, err error)
+    PersistURI(uriRegisterData interface{})(registerResult bool, err error)
 
-	RegisterServiceInstance(metaData interface{}) (registerResult bool, err error)
+	Close()
 }

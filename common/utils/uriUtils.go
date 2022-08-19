@@ -15,29 +15,42 @@
  * limitations under the License.
  */
 
-package model
+package utils
+
+import "strings"
+
+const PRE_FIX  = "/"
 
 /**
- * The ShenYu Admin token
- **/
-type AdminToken struct {
-	Code           int            `json:"code"`
-	Message        string         `json:"message"`
-	AdminTokenData AdminTokenData `json:"data"`
+* Repair data string.
+**/
+func RepairData(name string) string {
+  var result = strings.HasPrefix(name,PRE_FIX)
+  if result{
+  	return name
+  }
+  return PRE_FIX + name
 }
 
-type AdminTokenData struct {
-	ID          string `json:"id"`
-	UserName    string `json:"userName"`
-	Role        int    `json:"role"`
-	Enabled     bool   `json:"enabled"`
-	DateCreated string `json:"dateCreated"`
-	DateUpdated string `json:"dateUpdated"`
-	Token       string `json:"token"` //This param can invoke registory http service to shenyu gateway
+/**
+* Remove prefix string.
+**/
+func RemovePrefix(name string) string {
+	var result = strings.HasPrefix(name,PRE_FIX)
+	if result{
+		return name[1:]
+	}
+	return name
 }
 
-type ShenYuAdminClient struct {
-	ServerList string `json:"serverList"`//if use admin_client is required
-	UserName string `json:"userName"` //optional
-	Password string `json:"password"` //optional
+/*
+remove Suffix /
+ */
+func RemoveSuffix(name string) string{
+	var result = strings.HasSuffix(name,PRE_FIX)
+	if result{
+		return name[0:len([]rune(name)) - 1]
+	}
+	return name
 }
+

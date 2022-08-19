@@ -21,6 +21,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/apache/shenyu-client-golang/common/constants"
+	"github.com/apache/shenyu-client-golang/common/utils"
 	"github.com/apache/shenyu-client-golang/model"
 	"github.com/hashicorp/consul/api"
 	"github.com/wonderivan/logger"
@@ -39,9 +40,11 @@ type ShenYuConsulClient struct {
  * ConsulClientParam
  **/
 type ConsulClientParam struct {
-	Host  string //the customer consul server address
-	Token string //the customer consul server Token
-	Port  int    //the customer consul server Port
+	Id string // namespaceId
+	NameSpace string //namespace
+	ServerList []string //ip+port
+	Tags []string
+	EnableTagOverride bool
 }
 
 /**
@@ -50,99 +53,82 @@ type ConsulClientParam struct {
 func (scc *ShenYuConsulClient) NewClient(clientParam interface{}) (client interface{}, createResult bool, err error) {
 	ccp, ok := clientParam.(*ConsulClientParam)
 	if !ok {
-		logger.Fatal("init consul client error %+v:", err)
+		logger.Fatal("The clientParam  must not nil!")
 	}
-	if len(ccp.Host) > 0 && len(ccp.Token) > 0 && ccp.Port > 0 {
-		//use customer param to create client
-		config := api.DefaultConfig()
-		config.Address = ccp.Host + ":" + strconv.Itoa(ccp.Port)
-		config.Token = ccp.Token
-		client, err := api.NewClient(config)
-		if err == nil {
-			logger.Info("Create customer consul client success!")
-			return &ShenYuConsulClient{
-				Ccp: &ConsulClientParam{
-					Host:  ccp.Host,
-					Token: ccp.Token,
-					Port:  ccp.Port,
-				},
-				ConsulClient: client,
-			}, true, nil
-		}
-	} else {
-		//use default consul client
-		config := api.DefaultConfig()
-		client, err := api.NewClient(config)
-		if err == nil {
-			logger.Info("Create default consul client success!")
-			return &ShenYuConsulClient{
-				Ccp: &ConsulClientParam{
-					Host:  ccp.Host,
-					Token: ccp.Token,
-					Port:  ccp.Port,
-				},
-				ConsulClient: client,
-			}, true, nil
-		}
+	if len(ccp.ServerList) == 0{
+		logger.Fatal("The clientParam ServerList must not nil!")
 	}
-	return &ShenYuConsulClient{}, false, err
+	//use customer param to create client
+	config := api.DefaultConfig()
+	config.Address = ccp.ServerList[0]
+	config.Namespace = ccp.NameSpace
+	client, err = api.NewClient(config)
+	if err == nil {
+		logger.Info("Create customer consul client success!")
+		return &ShenYuConsulClient{
+			Ccp: &ConsulClientParam{
+				 Id: ccp.Id,
+				 NameSpace: ccp.NameSpace,
+				 ServerList: ccp.ServerList,
+				 Tags: ccp.Tags,
+				 EnableTagOverride: ccp.EnableTagOverride,
+			},
+			ConsulClient: client.(*api.Client),
+		}, true, nil
+	}
+	logger.Error("init consul client error %+v:", err)
+	return nil,false,err
 }
 
 /**
- * DeregisterServiceInstance
- **/
-func (scc *ShenYuConsulClient) DeregisterServiceInstance(metaData interface{}) (deRegisterResult bool, err error) {
-	mdr := scc.checkCommonParam(metaData, err)
-	err = scc.ConsulClient.Agent().ServiceDeregister(mdr.ShenYuMetaData.AppName)
-	if err != nil {
-		logger.Fatal("DeregisterServiceInstance failure! ,error is :%+v", err)
+PersistInterface
+ */
+func (scc *ShenYuConsulClient) PersistInterface(metaData interface{})(registerResult bool, err error){
+	var metadata,ok =  metaData.(*model.MetaDataRegister)
+	if !ok {
+		logger.Fatal("get consul client metaData error %+v:", err)
 	}
-	logger.Info("DeregisterServiceInstance,result:%+v", true)
-	return true, nil
+	var contextPath = utils.BuildRealNode(metadata.ContextPath, metadata.AppName)
+	var metadataNodeName = utils.BuildMetadataNodeName(*metadata)
+	var metaDataPath = utils.BuildMetaDataParentPath(metadata.RPCType, contextPath)
+	var realNode = utils.BuildRealNode(metaDataPath, metadataNodeName)
+	realNode = utils.RemovePrefix(realNode)//remove prefix /
+	var metadataStr,_ = json.Marshal(metaData)
+	var putPair = &api.KVPair{
+		Key: realNode,
+		Value: []byte(metadataStr),
+		Flags: 0,
+	}
+    _,err =scc.ConsulClient.KV().Put(putPair,nil)
+    if err != nil{
+		logger.Error("Consul client register failure! ,error is :%+v", err)
+		return false,err
+	}
+	logger.Info("%s Consul client register success: %s",metadata.RPCType,metadataStr)
+	return true,nil
 }
 
 /**
- * GetServiceInstanceInfo
- **/
-func (scc *ShenYuConsulClient) GetServiceInstanceInfo(metaData interface{}) (instances interface{}, err error) {
-	mdr := scc.checkCommonParam(metaData, err)
-	catalogService, _, err := scc.ConsulClient.Catalog().Service(mdr.ShenYuMetaData.AppName, "", nil)
-	if len(catalogService) > 0 && err == nil {
-		result := make([]*model.ConsulMetaDataRegister, len(catalogService))
-		for index, consulInstance := range catalogService {
-			instance := &model.ConsulMetaDataRegister{
-				ServiceId: consulInstance.ServiceID,
-				ShenYuMetaData: &model.MetaDataRegister{
-					AppName: consulInstance.ServiceName,
-					Host:    consulInstance.Address,
-					Port:    strconv.Itoa(consulInstance.ServicePort),
-					//metaData:  consulInstance.ServiceMeta,  todo  shenYu java MetaDataRegisterDTO boolean -> map
-				},
-			}
-			result[index] = instance
-			logger.Info("GetServiceInstanceInfo,instance:%+v", instance)
-		}
-		return result, nil
+PersistURI
+ */
+func (scc *ShenYuConsulClient) PersistURI(uriRegisterData interface{})(registerResult bool, err error){
+	uriRegister,ok := uriRegisterData.(*model.URIRegister)
+	if !ok {
+		logger.Fatal("get consul client uriregister error %+v:", err)
 	}
-	return nil, err
-}
-
-/**
- * RegisterServiceInstance
- **/
-func (scc *ShenYuConsulClient) RegisterServiceInstance(metaData interface{}) (registerResult bool, err error) {
-	mdr := scc.checkCommonParam(metaData, err)
-	port, _ := strconv.Atoi(mdr.ShenYuMetaData.Port)
-	metaDataStringJson, _ := json.Marshal(metaData)
+	port, _ := strconv.Atoi(uriRegister.Port)
+	uriRegString, _ := json.Marshal(uriRegister)
 
 	//Integrate with MetaDataRegister
 	registration := &api.AgentServiceRegistration{
-		ID:        mdr.ShenYuMetaData.AppName,
-		Name:      mdr.ShenYuMetaData.AppName,
+		ID:        scc.Ccp.Id,
+		Namespace: scc.Ccp.NameSpace,
+		Name:      uriRegister.AppName,
+		Tags:      scc.Ccp.Tags,
 		Port:      port,
-		Address:   mdr.ShenYuMetaData.Host,
-		Namespace: mdr.ShenYuMetaData.ContextPath,
-		Meta:      map[string]string{"uriMetadata": string(metaDataStringJson)},
+		Address:   uriRegister.Host,
+		EnableTagOverride: scc.Ccp.EnableTagOverride,
+		Meta:      map[string]string{constants.UriType: string(uriRegString)},
 	}
 
 	//server checker
@@ -150,7 +136,7 @@ func (scc *ShenYuConsulClient) RegisterServiceInstance(metaData interface{}) (re
 		Timeout:                        constants.DEFAULT_CONSUL_CHECK_TIMEOUT,
 		Interval:                       constants.DEFAULT_CONSUL_CHECK_INTERVAL,
 		DeregisterCriticalServiceAfter: constants.DEFAULT_CONSUL_CHECK_DEREGISTER,
-		HTTP:                           fmt.Sprintf("%s://%s:%d/actuator/health", mdr.ShenYuMetaData.RPCType, registration.Address, registration.Port),
+		HTTP:                           fmt.Sprintf("%s://%s:%d/actuator/health", uriRegister.RPCType, registration.Address, registration.Port),
 	}
 	registration.Check = check
 
@@ -164,12 +150,12 @@ func (scc *ShenYuConsulClient) RegisterServiceInstance(metaData interface{}) (re
 }
 
 /**
- * check common MetaDataRegister
- **/
-func (scc *ShenYuConsulClient) checkCommonParam(metaData interface{}, err error) *model.ConsulMetaDataRegister {
-	mdr, ok := metaData.(*model.ConsulMetaDataRegister)
-	if !ok {
-		logger.Fatal("get consul client metaData error %+v:", err)
-	}
-	return mdr
+Close
+ */
+func (scc *ShenYuConsulClient) Close(){
+  var err=	scc.ConsulClient.Agent().ServiceDeregister(scc.Ccp.Id)
+  if err != nil{
+  	logger.Error("close consul fail:%=v",err)
+  }
 }
+

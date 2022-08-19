@@ -34,6 +34,8 @@ const (
 	DEFAULT_CONSUL_CHECK_TIMEOUT    = "1s"
 	DEFAULT_CONSUL_CHECK_INTERVAL   = "3s"
 	DEFAULT_CONSUL_CHECK_DEREGISTER = "15s"
+	DEFAULT_ETCD_CLIENT_TIMEOUT     = 5
+	DEFAULT_NACOS_GROUP_NAME        = "DEFAULT_GROUP"
 
 	//System default key
 	ADMIN_USERNAME                  = "userName"
@@ -51,10 +53,20 @@ const (
 	REGISTER_METADATA               = "/register-metadata"
 	DEFAULT_SHENYU_TOKEN            = "/platform/login"
 	DEFAULT_CLIENT_ERRORCODE        = "SDK.ShenYuError"
+	UriType                         = "uri"
+	CONTEXT_PATH                    = "contextPath"
+	URI_META_DATA                   = "uriMetadata"
 
 	//System default error
 	MISS_PARAM_ERROR_CODE        = "400"
 	MISS_PARAM_ERROR_MSG         = "MetaDataRegister struct miss require param"
 	MISS_SHENYU_ADMIN_ERROR_CODE = "503"
 	MISS_SHENYU_ADMIN_ERROR_MSG  = "Please check ShenYu admin service status"
+
+	//Constant
+	SelectorJoinRule = "-"
+    PathSeparator = "/"
+    DotSeparator = "."
+    COLONS = ":"
+    DoubleSlash = "\\"
 )

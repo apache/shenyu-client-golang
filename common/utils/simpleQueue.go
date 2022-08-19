@@ -15,29 +15,51 @@
  * limitations under the License.
  */
 
-package model
+package utils
+
+import "sync"
 
 /**
- * The ShenYu Admin token
- **/
-type AdminToken struct {
-	Code           int            `json:"code"`
-	Message        string         `json:"message"`
-	AdminTokenData AdminTokenData `json:"data"`
+simple queue struct
+ */
+type SimpleQueue struct {
+	Qs []string
+	Size int
+	Lock sync.Mutex
 }
 
-type AdminTokenData struct {
-	ID          string `json:"id"`
-	UserName    string `json:"userName"`
-	Role        int    `json:"role"`
-	Enabled     bool   `json:"enabled"`
-	DateCreated string `json:"dateCreated"`
-	DateUpdated string `json:"dateUpdated"`
-	Token       string `json:"token"` //This param can invoke registory http service to shenyu gateway
+/*
+* add data
+ */
+func (self *SimpleQueue) QueueAdd(data string) {
+	self.Lock.Lock()
+	defer self.Lock.Unlock()
+	self.Qs = append(self.Qs, data)
+	self.Size += 1
 }
 
-type ShenYuAdminClient struct {
-	ServerList string `json:"serverList"`//if use admin_client is required
-	UserName string `json:"userName"` //optional
-	Password string `json:"password"` //optional
+/*
+pop data
+ */
+func (self *SimpleQueue) QueuePop() string {
+	self.Lock.Lock()
+	defer self.Lock.Unlock()
+	if self.Size == 0 {
+		return ""
+	}
+	v := self.Qs[0]
+	self.Qs = self.Qs[1:]
+	self.Size -= 1
+	return v
 }
+
+/*
+* get all queue data
+ */
+func (self *SimpleQueue) GetAllQueueData() []string{
+	self.Lock.Lock()
+	defer self.Lock.Unlock()
+	v := self.Qs
+	return v
+}
+

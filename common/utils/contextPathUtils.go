@@ -15,29 +15,24 @@
  * limitations under the License.
  */
 
-package model
+package utils
 
 /**
- * The ShenYu Admin token
- **/
-type AdminToken struct {
-	Code           int            `json:"code"`
-	Message        string         `json:"message"`
-	AdminTokenData AdminTokenData `json:"data"`
+* Build context path string.
+**/
+func  BuildContextPathRemovePrefix(contextPath string,appName string) string {
+	if contextPath == ""{
+	  return RepairData(appName)
+	}
+	return RepairData(contextPath)
 }
 
-type AdminTokenData struct {
-	ID          string `json:"id"`
-	UserName    string `json:"userName"`
-	Role        int    `json:"role"`
-	Enabled     bool   `json:"enabled"`
-	DateCreated string `json:"dateCreated"`
-	DateUpdated string `json:"dateUpdated"`
-	Token       string `json:"token"` //This param can invoke registory http service to shenyu gateway
-}
-
-type ShenYuAdminClient struct {
-	ServerList string `json:"serverList"`//if use admin_client is required
-	UserName string `json:"userName"` //optional
-	Password string `json:"password"` //optional
+/**
+* Build real node string.
+**/
+func BuildRealNodeRemovePrefix(contextPath string,appName string) string {
+	if contextPath == ""{
+		return RemovePrefix(appName)
+	}
+	return RemovePrefix(contextPath)
 }
