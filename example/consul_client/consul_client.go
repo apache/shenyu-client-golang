@@ -45,7 +45,7 @@ func main() {
 	client, createResult, err := sdkClient.NewClient(ccp)
 
 	if !createResult && err != nil {
-		logger.Fatal("Create ShenYuConsulClient error : %+v", err)
+		logger.Fatal("Create ShenYuConsulClient error : %v", err)
 	}
 
 	scc := client.(*consul_client.ShenYuConsulClient)
@@ -95,17 +95,17 @@ func main() {
 	//register multiple metaData
 	registerResult1, err := scc.RegisterServiceInstance(metaData1)
 	if !registerResult1 && err != nil {
-		logger.Fatal("Register consul Instance error : %+v", err)
+		logger.Fatal("Register consul Instance error : %v", err)
 	}
 
 	registerResult2, err := scc.RegisterServiceInstance(metaData2)
 	if !registerResult2 && err != nil {
-		logger.Fatal("Register consul Instance error : %+v", err)
+		logger.Fatal("Register consul Instance error : %v", err)
 	}
 
 	registerResult3, err := scc.RegisterServiceInstance(metaData3)
 	if !registerResult3 && err != nil {
-		logger.Fatal("Register consul Instance error : %+v", err)
+		logger.Fatal("Register consul Instance error : %v", err)
 	}
 	//RegisterServiceInstance end
 
@@ -115,7 +115,7 @@ func main() {
 	instanceDetail, err := scc.GetServiceInstanceInfo(metaData1)
 	nodes1, ok := instanceDetail.([]*model.ConsulMetaDataRegister)
 	if !ok {
-		logger.Fatal("get consul client metaData error %+v:", err)
+		logger.Fatal("get consul client metaData error %v:", err)
 	}
 
 	//range nodes
@@ -129,7 +129,7 @@ func main() {
 	instanceDetail2, err := scc.GetServiceInstanceInfo(metaData2)
 	nodes2, ok := instanceDetail2.([]*model.ConsulMetaDataRegister)
 	if !ok {
-		logger.Fatal("get consul client metaData error %+v:", err)
+		logger.Fatal("get consul client metaData error %v:", err)
 	}
 
 	//range nodes2
@@ -144,7 +144,7 @@ func main() {
 	instanceDetail3, err := scc.GetServiceInstanceInfo(metaData3)
 	nodes3, ok := instanceDetail3.([]*model.ConsulMetaDataRegister)
 	if !ok {
-		logger.Fatal("get consul client metaData error %+v:", err)
+		logger.Fatal("get consul client metaData error %v:", err)
 	}
 
 	for index, node := range nodes3 {

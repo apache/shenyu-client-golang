@@ -43,7 +43,7 @@ func main() {
 	client, createResult, err := sdkClient.NewClient(zcp)
 
 	if !createResult && err != nil {
-		logger.Fatal("Create ShenYuZkClient error : %+v", err)
+		logger.Fatal("Create ShenYuZkClient error : %v", err)
 	}
 
 	zc := client.(*zk_client.ShenYuZkClient)
@@ -79,17 +79,17 @@ func main() {
 	//register multiple metaData
 	registerResult1, err := zc.RegisterServiceInstance(metaData1)
 	if !registerResult1 && err != nil {
-		logger.Fatal("Register zk Instance error : %+v", err)
+		logger.Fatal("Register zk Instance error : %v", err)
 	}
 
 	registerResult2, err := zc.RegisterServiceInstance(metaData2)
 	if !registerResult2 && err != nil {
-		logger.Fatal("Register zk Instance error : %+v", err)
+		logger.Fatal("Register zk Instance error : %v", err)
 	}
 
 	registerResult3, err := zc.RegisterServiceInstance(metaData3)
 	if !registerResult3 && err != nil {
-		logger.Fatal("Register zk Instance error : %+v", err)
+		logger.Fatal("Register zk Instance error : %v", err)
 	}
 	//RegisterServiceInstance end
 
@@ -99,7 +99,7 @@ func main() {
 	instanceDetail, err := zc.GetServiceInstanceInfo(metaData1)
 	nodes1, ok := instanceDetail.([]*model.MetaDataRegister)
 	if !ok {
-		logger.Fatal("get zk client metaData error %+v:", err)
+		logger.Fatal("get zk client metaData error %v:", err)
 	}
 
 	//range nodes
@@ -113,7 +113,7 @@ func main() {
 	instanceDetail2, err := zc.GetServiceInstanceInfo(metaData2)
 	nodes2, ok := instanceDetail2.([]*model.MetaDataRegister)
 	if !ok {
-		logger.Fatal("get zk client metaData error %+v:", err)
+		logger.Fatal("get zk client metaData error %v:", err)
 	}
 
 	//range nodes1
@@ -127,7 +127,7 @@ func main() {
 	instanceDetail3, err := zc.GetServiceInstanceInfo(metaData3)
 	nodes3, ok := instanceDetail3.([]*model.MetaDataRegister)
 	if !ok {
-		logger.Fatal("get zk client metaData error %+v:", err)
+		logger.Fatal("get zk client metaData error %v:", err)
 	}
 
 	for index, node := range nodes3 {

@@ -78,7 +78,7 @@ func (sec *ShenYuEtcdClient) NewClient(clientParam interface{}) (client interfac
 				EtcdClient: client,
 			}, true, nil
 		}
-		logger.Fatalf("init etcd client error %+v:", err)
+		logger.Fatalf("init etcd client error %v:", err)
 	}
 	return
 }
@@ -89,7 +89,7 @@ DeregisterServiceInstance
 func (sec *ShenYuEtcdClient) DeregisterServiceInstance(metaData interface{}) (deRegisterResult bool, err error) {
 	mdr, ok := metaData.(*model.MetaDataRegister)
 	if !ok {
-		logger.Fatalf("get etcd client metaData error %+v:", err)
+		logger.Fatalf("get etcd client metaData error %v:", err)
 	}
 	key := mdr.AppName
 	ctx, cancel := context.WithTimeout(context.Background(), constants.DEFAULT_ETCD_TIMEOUT*time.Second)
@@ -138,10 +138,10 @@ func (sec *ShenYuEtcdClient) RegisterServiceInstance(metaData interface{}) (regi
 	defer cancel()
 	_, err = sec.EtcdClient.Put(ctx, key, string(data))
 	if err != nil {
-		logger.Error("RegisterServiceInstance failure! ,error is :%+v", err)
+		logger.Error("RegisterServiceInstance failure! ,error is :%v", err)
 		return false, err
 	}
-	logger.Infof("RegisterServiceInstance,result:%+v", true)
+	logger.Infof("RegisterServiceInstance,result:%v", true)
 	return true, nil
 }
 
@@ -151,7 +151,7 @@ func (sec *ShenYuEtcdClient) RegisterServiceInstance(metaData interface{}) (regi
 func (sec *ShenYuEtcdClient) checkCommonParam(metaData interface{}, err error) *model.MetaDataRegister {
 	mdr, ok := metaData.(*model.MetaDataRegister)
 	if !ok {
-		logger.Fatalf("get etcd client metaData error %+v:", err)
+		logger.Fatalf("get etcd client metaData error %v:", err)
 	}
 	return mdr
 }

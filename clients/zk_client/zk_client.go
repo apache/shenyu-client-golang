@@ -80,7 +80,7 @@ func (zc *ShenYuZkClient) NewClient(clientParam interface{}) (client interface{}
 func (zc *ShenYuZkClient) DeregisterServiceInstance(metaData interface{}) (deRegisterResult bool, err error) {
 	mdr, ok := metaData.(*model.MetaDataRegister)
 	if !ok {
-		logger.Fatalf("get zk client metaData error %+v:", err)
+		logger.Fatalf("get zk client metaData error %v:", err)
 	}
 	if err := zc.ensureName(mdr.AppName); err != nil {
 		return false, err
@@ -109,7 +109,7 @@ func (zc *ShenYuZkClient) GetServiceInstanceInfo(metaData interface{}) (instance
 	var nodes []*model.MetaDataRegister
 	data, _, err := zc.ZkClient.Get(path)
 	if err != nil {
-		logger.Fatalf("zk Get node failure, err  %+v:", err)
+		logger.Fatalf("zk Get node failure, err  %v:", err)
 	}
 	node := new(model.MetaDataRegister)
 	err = json.Unmarshal(data, node)
@@ -160,7 +160,7 @@ func (zc *ShenYuZkClient) RegisterServiceInstance(metaData interface{}) (registe
 	mdr := zc.checkCommonParam(metaData, err)
 	err = zc.ensureRoot()
 	if err != nil {
-		logger.Fatalf("ensureRoot failure, err  %+v:", err)
+		logger.Fatalf("ensureRoot failure, err  %v:", err)
 	}
 	path := zc.Zcp.ZkRoot + "/" + mdr.AppName
 	data, err := json.Marshal(metaData)
@@ -180,7 +180,7 @@ func (zc *ShenYuZkClient) RegisterServiceInstance(metaData interface{}) (registe
 func (zc *ShenYuZkClient) checkCommonParam(metaData interface{}, err error) *model.MetaDataRegister {
 	mdr, ok := metaData.(*model.MetaDataRegister)
 	if !ok {
-		logger.Fatalf("get zk client metaData error %+v:", err)
+		logger.Fatalf("get zk client metaData error %v:", err)
 	}
 	return mdr
 }
@@ -214,9 +214,9 @@ func (zc *ShenYuZkClient) ensureRoot() error {
  **/
 func (zc *ShenYuZkClient) ensureName(name string) error {
 	path := zc.Zcp.ZkRoot + "/" + name
-	logger.Infof("ensureName check, path is  %+v: ->", path)
+	logger.Infof("ensureName check, path is  %v: ->", path)
 	exists, _, err := zc.ZkClient.Exists(path) //avoid create error
-	logger.Infof("ensureName check result is  %+v: ->", exists)
+	logger.Infof("ensureName check result is  %v: ->", exists)
 	if err != nil {
 		return err
 	}

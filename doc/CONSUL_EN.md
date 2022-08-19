@@ -16,7 +16,7 @@
     client, createResult, err := sdkClient.NewClient(ccp)
     
     if !createResult && err != nil {
-    logger.Fatal("Create ShenYuConsulClient error : %+V", err)
+    logger.Fatal("Create ShenYuConsulClient error : %v", err)
     }
     
     scc := client.(*consul_client.ShenYuConsulClient)
@@ -68,17 +68,17 @@
    //register multiple metaData
     registerResult1, err := scc.RegisterServiceInstance(metaData1)
     if !registerResult1 && err != nil {
-    logger.Fatal("Register consul Instance error : %+V", err)
+    logger.Fatal("Register consul Instance error : %v", err)
     }
     
     registerResult2, err := scc.RegisterServiceInstance(metaData2)
     if !registerResult2 && err != nil {
-    logger.Fatal("Register consul Instance error : %+V", err)
+    logger.Fatal("Register consul Instance error : %v", err)
     }
     
     registerResult3, err := scc.RegisterServiceInstance(metaData3)
     if !registerResult3 && err != nil {
-    logger.Fatal("Register consul Instance error : %+V", err)
+    logger.Fatal("Register consul Instance error : %v", err)
     }
 //RegisterServiceInstance end
     //do your logic
@@ -116,7 +116,7 @@
     instanceDetail, err := scc.GetServiceInstanceInfo(metaData1)
     nodes1, ok := instanceDetail.([]*model.MetaDataRegister)
         if !ok {
-        logger.Fatal("get consul client metaData error %+v:", err)
+        logger.Fatal("get consul client metaData error %v:", err)
     }
     
     //range nodes
@@ -130,7 +130,7 @@
     instanceDetail2, err := scc.GetServiceInstanceInfo(metaData2)
     nodes2, ok := instanceDetail2.([]*model.MetaDataRegister)
         if !ok {
-        logger.Fatal("get consul client metaData error %+v:", err)
+        logger.Fatal("get consul client metaData error %v:", err)
     }
     
     //range nodes2
@@ -145,7 +145,7 @@
     instanceDetail3, err := scc.GetServiceInstanceInfo(metaData3)
     nodes3, ok := instanceDetail3.([]*model.MetaDataRegister)
     if !ok {
-        logger.Fatal("get consul client metaData error %+v:", err)
+        logger.Fatal("get consul client metaData error %v:", err)
         }
     
     for index, node := range nodes3 {

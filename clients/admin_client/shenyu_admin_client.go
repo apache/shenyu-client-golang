@@ -52,7 +52,7 @@ func GetShenYuAdminUser(shenYuCommonRequest *model.ShenYuCommonRequest) (adminTo
 	if err != nil {
 		return
 	}
-	logger.Infof("Get ShenYu Admin response, body is %+v:->", adminToken)
+	logger.Infof("Get ShenYu Admin response, body is %v:->", adminToken)
 	if response.StatusCode == http.StatusOK && adminToken.Code == http.StatusOK {
 		return model.AdminToken{
 			Code:    adminToken.Code,

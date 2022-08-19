@@ -41,7 +41,7 @@ func NewShenYuError(errorCode string, errMsg string, originError error) *ShenYuE
 }
 
 func (err *ShenYuError) Error() (str string) {
-	shenYuErrMsg := fmt.Sprintf("The errCode is ->:%+v, The errMsg is  ->:%+v \n\n", err.ErrorCode(), err.errMsg)
+	shenYuErrMsg := fmt.Sprintf("The errCode is ->:%v, The errMsg is  ->:%v \n\n", err.ErrorCode(), err.errMsg)
 	if err.originError != nil {
 		return shenYuErrMsg + "caused by:\n" + err.originError.Error()
 	}

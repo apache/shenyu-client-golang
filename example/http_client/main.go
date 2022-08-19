@@ -41,7 +41,7 @@ func main() {
 
 	adminToken, err := clients.NewShenYuAdminClient(adminClient)
 	if err == nil {
-		logger.Infof("this is ShenYu Admin client token %+v ->", adminToken.AdminTokenData.Token)
+		logger.Infof("this is ShenYu Admin client token %v ->", adminToken.AdminTokenData.Token)
 	}
 
 	//init MetaDataRegister
@@ -57,7 +57,7 @@ func main() {
 	if err != nil {
 		logger.Warn("MetaDataRegister has error:", err)
 	}
-	logger.Infof("finish register metadata ,the result is %+v ->", result)
+	logger.Infof("finish register metadata ,the result is %v ->", result)
 
 	//init urlRegister
 	urlRegister := &model.URIRegister{
@@ -70,9 +70,9 @@ func main() {
 	}
 	result, err = clients.UrlRegister(adminToken.AdminTokenData, urlRegister)
 	if err != nil {
-		logger.Warnf("UrlRegister has error %+v:", err)
+		logger.Warnf("UrlRegister has error %v:", err)
 	}
-	logger.Infof("finish UrlRegister ,the result is %+v ->", result)
+	logger.Infof("finish UrlRegister ,the result is %v ->", result)
 
 	//do you logic
 }

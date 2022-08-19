@@ -54,7 +54,7 @@ type ConsulClientParam struct {
 func (scc *ShenYuConsulClient) NewClient(clientParam interface{}) (client interface{}, createResult bool, err error) {
 	ccp, ok := clientParam.(*ConsulClientParam)
 	if !ok {
-		logger.Fatalf("init consul client error %+v:", err)
+		logger.Fatalf("init consul client error %v:", err)
 	}
 	if len(ccp.Host) > 0 && len(ccp.Token) > 0 && ccp.Port > 0 {
 		//use customer param to create client
@@ -99,9 +99,9 @@ func (scc *ShenYuConsulClient) DeregisterServiceInstance(metaData interface{}) (
 	mdr := scc.checkCommonParam(metaData, err)
 	err = scc.ConsulClient.Agent().ServiceDeregister(mdr.ShenYuMetaData.AppName)
 	if err != nil {
-		logger.Fatalf("DeregisterServiceInstance failure! ,error is :%+v", err)
+		logger.Fatalf("DeregisterServiceInstance failure! ,error is :%v", err)
 	}
-	logger.Infof("DeregisterServiceInstance,result:%+v", true)
+	logger.Infof("DeregisterServiceInstance,result:%v", true)
 	return true, nil
 }
 
@@ -124,7 +124,7 @@ func (scc *ShenYuConsulClient) GetServiceInstanceInfo(metaData interface{}) (ins
 				},
 			}
 			result[index] = instance
-			logger.Infof("GetServiceInstanceInfo,instance:%+v", instance)
+			logger.Infof("GetServiceInstanceInfo,instance:%v", instance)
 		}
 		return result, nil
 	}
@@ -161,9 +161,9 @@ func (scc *ShenYuConsulClient) RegisterServiceInstance(metaData interface{}) (re
 	//register
 	err = scc.ConsulClient.Agent().ServiceRegister(registration)
 	if err != nil {
-		logger.Fatalf("RegisterServiceInstance failure! ,error is :%+v", err)
+		logger.Fatalf("RegisterServiceInstance failure! ,error is :%v", err)
 	}
-	logger.Infof("RegisterServiceInstance,result:%+v", true)
+	logger.Infof("RegisterServiceInstance,result:%v", true)
 	return true, nil
 }
 
@@ -173,7 +173,7 @@ func (scc *ShenYuConsulClient) RegisterServiceInstance(metaData interface{}) (re
 func (scc *ShenYuConsulClient) checkCommonParam(metaData interface{}, err error) *model.ConsulMetaDataRegister {
 	mdr, ok := metaData.(*model.ConsulMetaDataRegister)
 	if !ok {
-		logger.Fatalf("get consul client metaData error %+v:", err)
+		logger.Fatalf("get consul client metaData error %v:", err)
 	}
 	return mdr
 }

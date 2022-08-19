@@ -49,7 +49,7 @@ func main() {
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.NACOS_CLIENT)
 	result, createResult, err := sdkClient.NewClient(ncp)
 	if !createResult && err != nil {
-		logger.Fatalf("Create ShenYuNacosClient error : %+v", err)
+		logger.Fatalf("Create ShenYuNacosClient error : %v", err)
 	}
 
 	nc := &nacos_client.ShenYuNacosClient{
@@ -85,7 +85,7 @@ func main() {
 
 	registerResult, err := nc.RegisterServiceInstance(nacosRegisterInstance)
 	if !registerResult && err != nil {
-		logger.Fatalf("Register nacos Instance error : %+v", err)
+		logger.Fatalf("Register nacos Instance error : %v", err)
 	}
 	//RegisterServiceInstance end
 
@@ -101,9 +101,9 @@ func main() {
 
 	instanceInfo, err := nc.GetServiceInstanceInfo(queryData)
 	if instanceInfo == nil {
-		logger.Fatalf("Register nacos Instance error : %+v", err)
+		logger.Fatalf("Register nacos Instance error : %v", err)
 	}
-	logger.Infof("GetServiceInstanceInfo result : %+v", instanceInfo)
+	logger.Infof("GetServiceInstanceInfo result : %v", instanceInfo)
 	//GetServiceInstanceInfo end
 
 	time.Sleep(time.Second)
@@ -120,7 +120,7 @@ func main() {
 
 	serviceInstance, err := nc.DeregisterServiceInstance(deregisterInstanceParam)
 	if !serviceInstance && err != nil {
-		logger.Infof("DeregisterServiceInstance result : %+v", serviceInstance)
+		logger.Infof("DeregisterServiceInstance result : %v", serviceInstance)
 	}
 	//DeregisterServiceInstance end
 
