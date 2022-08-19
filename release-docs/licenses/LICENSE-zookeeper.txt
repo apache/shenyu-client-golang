@@ -1,3 +1,6 @@
+zookeeper License
+---------------
+
 Copyright (c) 2013, Samuel Stauffer <samuel@descolada.com>
 All rights reserved.
 
