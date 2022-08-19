@@ -19,8 +19,12 @@ package http_client
 
 import (
 	"github.com/pkg/errors"
-	"github.com/wonderivan/logger"
+	"github.com/sirupsen/logrus"
 	"net/http"
+)
+
+var (
+	logger = logrus.New()
 )
 
 type HttpClient struct {

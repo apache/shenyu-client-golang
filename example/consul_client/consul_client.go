@@ -24,8 +24,12 @@ import (
 	"github.com/apache/shenyu-client-golang/common/shenyu_sdk_client"
 	"github.com/apache/shenyu-client-golang/model"
 	"github.com/hashicorp/go-uuid"
-	"github.com/wonderivan/logger"
+	"github.com/sirupsen/logrus"
 	"time"
+)
+
+var (
+	logger = logrus.New()
 )
 
 func main() {
@@ -41,7 +45,7 @@ func main() {
 	client, createResult, err := sdkClient.NewClient(ccp)
 
 	if !createResult && err != nil {
-		logger.Fatal("Create ShenYuConsulClient error : %+V", err)
+		logger.Fatal("Create ShenYuConsulClient error : %+v", err)
 	}
 
 	scc := client.(*consul_client.ShenYuConsulClient)
@@ -91,17 +95,17 @@ func main() {
 	//register multiple metaData
 	registerResult1, err := scc.RegisterServiceInstance(metaData1)
 	if !registerResult1 && err != nil {
-		logger.Fatal("Register consul Instance error : %+V", err)
+		logger.Fatal("Register consul Instance error : %+v", err)
 	}
 
 	registerResult2, err := scc.RegisterServiceInstance(metaData2)
 	if !registerResult2 && err != nil {
-		logger.Fatal("Register consul Instance error : %+V", err)
+		logger.Fatal("Register consul Instance error : %+v", err)
 	}
 
 	registerResult3, err := scc.RegisterServiceInstance(metaData3)
 	if !registerResult3 && err != nil {
-		logger.Fatal("Register consul Instance error : %+V", err)
+		logger.Fatal("Register consul Instance error : %+v", err)
 	}
 	//RegisterServiceInstance end
 

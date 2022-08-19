@@ -23,8 +23,12 @@ import (
 	"github.com/apache/shenyu-client-golang/common/constants"
 	"github.com/apache/shenyu-client-golang/model"
 	"github.com/hashicorp/consul/api"
-	"github.com/wonderivan/logger"
+	"github.com/sirupsen/logrus"
 	"strconv"
+)
+
+var (
+	logger = logrus.New()
 )
 
 /**
@@ -50,7 +54,7 @@ type ConsulClientParam struct {
 func (scc *ShenYuConsulClient) NewClient(clientParam interface{}) (client interface{}, createResult bool, err error) {
 	ccp, ok := clientParam.(*ConsulClientParam)
 	if !ok {
-		logger.Fatal("init consul client error %+v:", err)
+		logger.Fatalf("init consul client error %+v:", err)
 	}
 	if len(ccp.Host) > 0 && len(ccp.Token) > 0 && ccp.Port > 0 {
 		//use customer param to create client
@@ -59,7 +63,7 @@ func (scc *ShenYuConsulClient) NewClient(clientParam interface{}) (client interf
 		config.Token = ccp.Token
 		client, err := api.NewClient(config)
 		if err == nil {
-			logger.Info("Create customer consul client success!")
+			logger.Infof("Create customer consul client success!")
 			return &ShenYuConsulClient{
 				Ccp: &ConsulClientParam{
 					Host:  ccp.Host,
@@ -74,7 +78,7 @@ func (scc *ShenYuConsulClient) NewClient(clientParam interface{}) (client interf
 		config := api.DefaultConfig()
 		client, err := api.NewClient(config)
 		if err == nil {
-			logger.Info("Create default consul client success!")
+			logger.Infof("Create default consul client success!")
 			return &ShenYuConsulClient{
 				Ccp: &ConsulClientParam{
 					Host:  ccp.Host,
@@ -95,9 +99,9 @@ func (scc *ShenYuConsulClient) DeregisterServiceInstance(metaData interface{}) (
 	mdr := scc.checkCommonParam(metaData, err)
 	err = scc.ConsulClient.Agent().ServiceDeregister(mdr.ShenYuMetaData.AppName)
 	if err != nil {
-		logger.Fatal("DeregisterServiceInstance failure! ,error is :%+v", err)
+		logger.Fatalf("DeregisterServiceInstance failure! ,error is :%+v", err)
 	}
-	logger.Info("DeregisterServiceInstance,result:%+v", true)
+	logger.Infof("DeregisterServiceInstance,result:%+v", true)
 	return true, nil
 }
 
@@ -120,7 +124,7 @@ func (scc *ShenYuConsulClient) GetServiceInstanceInfo(metaData interface{}) (ins
 				},
 			}
 			result[index] = instance
-			logger.Info("GetServiceInstanceInfo,instance:%+v", instance)
+			logger.Infof("GetServiceInstanceInfo,instance:%+v", instance)
 		}
 		return result, nil
 	}
@@ -157,9 +161,9 @@ func (scc *ShenYuConsulClient) RegisterServiceInstance(metaData interface{}) (re
 	//register
 	err = scc.ConsulClient.Agent().ServiceRegister(registration)
 	if err != nil {
-		logger.Fatal("RegisterServiceInstance failure! ,error is :%+v", err)
+		logger.Fatalf("RegisterServiceInstance failure! ,error is :%+v", err)
 	}
-	logger.Info("RegisterServiceInstance,result:%+v", true)
+	logger.Infof("RegisterServiceInstance,result:%+v", true)
 	return true, nil
 }
 
@@ -169,7 +173,7 @@ func (scc *ShenYuConsulClient) RegisterServiceInstance(metaData interface{}) (re
 func (scc *ShenYuConsulClient) checkCommonParam(metaData interface{}, err error) *model.ConsulMetaDataRegister {
 	mdr, ok := metaData.(*model.ConsulMetaDataRegister)
 	if !ok {
-		logger.Fatal("get consul client metaData error %+v:", err)
+		logger.Fatalf("get consul client metaData error %+v:", err)
 	}
 	return mdr
 }

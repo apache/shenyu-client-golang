@@ -23,8 +23,12 @@ import (
 	"github.com/apache/shenyu-client-golang/common/constants"
 	"github.com/apache/shenyu-client-golang/common/shenyu_sdk_client"
 	"github.com/apache/shenyu-client-golang/model"
-	"github.com/wonderivan/logger"
+	"github.com/sirupsen/logrus"
 	"time"
+)
+
+var (
+	logger = logrus.New()
 )
 
 func main() {
@@ -39,7 +43,7 @@ func main() {
 	client, createResult, err := sdkClient.NewClient(zcp)
 
 	if !createResult && err != nil {
-		logger.Fatal("Create ShenYuZkClient error : %+V", err)
+		logger.Fatal("Create ShenYuZkClient error : %+v", err)
 	}
 
 	zc := client.(*zk_client.ShenYuZkClient)
@@ -75,17 +79,17 @@ func main() {
 	//register multiple metaData
 	registerResult1, err := zc.RegisterServiceInstance(metaData1)
 	if !registerResult1 && err != nil {
-		logger.Fatal("Register zk Instance error : %+V", err)
+		logger.Fatal("Register zk Instance error : %+v", err)
 	}
 
 	registerResult2, err := zc.RegisterServiceInstance(metaData2)
 	if !registerResult2 && err != nil {
-		logger.Fatal("Register zk Instance error : %+V", err)
+		logger.Fatal("Register zk Instance error : %+v", err)
 	}
 
 	registerResult3, err := zc.RegisterServiceInstance(metaData3)
 	if !registerResult3 && err != nil {
-		logger.Fatal("Register zk Instance error : %+V", err)
+		logger.Fatal("Register zk Instance error : %+v", err)
 	}
 	//RegisterServiceInstance end
 

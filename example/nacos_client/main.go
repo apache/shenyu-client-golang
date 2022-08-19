@@ -25,8 +25,12 @@ import (
 	"github.com/apache/shenyu-client-golang/model"
 	"github.com/nacos-group/nacos-sdk-go/clients/naming_client"
 	"github.com/nacos-group/nacos-sdk-go/vo"
-	"github.com/wonderivan/logger"
+	"github.com/sirupsen/logrus"
 	"time"
+)
+
+var (
+	logger = logrus.New()
 )
 
 /**
@@ -45,7 +49,7 @@ func main() {
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.NACOS_CLIENT)
 	result, createResult, err := sdkClient.NewClient(ncp)
 	if !createResult && err != nil {
-		logger.Fatal("Create ShenYuNacosClient error : %+V", err)
+		logger.Fatalf("Create ShenYuNacosClient error : %+v", err)
 	}
 
 	nc := &nacos_client.ShenYuNacosClient{
@@ -81,7 +85,7 @@ func main() {
 
 	registerResult, err := nc.RegisterServiceInstance(nacosRegisterInstance)
 	if !registerResult && err != nil {
-		logger.Fatal("Register nacos Instance error : %+V", err)
+		logger.Fatalf("Register nacos Instance error : %+v", err)
 	}
 	//RegisterServiceInstance end
 
@@ -97,9 +101,9 @@ func main() {
 
 	instanceInfo, err := nc.GetServiceInstanceInfo(queryData)
 	if instanceInfo == nil {
-		logger.Fatal("Register nacos Instance error : %+V", err)
+		logger.Fatalf("Register nacos Instance error : %+v", err)
 	}
-	logger.Info(instanceInfo)
+	logger.Infof("GetServiceInstanceInfo result : %+v", instanceInfo)
 	//GetServiceInstanceInfo end
 
 	time.Sleep(time.Second)
@@ -116,7 +120,7 @@ func main() {
 
 	serviceInstance, err := nc.DeregisterServiceInstance(deregisterInstanceParam)
 	if !serviceInstance && err != nil {
-		logger.Info("DeregisterServiceInstance result : %+V", serviceInstance)
+		logger.Infof("DeregisterServiceInstance result : %+v", serviceInstance)
 	}
 	//DeregisterServiceInstance end
 

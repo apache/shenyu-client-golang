@@ -19,7 +19,6 @@ package http_client
 
 import (
 	"github.com/apache/shenyu-client-golang/common/constants"
-	"github.com/wonderivan/logger"
 	"io/ioutil"
 	"net/http"
 	"testing"
@@ -68,7 +67,7 @@ func TestHttpClientRequest(t *testing.T) {
 	}
 	/*var adminToken = model.AdminToken{}
 	err = json.Unmarshal(bytes, &adminToken)*/
-	logger.Info("Get body is ->", string(bytes))
+	logger.Infof("Get body is %+v->", string(bytes))
 	if response.StatusCode == 200 {
 		return
 	} else {
