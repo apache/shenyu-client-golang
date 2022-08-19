@@ -30,6 +30,7 @@ func main() {
 	//Create ShenYuZkClient  start
 	zcp := &zk_client.ZkClientParam{
 		ServerList: []string{"127.0.0.1:2181"}, //require user provide
+		Password: "",
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ZOOKEEPER_CLIENT)
@@ -41,6 +42,9 @@ func main() {
 
 	zc := client.(*zk_client.ShenYuZkClient)
 	defer zc.Close()
+	go func() {
+		zc.HandCallback()
+	}()
 	//Create ShenYuZkClient end
 
 	//RegisterServiceInstance start
@@ -73,8 +77,11 @@ func main() {
 	if err != nil {
 		logger.Warn("UrlRegister has error:", err)
 	}
+	zc.PersistURI(urlRegister)
 	logger.Info("finish UrlRegister ,the result is->", result)
+	select {
 
+	}
 	//DeregisterServiceInstance end
 
 	//do your logic

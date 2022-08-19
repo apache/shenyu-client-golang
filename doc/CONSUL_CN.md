@@ -6,10 +6,11 @@
 ```go
     //Create ShenYuConsulClient  start
     ccp := &consul_client.ConsulClientParam{
-        Host:  "127.0.0.1",  //用户选择性提供
-        Port:  8500,         //用户选择性提供
-        Token: "",
-        }
+        ServerList:  []string{"127.0.0.1:8500"},
+        Id: "testName",
+        NameSpace: "testName",
+        Tags: []string{"test1"},
+    }
     
     sdkClient := shenyu_sdk_client.GetFactoryClient(constants.CONSUL_CLIENT)
     client, createResult, err := sdkClient.NewClient(ccp)
@@ -24,157 +25,52 @@
 
 **2. 准备你要注册服务的元数据信息**
 ```go
-//metaData is necessary param, this will be register to shenyu gateway to use
-    uuid1, _ := uuid.GenerateUUID()
-    uuid2, _ := uuid.GenerateUUID()
-    uuid3, _ := uuid.GenerateUUID()
+//元数据注册
+     metaData := &model.MetaDataRegister{
+		AppName: "testMetaDataRegister", //需要用户提供
+		Path:    "/your/path",           //需要用户提供
+		Enabled: true,                   //需要用户提供
+		Host:    "127.0.0.1",            //需要用户提供
+		Port:    "8080",                 //需要用户提供
+	}
+    result, err := acc.PersistInterface(metaData)
+    if err != nil {
+    logger.Warn("MetaDataRegister has error:", err)
+    }
+    logger.Info("finish register metadata ,the result is->", result)
 
-    //RegisterServiceInstance start
-    //init MetaDataRegister
-    metaData1 := &model.MetaDataRegister{
-        ServiceId: uuid1,
-        AppName:   "testMetaDataRegister1", //需要用户提供
-        Path:      "/your/path1",           //需要用户提供
-        Enabled:   true,                    //需要用户提供
-        Host:      "127.0.0.1",             //需要用户提供
-        Port:      "8080",                  //需要用户提供
-        RPCType:   "http",                  //需要用户提供
-    }
-    
-    metaData2 := &model.MetaDataRegister{
-        ServiceId: uuid2,
-        AppName:   "testMetaDataRegister2", //需要用户提供
-        Path:      "/your/path2",           //需要用户提供
-        Enabled:   true,                    //需要用户提供
-        Host:      "127.0.0.1",             //需要用户提供
-        Port:      "8181",                  //需要用户提供
-        RPCType:   "http",                  //需要用户提供
-    }
-    
-    metaData3 := &model.MetaDataRegister{
-        ServiceId: uuid3,
-        AppName:   "testMetaDataRegister3", //需要用户提供
-        Path:      "/your/path3",           //需要用户提供
-        Enabled:   true,                    //需要用户提供
-        Host:      "127.0.0.1",             //需要用户提供
-        Port:      "8282",                  //需要用户提供
-        RPCType:   "http",                  //需要用户提供
-    }
+
+当你注册成功,你将看到这些:
+finish register metadata ,the result is-> true
 ```
 
-**3.使用客户端进行节点信息注册**
+**3.以URL的方式注册到ShenYu网关. **
 ```go
-   //register multiple metaData
-    registerResult1, err := scc.RegisterServiceInstance(metaData1)
-    if !registerResult1 && err != nil {
-    logger.Fatal("Register consul Instance error : %+V", err)
+    //URI注册
+    //初始化 URI注册
+    urlRegister := &model.URIRegister{
+    Protocol:    "testMetaDataRegister", //需要用户提供
+    AppName:     "testURLRegister",      //需要用户提供
+    ContextPath: "contextPath",          //需要用户提供
+    RPCType:     constants.RPCTYPE_HTTP, //需要用户提供
+    Host:        "127.0.0.1",            //需要用户提供
+    Port:        "8080",                 //需要用户提供
     }
-    
-    registerResult2, err := scc.RegisterServiceInstance(metaData2)
-    if !registerResult2 && err != nil {
-    logger.Fatal("Register consul Instance error : %+V", err)
-    }
-    
-    registerResult3, err := scc.RegisterServiceInstance(metaData3)
-    if !registerResult3 && err != nil {
-    logger.Fatal("Register consul Instance error : %+V", err)
-    }
-//RegisterServiceInstance end
-    //do your logic
-```
-
-**4.使用客户端进行注册节点信息删除**
-```go
-    //your can chose to invoke,not require
-    //DeregisterServiceInstance start
-    logger.Info("> DeregisterServiceInstance start")
-    deRegisterResult1, err := scc.DeregisterServiceInstance(metaData1)
+    result, err = acc.PersistInterface(urlRegister)
     if err != nil {
-    panic(err)
+    logger.Warn("UrlRegister has error:", err)
     }
-    
-    deRegisterResult2, err := scc.DeregisterServiceInstance(metaData2)
-    if err != nil {
-    panic(err)
-    }
-    
-    deRegisterResult3, err := scc.DeregisterServiceInstance(metaData3)
-    if err != nil {
-    panic(err)
-    }
-    
-    if deRegisterResult1 && deRegisterResult2 && deRegisterResult3 {
-    logger.Info("DeregisterServiceInstance success !")
-    }
-    //DeregisterServiceInstance end
-```
-
-**5.使用客户端获取注册节点的信息**
-```go
-    //GetServiceInstanceInfo start
-    instanceDetail, err := scc.GetServiceInstanceInfo(metaData1)
-    nodes1, ok := instanceDetail.([]*model.MetaDataRegister)
-        if !ok {
-        logger.Fatal("get consul client metaData error %+v:", err)
-    }
-    
-    //range nodes
-    for index, node := range nodes1 {
-    nodeJson, err := json.Marshal(node)
-    if err == nil {
-        logger.Info("GetNodesInfo ,success Index", index, string(nodeJson))
-        }
-    }
-    
-    instanceDetail2, err := scc.GetServiceInstanceInfo(metaData2)
-    nodes2, ok := instanceDetail2.([]*model.MetaDataRegister)
-        if !ok {
-        logger.Fatal("get consul client metaData error %+v:", err)
-    }
-    
-    //range nodes2
-    for index, node := range nodes2 {
-    nodeJson, err := json.Marshal(node)
-    if err == nil {
-        logger.Info("GetNodesInfo ,success Index", index, string(nodeJson))
-        }
-    }
-
-    //range nodes3
-    instanceDetail3, err := scc.GetServiceInstanceInfo(metaData3)
-    nodes3, ok := instanceDetail3.([]*model.MetaDataRegister)
-    if !ok {
-        logger.Fatal("get consul client metaData error %+v:", err)
-        }
-    
-    for index, node := range nodes3 {
-    nodeJson, err := json.Marshal(node)
-    if err == nil {
-        logger.Info("GetNodesInfo ,success Index", index, string(nodeJson))
-        }
-    }
-//GetServiceInstanceInfo end
+    logger.Info("finish UrlRegister ,the result is->", result)
+        
 
 ```
 
 ## 完整的成功日志
 ```go
 
-2022-07-26 18:05:43 [INFO] [github.com/apache/shenyu-client-golang/clients/consul_client/consul_client.go:77] Create default consul client success!
-2022-07-26 18:05:43 [INFO] [github.com/apache/shenyu-client-golang/clients/consul_client/consul_client.go:160] RegisterServiceInstance,result:true
-2022-07-26 18:05:43 [INFO] [github.com/apache/shenyu-client-golang/clients/consul_client/consul_client.go:160] RegisterServiceInstance,result:true
-2022-07-26 18:05:43 [INFO] [github.com/apache/shenyu-client-golang/clients/consul_client/consul_client.go:160] RegisterServiceInstance,result:true
-2022-07-26 18:05:44 [INFO] [github.com/apache/shenyu-client-golang/clients/consul_client/consul_client.go:121] GetServiceInstanceInfo,instance:&{AppName:testMetaDataRegister1 Path: ContextPath: RuleName: RPCType: Enabled:false Host:172.22.0.5 Port:8080 PluginNames:[] RegisterMetaData:false TimeMillis:0 ServiceId:testMetaDataRegister1}
-2022-07-26 18:05:44 [INFO] [github.com/apache/shenyu-client-golang/example/consul_client/consul_client.go:115] GetNodesInfo ,success Index 0 {"appName":"testMetaDataRegister1","path":"","contextPath":"","ruleName":"","rpcType":"","enabled":false,"host":"172.22.0.5","port":"8080","pluginNames":null,"registerMetaData":false,"timeMillis":0,"serviceId":"testMetaDataRegister1"}
-2022-07-26 18:05:44 [INFO] [github.com/apache/shenyu-client-golang/clients/consul_client/consul_client.go:121] GetServiceInstanceInfo,instance:&{AppName:testMetaDataRegister2 Path: ContextPath: RuleName: RPCType: Enabled:false Host:172.22.0.5 Port:8181 PluginNames:[] RegisterMetaData:false TimeMillis:0 ServiceId:testMetaDataRegister2}
-2022-07-26 18:05:44 [INFO] [github.com/apache/shenyu-client-golang/example/consul_client/consul_client.go:129] GetNodesInfo ,success Index 0 {"appName":"testMetaDataRegister2","path":"","contextPath":"","ruleName":"","rpcType":"","enabled":false,"host":"172.22.0.5","port":"8181","pluginNames":null,"registerMetaData":false,"timeMillis":0,"serviceId":"testMetaDataRegister2"}
-2022-07-26 18:05:44 [INFO] [github.com/apache/shenyu-client-golang/clients/consul_client/consul_client.go:121] GetServiceInstanceInfo,instance:&{AppName:testMetaDataRegister3 Path: ContextPath: RuleName: RPCType: Enabled:false Host:172.22.0.5 Port:8282 PluginNames:[] RegisterMetaData:false TimeMillis:0 ServiceId:testMetaDataRegister3}
-2022-07-26 18:05:44 [INFO] [github.com/apache/shenyu-client-golang/example/consul_client/consul_client.go:143] GetNodesInfo ,success Index 0 {"appName":"testMetaDataRegister3","path":"","contextPath":"","ruleName":"","rpcType":"","enabled":false,"host":"172.22.0.5","port":"8282","pluginNames":null,"registerMetaData":false,"timeMillis":0,"serviceId":"testMetaDataRegister3"}
-2022-07-26 18:05:44 [INFO] [github.com/apache/shenyu-client-golang/example/consul_client/consul_client.go:150] > DeregisterServiceInstance start
-2022-07-26 18:05:44 [INFO] [github.com/apache/shenyu-client-golang/clients/consul_client/consul_client.go:100] DeregisterServiceInstance,result:true
-2022-07-26 18:05:44 [INFO] [github.com/apache/shenyu-client-golang/clients/consul_client/consul_client.go:100] DeregisterServiceInstance,result:true
-2022-07-26 18:05:44 [INFO] [github.com/apache/shenyu-client-golang/clients/consul_client/consul_client.go:100] DeregisterServiceInstance,result:true
-2022-07-26 18:05:44 [INFO] [github.com/apache/shenyu-client-golang/example/consul_client/consul_client.go:167] DeregisterServiceInstance success !
+2022-08-19 21:55:15 [INFO] [github.com/shenyu-client-golang/clients/consul_client/consul_client.go:103] http consul client register success: {"appName":"testGoAppName2","path":"/golang/your/path","pathDesc":"","contextPath":"/golang","ruleName":"","rpcType":"http","serviceName":"","methodName":"","parameterTypes":"","rpcExt":"","enabled":true,"host":"127.0.0.1","port":"8080","pluginNames":null,"registerMetaData":false,"timeMillis":0}
+2022-08-19 21:55:15 [INFO] [github.com/shenyu-client-golang/example/consul_client/main.go:62] finish register metadata ,the result is-> true
+2022-08-19 21:55:25 [INFO] [github.com/shenyu-client-golang/example/consul_client/main.go:78] finish UrlRegister ,the result is-> true
 
 ```
 

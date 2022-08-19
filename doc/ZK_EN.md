@@ -6,8 +6,8 @@
 ```go
     //Create ShenYuZkClient  start
     zcp := &zk_client.ZkClientParam{
-    ZkServers: []string{"127.0.0.1:2181"}, //require user provide
-    ZkRoot:    "/api",                     //require user provide
+      ServerList: []string{"127.0.0.1:2181"}, //require user provide
+      Password: "",
     }
 
     sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ZOOKEEPER_CLIENT)
@@ -22,92 +22,50 @@
     //Create ShenYuZkClient end
 ```
 
-**2. Prepare your service metaData to register**
-```go
-//metaData is necessary param, this will be register to shenyu gateway to use
-    metaData1 := &model.MetaDataRegister{
-        AppName: "testMetaDataRegister1", //require user provide
-        Path:    "your/path1",            //require user provide
-        Enabled: true,                    //require user provide
-        Host:    "127.0.0.1",             //require user provide
-        Port:    "8080",                  //require user provide
-    }
 
-    metaData2 := &model.MetaDataRegister{
-        AppName: "testMetaDataRegister2", //require user provide
-        Path:    "your/path2",            //require user provide
-        Enabled: true,                    //require user provide
-        Host:    "127.0.0.1",             //require user provide
-        Port:    "8181",                  //require user provide
+**2.Step 1 Register MetaData to ShenYu GateWay. (Need step 1 token to invoke)**
+```go
+//MetaDataRegister(Need Step 1 toekn adminToken.AdminTokenData)
+metaData := &model.MetaDataRegister{
+		AppName: "testMetaDataRegister", //require user provide
+		Path:    "/your/path",           //require user provide
+		Enabled: true,                   //require user provide
+		Host:    "127.0.0.1",            //require user provide
+		Port:    "8080",                 //require user provide
+	}
+    result, err := zc.PersistInterface(metaData)
+    if err != nil {
+    logger.Warn("MetaDataRegister has error:", err)
     }
+    logger.Info("finish register metadata ,the result is->", result)
+	
+When Register success , you will see this :  
+finish register metadata ,the result is-> true
 ```
 
-**3.use client to invoke RegisterServiceInstance**
+**3.Step 2  Url  Register  to ShenYu GateWay.**
 ```go
-   //register multiple metaData
-    registerResult1, err := zc.RegisterServiceInstance(metaData1)
-        if !registerResult1 && err != nil {
-        logger.Fatal("Register zk Instance error : %+V", err)
+    //URIRegister
+    //init urlRegister
+    urlRegister := &model.URIRegister{
+    Protocol:    "testMetaDataRegister", //require user provide
+    AppName:     "testURLRegister",      //require user provide
+    ContextPath: "contextPath",          //require user provide
+    RPCType:     constants.RPCTYPE_HTTP, //require user provide
+    Host:        "127.0.0.1",            //require user provide
+    Port:        "8080",                 //require user provide
     }
-
-    registerResult2, err := zc.RegisterServiceInstance(metaData2)
-        if !registerResult2 && err != nil {
-        logger.Fatal("Register zk Instance error : %+V", err)
+    result, err = zc.PersistInterface(urlRegister)
+    if err != nil {
+    logger.Warn("UrlRegister has error:", err)
     }
-    //do your logic
-```
-
-**4.use client to invoke DeregisterServiceInstance**
-```go
-    //your can chose to invoke,not require
-    deRegisterResult1, err := zc.DeregisterServiceInstance(metaData1)
-        if err != nil {
-        panic(err)
-        }
-
-    deRegisterResult2, err := zc.DeregisterServiceInstance(metaData2)
-        if err != nil {
-        panic(err)
-        }
-```
-
-**5.use client to GetServiceInstanceInfo**
-```go
-    //GetServiceInstanceInfo start
-    instanceDetail, err := zc.GetServiceInstanceInfo(metaData1)
-        nodes1, ok := instanceDetail.([]*model.MetaDataRegister)
-        if !ok {
-        logger.Fatal("get zk client metaData error %+v:", err)
-     }
-    
-    //range nodes
-    for index, node := range nodes1 {
-        nodeJson, err := json.Marshal(node)
-        if err == nil {
-        logger.Info("GetNodesInfo ,success Index", index, string(nodeJson))
-        }
-    }
-    
-    instanceDetail2, err := zc.GetServiceInstanceInfo(metaData2)
-        nodes2, ok := instanceDetail2.([]*model.MetaDataRegister)
-        if !ok {
-            logger.Fatal("get zk client metaData error %+v:", err)
-    }
-    //GetServiceInstanceInfo end
+    logger.Info("finish UrlRegister ,the result is->", result)
 
 ```
 
 ## Entire Success log
 ```go
-2022-07-13 16:09:31 [INFO] [github.com/shenyu-client-golang/example/zk_client/main.go:105] GetNodesInfo ,success Index 0 {"appName":"testMetaDataRegister1","path":"your/path1","contextPath":"","ruleName":"","rpcType":"","enabled":true,"host":"127.0.0.1","port":"8080","pluginNames":null,"registerMetaData":false,"timeMillis":0}
-2022-07-13 16:09:31 [INFO] [github.com/shenyu-client-golang/example/zk_client/main.go:119] GetNodesInfo ,success Index 0 {"appName":"testMetaDataRegister2","path":"your/path2","contextPath":"","ruleName":"","rpcType":"","enabled":true,"host":"127.0.0.1","port":"8181","pluginNames":null,"registerMetaData":false,"timeMillis":0}
-2022-07-13 16:09:31 [INFO] [github.com/shenyu-client-golang/example/zk_client/main.go:132] GetNodesInfo ,success Index 0 {"appName":"testMetaDataRegister3","path":"your/path3","contextPath":"","ruleName":"","rpcType":"","enabled":true,"host":"127.0.0.1","port":"8282","pluginNames":null,"registerMetaData":false,"timeMillis":0}
-2022-07-13 16:09:31 [INFO] [github.com/shenyu-client-golang/example/zk_client/main.go:139] > DeregisterServiceInstance start
-2022-07-13 16:09:31 [INFO] [github.com/shenyu-client-golang/clients/zk_client/zk_client.go:213] ensureName check, path is -> /api/testMetaDataRegister1
-2022-07-13 16:09:31 [INFO] [github.com/shenyu-client-golang/clients/zk_client/zk_client.go:215] ensureName check result is -> true
-2022-07-13 16:09:31 [INFO] [github.com/shenyu-client-golang/clients/zk_client/zk_client.go:213] ensureName check, path is -> /api/testMetaDataRegister2
-2022-07-13 16:09:31 [INFO] [github.com/shenyu-client-golang/clients/zk_client/zk_client.go:215] ensureName check result is -> true
-2022-07-13 16:09:31 [INFO] [github.com/shenyu-client-golang/clients/zk_client/zk_client.go:213] ensureName check, path is -> /api/testMetaDataRegister3
-2022-07-13 16:09:31 [INFO] [github.com/shenyu-client-golang/clients/zk_client/zk_client.go:215] ensureName check result is -> true
-2022-07-13 16:09:31 [INFO] [github.com/shenyu-client-golang/example/zk_client/main.go:156] DeregisterServiceInstance success !
+2022-08-19 21:55:15 [INFO] [github.com/shenyu-client-golang/clients/zk_client/zk_client.go:103] http zookeeper client register success: {"appName":"testGoAppName2","path":"/golang/your/path","pathDesc":"","contextPath":"/golang","ruleName":"","rpcType":"http","serviceName":"","methodName":"","parameterTypes":"","rpcExt":"","enabled":true,"host":"127.0.0.1","port":"8080","pluginNames":null,"registerMetaData":false,"timeMillis":0}
+2022-08-19 21:55:15 [INFO] [github.com/shenyu-client-golang/example/zk_client/main.go:62] finish register metadata ,the result is-> true
+2022-08-19 21:55:25 [INFO] [github.com/shenyu-client-golang/example/zk_client/main.go:78] finish UrlRegister ,the result is-> true
 ```

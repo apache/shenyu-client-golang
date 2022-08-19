@@ -58,7 +58,7 @@ func TestRegisterServiceInstance(t *testing.T) {
 		Password: "nacos",
 	}
 
-	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ZOOKEEPER_CLIENT)
+	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.NACOS_CLIENT)
 	client, createResult, err := sdkClient.NewClient(ncp)
 
 	nc := client.(*nacos_client.ShenYuNacosClient)

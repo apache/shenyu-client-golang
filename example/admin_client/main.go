@@ -34,14 +34,14 @@ func main() {
 		"http://127.0.0.1:9095",
 	}
 	//Create ShenYuAdminClient  start
-	ccp := &admin_client.ShenYuAdminClientParams{
+	acp := &admin_client.ShenYuAdminClientParams{
 		ServerList: serverList,
 		UserName:  "admin",
 		Password: "123456",
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.RPCTYPE_HTTP)
-	client, createResult, err := sdkClient.NewClient(ccp)
+	client, createResult, err := sdkClient.NewClient(acp)
 
 	if !createResult && err != nil {
 		logger.Fatal("Create ShenYuAdminClient error : %+V", err)

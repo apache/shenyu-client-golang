@@ -37,7 +37,9 @@ func TestInitEtcdClient(t *testing.T) {
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
 	client, createResult, err := sdkClient.NewClient(ecp)
-
+	if err != nil{
+		return
+	}
 	assert.NotNil(t, client)
 	assert.True(t, createResult)
 	assert.Nil(t, err)
@@ -56,7 +58,9 @@ func TestRegisterServiceInstance(t *testing.T) {
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
 	client, createResult, err := sdkClient.NewClient(ecp)
-
+    if err != nil{
+		return
+	}
 	assert.NotNil(t, client)
 	assert.True(t, createResult)
 	assert.Nil(t, err)

@@ -47,6 +47,10 @@ type ZkClientParam struct {
     Password  string //zk pwd
 }
 
+var(
+	masterWatch = make(chan zk.Event,1)
+)
+
 /**
  * init NewClient
  **/
@@ -60,6 +64,7 @@ func (zc *ShenYuZkClient) NewClient(clientParam interface{}) (client interface{}
 	conn, _, err := zk.Connect(zcp.ServerList, time.Duration(constants.DEFAULT_ZOOKEEPER_CLIENT_TIME)*time.Second,eventCallbackOption)
 	if err != nil {
 		zc.Close()
+		logger.Error("zk connect fail %+v",err)
 		return &ShenYuZkClient{}, false, err
 	}
 
@@ -119,7 +124,7 @@ func (zc *ShenYuZkClient) PersistURI(uriRegisterData interface{})(registerResult
 	//set dic
 	zc.NodeDataMap.Store(realNode,nodeData)
 	//createMode FlagEphemeral=1 if session DisConnect will delete
-	err = zc.CreateNodeOrUpdate(realNode,nodeData,zk.WorldACL(zk.PermAll),1)
+	err = zc.CreateNodeOrUpdate(realNode,nodeData,zk.WorldACL(zk.PermAll),zk.FlagEphemeral)
 	if err != nil{
 		return false, err
 	}
@@ -134,14 +139,36 @@ func (zc *ShenYuZkClient) Close(){
 }
 
 /*
- event callback
+ global zk event callback
  */
 func callback(event zk.Event) {
+	masterWatch <- event
+	//fmt.Println("###########################")
+	//fmt.Println("path: ", event.Path)
+	//fmt.Println("type: ", event.Type.String())
+	//fmt.Println("state: ", event.State.String())
+	//fmt.Println("---------------------------")
+}
+
+func (zc *ShenYuZkClient) HandCallback(){
+	event := <- masterWatch
 	fmt.Println("###########################")
-	fmt.Println("path: ", event.Path)
-	fmt.Println("type: ", event.Type.String())
+	//fmt.Println("path: ", event.Path)
+	//fmt.Println("type: ", event.Type.String())
 	fmt.Println("state: ", event.State.String())
-	fmt.Println("---------------------------")
+	if event.State == zk.StateConnected || event.State == zk.StateConnectedReadOnly{
+		if zc.NodeDataMap != nil {
+			zc.NodeDataMap.Range(func(k ,v interface{}) bool{
+				key, _ := k.(string)
+				val, _ := v.([]byte)
+				var exists,_,_ =zc.ZkClient.Exists(key)
+				if exists {
+					zc.CreateNodeWithParent(key, val, zk.WorldACL(zk.PermAll), zk.FlagEphemeral)
+				}
+				return true
+			})
+		}
+	}
 }
 
 /*

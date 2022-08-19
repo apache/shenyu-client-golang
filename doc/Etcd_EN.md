@@ -6,10 +6,10 @@
 ```go
     //Create ShenYuEtcdClient  start
     ecp := &etcd_client.EtcdClientParam{
-    EtcdServers: []string{"http://127.0.0.1:2379"}, // require user provider
+    ServerList: []string{"http://127.0.0.1:2379"}, // require user provider
     UserName : "" // optional param etcd userName
     Password : "" // optional param etcd pwd
-    TTL:    50, // optional param key live
+    TTL:    50, // require user provider param key live
     }
     
     sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
@@ -23,88 +23,51 @@
     //Create ShenYuEtcdClient end
 ```
 
-**2. Prepare your service metaData to register**
-```go
-//metaData is necessary param, this will be register to shenyu gateway to use
-    metaData1 := &model.MetaDataRegister{
-        AppName: "testMetaDataRegister1", //require user provide
-        Path:    "your/path1",            //require user provide
-        Enabled: true,                    //require user provide
-        Host:    "127.0.0.1",             //require user provide
-        Port:    "8080",                  //require user provide
-    }
 
-    metaData2 := &model.MetaDataRegister{
-        AppName: "testMetaDataRegister2", //require user provide
-        Path:    "your/path2",            //require user provide
-        Enabled: true,                    //require user provide
-        Host:    "127.0.0.1",             //require user provide
-        Port:    "8181",                  //require user provide
+**2.Step 1 Register MetaData to ShenYu GateWay. **
+```go
+//MetaDataRegister
+metaData := &model.MetaDataRegister{
+		AppName: "testMetaDataRegister", //require user provide
+		Path:    "/your/path",           //require user provide
+		Enabled: true,                   //require user provide
+		Host:    "127.0.0.1",            //require user provide
+		Port:    "8080",                 //require user provide
+	}
+    result, err := etcd.PersistInterface(metaData)
+    if err != nil {
+    logger.Warn("MetaDataRegister has error:", err)
     }
+    logger.Info("finish register metadata ,the result is->", result)
+	
+When Register success , you will see this :  
+finish register metadata ,the result is-> true
 ```
 
-**3.use client to invoke RegisterServiceInstance**
+**3.Step 2  Url  Register  to ShenYu GateWay. (Need step 1 token to invoke)**
 ```go
-   //register multiple metaData
-    registerResult1, err := etcd.RegisterServiceInstance(metaData1)
-        if !registerResult1 && err != nil {
-        logger.Fatal("Register etcd Instance error : %+V", err)
+//URIRegister(Need Step 1 toekn adminToken.AdminTokenData)
+    //init urlRegister
+    urlRegister := &model.URIRegister{
+    Protocol:    "testMetaDataRegister", //require user provide
+    AppName:     "testURLRegister",      //require user provide
+    ContextPath: "contextPath",          //require user provide
+    RPCType:     constants.RPCTYPE_HTTP, //require user provide
+    Host:        "127.0.0.1",            //require user provide
+    Port:        "8080",                 //require user provide
     }
-
-    registerResult2, err := etcd.RegisterServiceInstance(metaData2)
-        if !registerResult2 && err != nil {
-        logger.Fatal("Register etcd Instance error : %+V", err)
+    result, err = etcd.PersistInterface(urlRegister)
+    if err != nil {
+    logger.Warn("UrlRegister has error:", err)
     }
-    //do your logic
-```
+    logger.Info("finish UrlRegister ,the result is->", result)
 
-**4.use client to invoke DeregisterServiceInstance**
-```go
-    //your can chose to invoke,not require
-    deRegisterResult1, err := etcd.DeregisterServiceInstance(metaData1)
-        if err != nil {
-        panic(err)
-        }
-
-    deRegisterResult2, err := etcd.DeregisterServiceInstance(metaData2)
-        if err != nil {
-        panic(err)
-        }
-```
-
-**5.use client to GetServiceInstanceInfo**
-```go
-    //GetServiceInstanceInfo start
-    instanceDetail, err := etcd.GetServiceInstanceInfo(metaData1)
-        nodes1, ok := instanceDetail.([]*model.MetaDataRegister)
-        if !ok {
-        logger.Fatal("get etcd client metaData error %+v:", err)
-     }
-    
-    //range nodes
-    for index, node := range nodes1 {
-        nodeJson, err := json.Marshal(node)
-        if err == nil {
-        logger.Info("GetNodesInfo ,success Index", index, string(nodeJson))
-        }
-    }
-    
-    instanceDetail2, err := etcd.GetServiceInstanceInfo(metaData2)
-        nodes2, ok := instanceDetail2.([]*model.MetaDataRegister)
-        if !ok {
-            logger.Fatal("get etcd client metaData error %+v:", err)
-    }
-    //GetServiceInstanceInfo end
 
 ```
 
 ## Entire Success log
 ```go
-2022-08-16 10:18:55 [INFO] [github.com/shenyu-client-golang/clients/etcd_client/etcd_client.go:66] Create customer etcd client success!
-2022-08-16 10:18:55 [INFO] [github.com/shenyu-client-golang/clients/etcd_client/etcd_client.go:142] RegisterServiceInstance,result:true
-2022-08-16 10:18:55 [INFO] [github.com/shenyu-client-golang/clients/etcd_client/etcd_client.go:142] RegisterServiceInstance,result:true
-2022-08-16 10:18:56 [INFO] [github.com/shenyu-client-golang/example/etcd_client/etcd_client.go:71] GetNodesInfo ,success Index 0 {"appName":"testMetaDataRegister1","path":"your/path1","contextPath":"","ruleName":"","rpcType":"","enabled":true,"host":"127.0.0.1","port":"8080","pluginNames":null,"registerMetaData":false,"timeMillis":0}
-2022-08-16 10:18:56 [INFO] [github.com/shenyu-client-golang/example/etcd_client/etcd_client.go:85] GetNodesInfo ,success Index 0 {"appName":"testMetaDataRegister2","path":"your/path2","contextPath":"","ruleName":"","rpcType":"","enabled":true,"host":"127.0.0.1","port":"8181","pluginNames":null,"registerMetaData":false,"timeMillis":0}
-2022-08-16 10:18:56 [INFO] [github.com/shenyu-client-golang/example/etcd_client/etcd_client.go:89] > DeregisterServiceInstance start
-2022-08-16 10:19:33 [INFO] [github.com/shenyu-client-golang/example/etcd_client/etcd_client.go:101] DeregisterServiceInstance success !
+2022-08-19 21:55:15 [INFO] [github.com/shenyu-client-golang/clients/etcd_client/etcd_client.go:103] http etcd client register success: {"appName":"testGoAppName2","path":"/golang/your/path","pathDesc":"","contextPath":"/golang","ruleName":"","rpcType":"http","serviceName":"","methodName":"","parameterTypes":"","rpcExt":"","enabled":true,"host":"127.0.0.1","port":"8080","pluginNames":null,"registerMetaData":false,"timeMillis":0}
+2022-08-19 21:55:15 [INFO] [github.com/shenyu-client-golang/example/etcd_client/main.go:62] finish register metadata ,the result is-> true
+2022-08-19 21:55:25 [INFO] [github.com/shenyu-client-golang/example/etcd_client/main.go:78] finish UrlRegister ,the result is-> true
 ```
