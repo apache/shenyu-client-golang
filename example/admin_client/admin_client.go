@@ -18,13 +18,9 @@
 package main
 
 import (
+	"fmt"
 	"github.com/apache/shenyu-client-golang/clients"
 	"github.com/apache/shenyu-client-golang/model"
-	"github.com/sirupsen/logrus"
-)
-
-var (
-	logger = logrus.New()
 )
 
 /**
@@ -40,7 +36,7 @@ func main() {
 
 	adminToken, err := clients.NewShenYuAdminClient(adminClient)
 	if err == nil {
-		logger.Infof("this is ShenYu Admin client token %v ->", adminToken.AdminTokenData.Token)
+		fmt.Printf("this is ShenYu Admin client token %v ->", adminToken.AdminTokenData.Token)
 	}
 
 }

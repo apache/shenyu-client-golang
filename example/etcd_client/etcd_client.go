@@ -19,16 +19,12 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/apache/shenyu-client-golang/clients/etcd_client"
 	"github.com/apache/shenyu-client-golang/common/constants"
 	"github.com/apache/shenyu-client-golang/common/shenyu_sdk_client"
 	"github.com/apache/shenyu-client-golang/model"
-	"github.com/sirupsen/logrus"
 	"time"
-)
-
-var (
-	logger = logrus.New()
 )
 
 func main() {
@@ -40,7 +36,7 @@ func main() {
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
 	client, createResult, err := sdkClient.NewClient(ecp)
 	if !createResult && err != nil {
-		logger.Fatal("Create ShenYuEtcdClient error : %v", err)
+		fmt.Printf("Create ShenYuEtcdClient error : %v", err)
 	}
 
 	etcd := client.(*etcd_client.ShenYuEtcdClient)
@@ -66,12 +62,12 @@ func main() {
 	//register multiple metaData
 	registerResult1, err := etcd.RegisterServiceInstance(metaData1)
 	if !registerResult1 && err != nil {
-		logger.Fatal("Register etcd Instance error : %v", err)
+		fmt.Printf("Register etcd Instance error : %v", err)
 	}
 
 	registerResult2, err := etcd.RegisterServiceInstance(metaData2)
 	if !registerResult2 && err != nil {
-		logger.Fatal("Register etcd Instance error : %v", err)
+		fmt.Printf("Register etcd Instance error : %v", err)
 	}
 
 	time.Sleep(time.Second)
@@ -79,32 +75,32 @@ func main() {
 	instanceDetail, err := etcd.GetServiceInstanceInfo(metaData1)
 	nodes1, ok := instanceDetail.([]*model.MetaDataRegister)
 	if !ok {
-		logger.Fatal("get etcd client metaData error %v:", err)
+		fmt.Printf("get etcd client metaData error %v:", err)
 	}
 
 	//range nodes
 	for index, node := range nodes1 {
 		nodeJson, err := json.Marshal(node)
 		if err == nil {
-			logger.Info("GetNodesInfo ,success Index", index, string(nodeJson))
+			fmt.Printf("GetNodesInfo ,success Index %v ,%v", index, string(nodeJson))
 		}
 	}
 
 	instanceDetail2, err := etcd.GetServiceInstanceInfo(metaData2)
 	nodes2, ok := instanceDetail2.([]*model.MetaDataRegister)
 	if !ok {
-		logger.Fatal("get etcd client metaData error %v:", err)
+		fmt.Printf("get etcd client metaData error %v:", err)
 	}
 
 	//range nodes
 	for index, node := range nodes2 {
 		nodeJson, err := json.Marshal(node)
 		if err == nil {
-			logger.Info("GetNodesInfo ,success Index", index, string(nodeJson))
+			fmt.Printf("GetNodesInfo ,success Index %v ,%v", index, string(nodeJson))
 		}
 	}
 
-	logger.Info("> DeregisterServiceInstance start")
+	fmt.Printf("> DeregisterServiceInstance start")
 	deRegisterResult1, err := etcd.DeregisterServiceInstance(metaData1)
 	if err != nil {
 		panic(err)
@@ -116,7 +112,7 @@ func main() {
 	}
 
 	if deRegisterResult1 && deRegisterResult2 {
-		logger.Info("DeregisterServiceInstance success !")
+		fmt.Printf("DeregisterServiceInstance success !")
 	}
 	//DeregisterServiceInstance end
 
