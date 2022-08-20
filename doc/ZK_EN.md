@@ -18,6 +18,9 @@
     }
 
     zc := client.(*zk_client.ShenYuZkClient)
+    go func() {
+    zc.WatchEventHandler()
+    }()
     defer zc.Close()
     //Create ShenYuZkClient end
 ```

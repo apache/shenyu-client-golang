@@ -37,6 +37,7 @@ type ShenYuZkClient struct {
 	ZkClient *zk.Conn       // ZkClient
 	Zcp      *ZkClientParam //client param
 	NodeDataMap *sync.Map
+	MasterWatch <- chan zk.Event
 }
 
 /**
@@ -47,9 +48,6 @@ type ZkClientParam struct {
     Password  string //zk pwd
 }
 
-var(
-	masterWatch = make(chan zk.Event,1)
-)
 
 /**
  * init NewClient
@@ -61,19 +59,19 @@ func (zc *ShenYuZkClient) NewClient(clientParam interface{}) (client interface{}
 	}
 	//event
 	eventCallbackOption := zk.WithEventCallback(callback)
-	conn, _, err := zk.Connect(zcp.ServerList, time.Duration(constants.DEFAULT_ZOOKEEPER_CLIENT_TIME)*time.Second,eventCallbackOption)
+	conn, watchEventChan, err := zk.Connect(zcp.ServerList, time.Duration(constants.DEFAULT_ZOOKEEPER_CLIENT_TIME)*time.Second,eventCallbackOption)
 	if err != nil {
 		zc.Close()
 		logger.Error("zk connect fail %+v",err)
 		return &ShenYuZkClient{}, false, err
 	}
-
 	return &ShenYuZkClient{
 		Zcp: &ZkClientParam{
 			ServerList: zcp.ServerList,
 		},
 		ZkClient: conn,
 		NodeDataMap: new(sync.Map),
+		MasterWatch: watchEventChan,
 	}, true, nil
 }
 
@@ -142,7 +140,7 @@ func (zc *ShenYuZkClient) Close(){
  global zk event callback
  */
 func callback(event zk.Event) {
-	masterWatch <- event
+	//masterWatch <- event
 	//fmt.Println("###########################")
 	//fmt.Println("path: ", event.Path)
 	//fmt.Println("type: ", event.Type.String())
@@ -150,25 +148,40 @@ func callback(event zk.Event) {
 	//fmt.Println("---------------------------")
 }
 
-func (zc *ShenYuZkClient) HandCallback(){
-	event := <- masterWatch
-	fmt.Println("###########################")
-	//fmt.Println("path: ", event.Path)
-	//fmt.Println("type: ", event.Type.String())
-	fmt.Println("state: ", event.State.String())
-	if event.State == zk.StateConnected || event.State == zk.StateConnectedReadOnly{
-		if zc.NodeDataMap != nil {
-			zc.NodeDataMap.Range(func(k ,v interface{}) bool{
-				key, _ := k.(string)
-				val, _ := v.([]byte)
-				var exists,_,_ =zc.ZkClient.Exists(key)
-				if exists {
-					_ = zc.CreateNodeWithParent(key, val, zk.WorldACL(zk.PermAll), zk.FlagEphemeral)
+func(zc *ShenYuZkClient) WatchEventHandler(){
+	for {
+		select {
+		case event := <- zc.MasterWatch:
+			if event.State == zk.StateConnected || event.State == zk.StateConnectedReadOnly{
+				if zc.NodeDataMap != nil {
+					zc.NodeDataMap.Range(func(k ,v interface{}) bool{
+						key, _ := k.(string)
+						val, _ := v.([]byte)
+						logger.Info("watch change %s",key)
+						var exists,_,_ =zc.ZkClient.Exists(key)
+						if exists {
+							_ = createNodeOrUpdate(zc.ZkClient,key, val, zk.WorldACL(zk.PermAll), zk.FlagEphemeral)
+						}
+						return true
+					})
 				}
-				return true
-			})
+			}
 		}
 	}
+}
+
+func createNodeOrUpdate(conn *zk.Conn,path string,data []byte, acl []zk.ACL,createMode int32) error {
+	path = getZooKeeperPath(path)
+	var exist,_,err = conn.Exists(path)
+	if err != nil{
+		return err
+	}
+	if exist{
+		_,err = conn.Set(path,data,-1)
+	}else {
+		_,err = conn.Create(path,data,createMode,acl)
+	}
+	return err
 }
 
 /*

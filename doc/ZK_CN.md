@@ -18,6 +18,10 @@
     }
     
     zc := client.(*zk_client.ShenYuZkClient)
+    //监听事件处理
+    go func() {
+    zc.WatchEventHandler()
+    }()
     defer zc.Close()
 ```
 

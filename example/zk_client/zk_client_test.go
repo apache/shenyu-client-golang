@@ -62,6 +62,9 @@ func TestRegisterServiceInstance(t *testing.T) {
 	assert.Nil(t, err)
 
 	zc := client.(*zk_client.ShenYuZkClient)
+	go func() {
+		zc.WatchEventHandler()
+	}()
 	defer zc.Close()
 
 	//init MetaDataRegister

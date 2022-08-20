@@ -41,10 +41,10 @@ func main() {
 	}
 
 	zc := client.(*zk_client.ShenYuZkClient)
-	defer zc.Close()
 	go func() {
-		zc.HandCallback()
+		zc.WatchEventHandler()
 	}()
+	defer zc.Close()
 	//Create ShenYuZkClient end
 
 	//RegisterServiceInstance start
@@ -73,17 +73,12 @@ func main() {
 		Host:        "127.0.0.1",            //require user provide
 		Port:        "8080",                 //require user provide
 	}
-	_, err = zc.PersistURI(urlRegister)
-	if err != nil {
-		logger.Warn("UrlRegister has error:", err)
-	}
 	result,err = zc.PersistURI(urlRegister)
 	if err != nil {
 		logger.Warn("UrlRegister has error:", err)
 	}
 	logger.Info("finish UrlRegister ,the result is->", result)
 	//DeregisterServiceInstance end
-
 	//do your logic
 
 }
