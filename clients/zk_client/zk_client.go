@@ -148,10 +148,13 @@ func callback(event zk.Event) {
 	//fmt.Println("---------------------------")
 }
 
+/**
+WatchEventHandler
+**/
 func(zc *ShenYuZkClient) WatchEventHandler(){
 	for {
 		select {
-		case event := <- zc.MasterWatch:
+		   case event := <- zc.MasterWatch:
 			if event.State == zk.StateConnected || event.State == zk.StateConnectedReadOnly{
 				if zc.NodeDataMap != nil {
 					zc.NodeDataMap.Range(func(k ,v interface{}) bool{
@@ -160,7 +163,10 @@ func(zc *ShenYuZkClient) WatchEventHandler(){
 						logger.Info("watch change %s",key)
 						var exists,_,_ =zc.ZkClient.Exists(key)
 						if exists {
-							_ = createNodeOrUpdate(zc.ZkClient,key, val, zk.WorldACL(zk.PermAll), zk.FlagEphemeral)
+							err := zc.CreateNodeOrUpdate(key, val, zk.WorldACL(zk.PermAll), zk.FlagEphemeral)
+							if err != nil{
+								logger.Error("watch eventHandler CreateNodeOrUpdate err:%+v",err)
+							}
 						}
 						return true
 					})
@@ -168,20 +174,6 @@ func(zc *ShenYuZkClient) WatchEventHandler(){
 			}
 		}
 	}
-}
-
-func createNodeOrUpdate(conn *zk.Conn,path string,data []byte, acl []zk.ACL,createMode int32) error {
-	path = getZooKeeperPath(path)
-	var exist,_,err = conn.Exists(path)
-	if err != nil{
-		return err
-	}
-	if exist{
-		_,err = conn.Set(path,data,-1)
-	}else {
-		_,err = conn.Create(path,data,createMode,acl)
-	}
-	return err
 }
 
 /*
