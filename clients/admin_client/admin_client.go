@@ -37,13 +37,17 @@ import (
 type ShenYuAdminClient struct {
 	Acp *ShenYuAdminClientParams
 }
-
+/**
+ * The ShenYuAdminClientParmas
+ **/
 type ShenYuAdminClientParams struct {
 	ServerList  []string
 	UserName string
 	Password string
 }
-
+/**
+ accessTokens
+**/
 var (
 	accessTokens *sync.Map
 )
@@ -144,8 +148,8 @@ func (hcc *ShenYuAdminClient)  registerMetaData(metaData *model.MetaDataRegister
 	} else {
 		params["ruleName"] = metaData.Path
 	}
-	registerResult, err = hcc.doRegister(params,constants.REGISTER_METADATA,"")
-	return registerResult,nil
+	registerResult, err = hcc.doRegister(params,constants.REGISTER_METADATA,"metaData")
+	return registerResult,err
 }
 
 /**
@@ -163,8 +167,8 @@ func(hcc *ShenYuAdminClient) urlRegister(urlMetaData *model.URIRegister) (regist
 	params["port"] = urlMetaData.Port
 	params["rpcType"] = urlMetaData.RPCType
 
-	registerResult, err = hcc.doRegister(params,constants.REGISTER_URI,"")
-	return true,nil
+	registerResult, err = hcc.doRegister(params,constants.REGISTER_URI,"uri")
+	return registerResult,err
 }
 
 /*
@@ -265,7 +269,9 @@ func (hcc *ShenYuAdminClient) doRegister(params map[string]string,path string,bz
 			TimeoutMs: constants.DEFAULT_REQUEST_TIME,
 		}
 		result,err = getShenYuHttpDoRegister(registerRequest)
-		return result,err
+		if !result {
+			return result, err
+		}
 	}
 	return true,nil
 }
@@ -292,7 +298,6 @@ func getShenYuHttpDoRegister(shenYuCommonRequest *model.ShenYuCommonRequest) (re
 		err = shenyu_error.NewShenYuError(strconv.Itoa(response.StatusCode), string(bytes), err)
 		return false, err
 	}
-	return false, err
 }
 
 

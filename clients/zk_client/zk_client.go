@@ -163,7 +163,7 @@ func (zc *ShenYuZkClient) HandCallback(){
 				val, _ := v.([]byte)
 				var exists,_,_ =zc.ZkClient.Exists(key)
 				if exists {
-					zc.CreateNodeWithParent(key, val, zk.WorldACL(zk.PermAll), zk.FlagEphemeral)
+					_ = zc.CreateNodeWithParent(key, val, zk.WorldACL(zk.PermAll), zk.FlagEphemeral)
 				}
 				return true
 			})

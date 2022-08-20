@@ -73,15 +73,15 @@ func main() {
 		Host:        "127.0.0.1",            //require user provide
 		Port:        "8080",                 //require user provide
 	}
-	result, err = zc.PersistURI(urlRegister)
+	_, err = zc.PersistURI(urlRegister)
 	if err != nil {
 		logger.Warn("UrlRegister has error:", err)
 	}
-	zc.PersistURI(urlRegister)
-	logger.Info("finish UrlRegister ,the result is->", result)
-	select {
-
+	result,err = zc.PersistURI(urlRegister)
+	if err != nil {
+		logger.Warn("UrlRegister has error:", err)
 	}
+	logger.Info("finish UrlRegister ,the result is->", result)
 	//DeregisterServiceInstance end
 
 	//do your logic
