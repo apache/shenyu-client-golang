@@ -34,7 +34,7 @@ Post "http://127.0.0.1:9095/shenyu-client/register-uri": dial tcp 127.0.0.1:9095
     
     sdkClient := shenyu_sdk_client.GetFactoryClient(constants.RPCTYPE_HTTP)
     client, createResult, err := sdkClient.NewClient(acp)
-    acc := client.(*admin_client.ShenYuAdminClient)
+    hcc := client.(*admin_client.ShenYuAdminClient)
 
 ```
 
@@ -49,7 +49,7 @@ Post "http://127.0.0.1:9095/shenyu-client/register-uri": dial tcp 127.0.0.1:9095
 		Host:    "127.0.0.1",            //需要用户提供
 		Port:    "8080",                 //需要用户提供
 	}
-    result, err := acc.PersistInterface(metaData)
+    result, err := hcc.PersistInterface(metaData)
     if err != nil {
     logger.Warn("MetaDataRegister has error:", err)
     }
@@ -72,7 +72,7 @@ finish register metadata ,the result is-> true
 		Host:        "127.0.0.1",            //需要用户提供
 		Port:        "8080",                 //需要用户提供
 	}
-    result, err = acc.PersistInterface(urlRegister)
+    result, err = hcc.PersistInterface(urlRegister)
     if err != nil {
     logger.Warn("UrlRegister has error:", err)
     }

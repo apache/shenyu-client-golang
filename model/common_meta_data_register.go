@@ -27,7 +27,7 @@ type MetaDataRegister struct {
 	ContextPath      string        `json:"contextPath"`
 	RuleName         string        `json:"ruleName"`
 	RPCType          string        `json:"rpcType"`
-	ServiceName       string       `json:"serviceName"`
+	ServiceName      string        `json:"serviceName"`
 	MethodName       string        `json:"methodName"`
 	ParameterTypes   string        `json:"parameterTypes"`
 	RpcExt           string        `json:"rpcExt"`

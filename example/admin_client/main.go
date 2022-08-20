@@ -26,7 +26,7 @@ import (
 )
 
 /**
-* The shenyu_admin_client example
+* The admin_client example
 **/
 func main() {
 
@@ -47,7 +47,7 @@ func main() {
 		logger.Fatal("Create ShenYuAdminClient error : %+V", err)
 	}
 
-	acc := client.(*admin_client.ShenYuAdminClient)
+	hcc := client.(*admin_client.ShenYuAdminClient)
 
 	//init MetaDataRegister
 	metaData := &model.MetaDataRegister{
@@ -58,7 +58,7 @@ func main() {
 		Host:        "127.0.0.1",         //require user provide
 		Port:        "8080",              //require user provide
 	}
-	result, err := acc.PersistInterface(metaData)
+	result, err := hcc.PersistInterface(metaData)
 	if err != nil {
 		logger.Warn("MetaDataRegister has error:", err)
 	}
@@ -73,7 +73,7 @@ func main() {
 		Host:        "127.0.0.1",            //require user provide
 		Port:        "8080",                 //require user provide
 	}
-	result, err = acc.PersistInterface(urlRegister)
+	result, err = hcc.PersistInterface(urlRegister)
 	if err != nil {
 		logger.Warn("UrlRegister has error:", err)
 	}

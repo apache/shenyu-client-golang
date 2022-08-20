@@ -26,9 +26,9 @@ import (
  * The ShenYuCommonRequest
  **/
 type ShenYuCommonRequest struct {
-	Url        string                 `json:"url"`
-	Header     http.Header            `json:"header"`
-	Params     map[string]string      `json:"jsons"`
-	TimeoutMs  uint64                 `json:"timeoutMs"`
+	Url        string               `json:"url"`
+	Header     http.Header          `json:"header"`
+	Params     map[string]string    `json:"jsons"`
+	TimeoutMs  uint64               `json:"timeoutMs"`
 	HttpClient http_client.HttpClient `json:"httpClient"`
 }
