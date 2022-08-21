@@ -99,7 +99,7 @@ func (sec *ShenYuEtcdClient) PersistInterface(metaData interface{})(registerResu
 	if !ok {
 		logger.Fatal("get etcd client metaData error %+v:", err)
 	}
-	var contextPath = utils.BuildRealNode(metadata.ContextPath, metadata.AppName)
+	var contextPath = utils.BuildRealNodeRemovePrefix(metadata.ContextPath, metadata.AppName)
 	var metadataNodeName = utils.BuildMetadataNodeName(*metadata)
 	var metaDataPath = utils.BuildMetaDataParentPath(metadata.RPCType, contextPath)
 	var realNode = utils.BuildRealNode(metaDataPath, metadataNodeName)
@@ -120,7 +120,7 @@ func (sec *ShenYuEtcdClient) PersistURI(uriRegisterData interface{})(registerRes
 	if !ok {
 		logger.Fatal("get etcd client uriregister error %+v:", err)
 	}
-	var contextPath = utils.BuildRealNode(uriRegister.ContextPath, uriRegister.AppName)
+	var contextPath = utils.BuildRealNodeRemovePrefix(uriRegister.ContextPath, uriRegister.AppName)
 	var uriNodeName = utils.BuildURINodeName(*uriRegister)
 	var uriPath = utils.BuildURIParentPath(uriRegister.RPCType, contextPath)
 	var realNode = utils.BuildRealNode(uriPath, uriNodeName)

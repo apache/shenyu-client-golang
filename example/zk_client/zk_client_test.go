@@ -32,7 +32,7 @@ import (
 func TestInitZkClient(t *testing.T) {
 	zcp := &zk_client.ZkClientParam{
 		ServerList: []string{"127.0.0.1:2181"}, //require user provide
-		Password: "",
+		Digest: "",
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ZOOKEEPER_CLIENT)
@@ -51,7 +51,7 @@ func TestInitZkClient(t *testing.T) {
 func TestRegisterServiceInstance(t *testing.T) {
 	zcp := &zk_client.ZkClientParam{
 		ServerList: []string{"127.0.0.1:2181"}, //require user provide
-		Password: "",
+		Digest: "",
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ZOOKEEPER_CLIENT)

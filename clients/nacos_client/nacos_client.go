@@ -139,7 +139,7 @@ func (nc *ShenYuNacosClient) PersistInterface(metaData interface{})(registerResu
 	if !ok {
 		logger.Fatal("get nacos client metaData error %+v:", err)
 	}
-	var contextPath = utils.BuildRealNode(metadata.ContextPath, metadata.AppName)
+	var contextPath = utils.BuildRealNodeRemovePrefix(metadata.ContextPath, metadata.AppName)
 	var metadataStr,_ = json.Marshal(metadata)
 	var configName = utils.BuildServiceConfigPath(metadata.RPCType, contextPath)
 
@@ -170,7 +170,7 @@ func (nc *ShenYuNacosClient) PersistURI(uriRegisterData interface{})(registerRes
 	}
 	//required
 	var serviceName = utils.BuildServiceInstancePath(uriRegister.RPCType)
-	var contextPath = utils.BuildRealNode(uriRegister.ContextPath, uriRegister.AppName)
+	var contextPath = utils.BuildRealNodeRemovePrefix(uriRegister.ContextPath, uriRegister.AppName)
 	port, _ := strconv.ParseUint(uriRegister.Port,10,64)
 	uriRegString, _ := json.Marshal(uriRegister)
     var metaData =  map[string]string{constants.CONTEXT_PATH: contextPath,constants.URI_META_DATA:string(uriRegString)}

@@ -45,7 +45,7 @@ type ShenYuZkClient struct {
  **/
 type ZkClientParam struct {
 	ServerList []string //  ex: 127.0.0.1
-    Password  string //zk pwd
+    Digest  string //zk user
 }
 
 
@@ -61,13 +61,16 @@ func (zc *ShenYuZkClient) NewClient(clientParam interface{}) (client interface{}
 	eventCallbackOption := zk.WithEventCallback(callback)
 	conn, watchEventChan, err := zk.Connect(zcp.ServerList, time.Duration(constants.DEFAULT_ZOOKEEPER_CLIENT_TIME)*time.Second,eventCallbackOption)
 	if err != nil {
-		zc.Close()
 		logger.Error("zk connect fail %+v",err)
 		return &ShenYuZkClient{}, false, err
+	}
+	if zcp.Digest != ""{
+		conn.AddAuth("digest",[]byte(zcp.Digest))
 	}
 	return &ShenYuZkClient{
 		Zcp: &ZkClientParam{
 			ServerList: zcp.ServerList,
+			Digest: zcp.Digest,
 		},
 		ZkClient: conn,
 		NodeDataMap: new(sync.Map),
@@ -83,7 +86,7 @@ func (zc *ShenYuZkClient) PersistInterface(metaData interface{})(registerResult 
 	if !ok {
 		logger.Fatal("get zookeeper client metaData error %+v:", err)
 	}
-	var contextPath = utils.BuildRealNode(metadata.ContextPath, metadata.AppName)
+	var contextPath = utils.BuildRealNodeRemovePrefix(metadata.ContextPath, metadata.AppName)
 	var metadataNodeName = utils.BuildMetadataNodeName(*metadata)
 	var metaDataPath = utils.BuildMetaDataParentPath(metadata.RPCType, contextPath)
 	var realNode = utils.BuildRealNode(metaDataPath, metadataNodeName)
@@ -110,7 +113,7 @@ func (zc *ShenYuZkClient) PersistURI(uriRegisterData interface{})(registerResult
 	if !ok {
 		logger.Fatal("get zookeeper client uriregister error %+v:", err)
 	}
-	var contextPath = utils.BuildRealNode(uriRegister.ContextPath,uriRegister.AppName)
+	var contextPath = utils.BuildRealNodeRemovePrefix(uriRegister.ContextPath,uriRegister.AppName)
 	var uriNodeName = utils.BuildURINodeName(*uriRegister)
 	var uriPath = utils.BuildURIParentPath(uriRegister.RPCType, contextPath)
 	var realNode = utils.BuildRealNode(uriPath, uriNodeName)
@@ -162,7 +165,7 @@ func(zc *ShenYuZkClient) WatchEventHandler(){
 						val, _ := v.([]byte)
 						logger.Info("watch change %s",key)
 						var exists,_,_ =zc.ZkClient.Exists(key)
-						if exists {
+						if !exists {
 							err := zc.CreateNodeOrUpdate(key, val, zk.WorldACL(zk.PermAll), zk.FlagEphemeral)
 							if err != nil{
 								logger.Error("watch eventHandler CreateNodeOrUpdate err:%+v",err)
@@ -184,6 +187,7 @@ func(zc *ShenYuZkClient) CreateNodeWithParent(path string,data []byte, acl []zk.
 	if path != constants.PathSeparator {
 		path = utils.RemoveSuffix(utils.RemovePrefix(path))
 	}
+	tempPath := utils.RepairData(path)
 	var paths = strings.Split(path,constants.PathSeparator)
 	var cur = ""
 	var err error
@@ -197,7 +201,7 @@ func(zc *ShenYuZkClient) CreateNodeWithParent(path string,data []byte, acl []zk.
 			continue
 		}
 
-	  if cur == path {
+	  if cur == tempPath {
 	    _,err =	zc.ZkClient.Create(cur,data,createMode,acl)
 		} else {
 		 _,err = zc.ZkClient.Create(cur,nil,createMode,acl)
@@ -211,14 +215,31 @@ func(zc *ShenYuZkClient) CreateNodeWithParent(path string,data []byte, acl []zk.
  */
 func(zc *ShenYuZkClient) CreateNodeOrUpdate(path string,data []byte, acl []zk.ACL,createMode int32) error {
 	path = getZooKeeperPath(path)
-    var exist,_,err = zc.ZkClient.Exists(path)
-	if err != nil{
-		return err
+	if path != constants.PathSeparator {
+		path = utils.RemoveSuffix(utils.RemovePrefix(path))
 	}
-	if exist{
-		_,err = zc.ZkClient.Set(path,data,-1)
-	}else {
-		_,err = zc.ZkClient.Create(path,data,createMode,acl)
+	tempPath := utils.RepairData(path)
+	var paths = strings.Split(path,constants.PathSeparator)
+	var cur = ""
+	var err error
+	for _,item := range paths {
+		if item == ""{
+			continue
+		}
+		cur = fmt.Sprintf("%s%s%s",cur,constants.PathSeparator,item)
+		var exist,_,_ = zc.ZkClient.Exists(cur)
+		if exist {
+			if cur == tempPath{
+				_,err = zc.ZkClient.Set(path,data,-1)
+			}
+			continue
+		}
+
+		if cur == tempPath {
+			_,err =	zc.ZkClient.Create(cur,data,createMode,acl)
+		} else {
+			_,err = zc.ZkClient.Create(cur,nil,0,acl)
+		}
 	}
 	return err
 }

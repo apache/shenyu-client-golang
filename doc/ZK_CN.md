@@ -7,7 +7,7 @@
     //开始创建ShenYuZkClient 
     zcp := &zk_client.ZkClientParam{
       ServerList: []string{"127.0.0.1:2181"}, //需要用户提供
-      Password: "",
+      Digest: "",
     }
     
     sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ZOOKEEPER_CLIENT)

@@ -30,7 +30,7 @@ func main() {
 	//Create ShenYuZkClient  start
 	zcp := &zk_client.ZkClientParam{
 		ServerList: []string{"127.0.0.1:2181"}, //require user provide
-		Password: "",
+		Digest: "",
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ZOOKEEPER_CLIENT)
@@ -80,5 +80,7 @@ func main() {
 	logger.Info("finish UrlRegister ,the result is->", result)
 	//DeregisterServiceInstance end
 	//do your logic
+	select {
 
+   }
 }
