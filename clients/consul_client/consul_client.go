@@ -88,6 +88,7 @@ func (scc *ShenYuConsulClient) PersistInterface(metaData interface{})(registerRe
 	if !ok {
 		logger.Fatal("get consul client metaData error %+v:", err)
 	}
+	utils.BuildMetadataDto(metadata)
 	var contextPath = utils.BuildRealNodeRemovePrefix(metadata.ContextPath, metadata.AppName)
 	var metadataNodeName = utils.BuildMetadataNodeName(*metadata)
 	var metaDataPath = utils.BuildMetaDataParentPath(metadata.RPCType, contextPath)

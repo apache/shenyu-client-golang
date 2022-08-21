@@ -99,6 +99,7 @@ func (sec *ShenYuEtcdClient) PersistInterface(metaData interface{})(registerResu
 	if !ok {
 		logger.Fatal("get etcd client metaData error %+v:", err)
 	}
+	utils.BuildMetadataDto(metadata)
 	var contextPath = utils.BuildRealNodeRemovePrefix(metadata.ContextPath, metadata.AppName)
 	var metadataNodeName = utils.BuildMetadataNodeName(*metadata)
 	var metaDataPath = utils.BuildMetaDataParentPath(metadata.RPCType, contextPath)

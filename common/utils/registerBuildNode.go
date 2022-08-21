@@ -27,6 +27,16 @@ func BuildMetadataNodeName(metadata model.MetaDataRegister) string {
 }
 
 /**
+ BuildMetadaDto
+ */
+func BuildMetadataDto(metadata *model.MetaDataRegister){
+	metadata.Path = metadata.ContextPath + metadata.Path
+	if metadata.RuleName == "" {
+		metadata.RuleName = metadata.Path
+	}
+}
+
+/**
 BuildURINodeName
  */
 func BuildURINodeName(registerDTO model.URIRegister ) string {

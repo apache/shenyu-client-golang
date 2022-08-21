@@ -86,6 +86,7 @@ func (zc *ShenYuZkClient) PersistInterface(metaData interface{})(registerResult 
 	if !ok {
 		logger.Fatal("get zookeeper client metaData error %+v:", err)
 	}
+	utils.BuildMetadataDto(metadata)
 	var contextPath = utils.BuildRealNodeRemovePrefix(metadata.ContextPath, metadata.AppName)
 	var metadataNodeName = utils.BuildMetadataNodeName(*metadata)
 	var metaDataPath = utils.BuildMetaDataParentPath(metadata.RPCType, contextPath)

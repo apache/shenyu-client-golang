@@ -132,7 +132,7 @@ func (hcc *ShenYuAdminClient)  registerMetaData(metaData *model.MetaDataRegister
 		return false, shenyu_error.NewShenYuError(constants.MISS_PARAM_ERROR_CODE, constants.MISS_PARAM_ERROR_MSG, err)
 	}
 	params["appName"] = metaData.AppName
-	params["path"] = metaData.Path
+	params["path"] = metaData.ContextPath + metaData.Path
 	params["contextPath"] = metaData.ContextPath
 	params["host"] = metaData.Host
 	params["port"] = metaData.Port
@@ -146,7 +146,7 @@ func (hcc *ShenYuAdminClient)  registerMetaData(metaData *model.MetaDataRegister
 	if metaData.RuleName != "" {
 		params["ruleName"] = metaData.RuleName
 	} else {
-		params["ruleName"] = metaData.Path
+		params["ruleName"] = metaData.ContextPath + metaData.Path
 	}
 	registerResult, err = hcc.doRegister(params,constants.REGISTER_METADATA,"metaData")
 	return registerResult,err

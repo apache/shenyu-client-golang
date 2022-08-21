@@ -52,7 +52,7 @@ func main() {
 	//metaData is necessary param, this will be register to shenyu gateway to use
 	metaData := &model.MetaDataRegister{
 		AppName:     "testGoAppName2",     //require user provide
-		Path:        "/golang/your/path", //require user provide
+		Path:        "/your/path", //require user provide
 		ContextPath: "/golang",           //require user provide
 		RPCType: constants.RPCTYPE_HTTP,
 		Enabled:     true,                //require user provide

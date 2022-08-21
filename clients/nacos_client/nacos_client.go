@@ -139,6 +139,7 @@ func (nc *ShenYuNacosClient) PersistInterface(metaData interface{})(registerResu
 	if !ok {
 		logger.Fatal("get nacos client metaData error %+v:", err)
 	}
+	utils.BuildMetadataDto(metadata)
 	var contextPath = utils.BuildRealNodeRemovePrefix(metadata.ContextPath, metadata.AppName)
 	var metadataStr,_ = json.Marshal(metadata)
 	var configName = utils.BuildServiceConfigPath(metadata.RPCType, contextPath)
