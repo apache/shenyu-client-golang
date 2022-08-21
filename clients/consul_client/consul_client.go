@@ -41,7 +41,8 @@ type ShenYuConsulClient struct {
  **/
 type ConsulClientParam struct {
 	Id string // namespaceId
-	NameSpace string //namespace
+	//NameSpace string //namespace
+	Token string
 	ServerList []string //ip+port
 	Tags []string
 	EnableTagOverride bool
@@ -61,14 +62,15 @@ func (scc *ShenYuConsulClient) NewClient(clientParam interface{}) (client interf
 	//use customer param to create client
 	config := api.DefaultConfig()
 	config.Address = ccp.ServerList[0]
-	config.Namespace = ccp.NameSpace
+	config.Token = ccp.Token
+	//config.Namespace = ccp.NameSpace
 	client, err = api.NewClient(config)
 	if err == nil {
 		logger.Info("Create customer consul client success!")
 		return &ShenYuConsulClient{
 			Ccp: &ConsulClientParam{
 				 Id: ccp.Id,
-				 NameSpace: ccp.NameSpace,
+				// NameSpace: ccp.NameSpace,
 				 ServerList: ccp.ServerList,
 				 Tags: ccp.Tags,
 				 EnableTagOverride: ccp.EnableTagOverride,
@@ -123,7 +125,7 @@ func (scc *ShenYuConsulClient) PersistURI(uriRegisterData interface{})(registerR
 	//Integrate with MetaDataRegister
 	registration := &api.AgentServiceRegistration{
 		ID:        scc.Ccp.Id,
-		Namespace: scc.Ccp.NameSpace,
+		//Namespace: scc.Ccp.NameSpace,
 		Name:      uriRegister.AppName,
 		Tags:      scc.Ccp.Tags,
 		Port:      port,

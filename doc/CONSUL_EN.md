@@ -9,8 +9,8 @@
     ccp := &consul_client.ConsulClientParam{
         ServerList:  []string{"127.0.0.1:8500"},//require user provide
         Id: "testName",//require user provide
-        NameSpace: "testName",//require user provide
         Tags: []string{"test1"},
+        Token:"",
         }
     
     sdkClient := shenyu_sdk_client.GetFactoryClient(constants.CONSUL_CLIENT)

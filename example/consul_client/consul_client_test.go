@@ -37,8 +37,8 @@ func TestInitConsulClient(t *testing.T) {
 	ccp := &consul_client.ConsulClientParam{
 		ServerList:  serverList,
 		Id: "testName",
-		NameSpace: "testName",
 		Tags: []string{"test1"},
+		Token:"",
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.CONSUL_CLIENT)
@@ -60,8 +60,8 @@ func TestRegisterServiceInstance(t *testing.T) {
 	ccp := &consul_client.ConsulClientParam{
 		ServerList:  serverList,
 		Id: "testName",
-		NameSpace: "testName",
 		Tags: []string{"test1"},
+		Token:"",
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.CONSUL_CLIENT)

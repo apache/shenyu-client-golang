@@ -78,9 +78,6 @@ func main() {
 		logger.Warn("UrlRegister has error:", err)
 	}
 	logger.Info("finish UrlRegister ,the result is->", result)
-	//DeregisterServiceInstance end
-	//do your logic
-	select {
 
-   }
+	//do your logic
 }

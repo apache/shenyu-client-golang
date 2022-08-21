@@ -65,7 +65,11 @@ func (zc *ShenYuZkClient) NewClient(clientParam interface{}) (client interface{}
 		return &ShenYuZkClient{}, false, err
 	}
 	if zcp.Digest != ""{
-		conn.AddAuth("digest",[]byte(zcp.Digest))
+		err = conn.AddAuth("digest",[]byte(zcp.Digest))
+		if err != nil{
+			logger.Error("zk digest fail %+v",err)
+			return &ShenYuZkClient{}, false, err
+		}
 	}
 	return &ShenYuZkClient{
 		Zcp: &ZkClientParam{
