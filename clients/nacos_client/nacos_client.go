@@ -157,7 +157,7 @@ func (nc *ShenYuNacosClient) PersistInterface(metaData interface{})(registerResu
 		logger.Error("nacos register metadata fail,please check: %+v",err)
 		return publishResult,err
 	}
-	logger.Info("rpcType:%s ->Consul client register success,meta:%s->ruleName:%s",metadata.RPCType,metadataStr,metadata.RuleName)
+	logger.Info("rpcType:%s ->nacos client register success,meta:%s->ruleName:%s",metadata.RPCType,metadataStr,metadata.RuleName)
 	return publishResult,nil
 }
 

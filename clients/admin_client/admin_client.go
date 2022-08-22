@@ -172,7 +172,7 @@ func(hcc *ShenYuAdminClient) urlRegister(urlMetaData *model.URIRegister) (regist
 }
 
 /*
-setAccessTomen
+setAccessToken
 */
 func (hcc *ShenYuAdminClient) setAccessToken(userName string,password string,server string ) error{
 	headers := map[string][]string{}

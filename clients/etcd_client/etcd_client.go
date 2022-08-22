@@ -175,6 +175,7 @@ func  keepAlive(client *clientv3.Client,leaseId clientv3.LeaseID)  {
 	kaCh, err := client.KeepAlive(context.Background(), leaseId)
 	if err != nil {
 		logger.Error("Keep alive with lease[%s] failed: %v\n",leaseId, err)
+		return
 	}
 	for {
 		<-kaCh

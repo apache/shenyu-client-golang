@@ -97,12 +97,12 @@ func (zc *ShenYuZkClient) PersistInterface(metaData interface{})(registerResult 
 	var realNode = utils.BuildRealNode(metaDataPath, metadataNodeName)
 
 	// create node with mode per
-	err = zc.CreateNodeWithParent(metaDataPath, nil, zk.WorldACL(zk.PermAll), 0)
+	err = zc.createNodeWithParent(metaDataPath, nil, zk.WorldACL(zk.PermAll), 0)
     if err != nil{
     	return false, err
 	}
 	var metadataStr,_ = json.Marshal(metadata)
-	err = zc.CreateNodeOrUpdate(realNode, metadataStr,zk.WorldACL(zk.PermAll), 0)
+	err = zc.createNodeOrUpdate(realNode, metadataStr,zk.WorldACL(zk.PermAll), 0)
 	if err != nil{
 		return false, err
 	}
@@ -122,7 +122,7 @@ func (zc *ShenYuZkClient) PersistURI(uriRegisterData interface{})(registerResult
 	var uriNodeName = utils.BuildURINodeName(*uriRegister)
 	var uriPath = utils.BuildURIParentPath(uriRegister.RPCType, contextPath)
 	var realNode = utils.BuildRealNode(uriPath, uriNodeName)
-	err = zc.CreateNodeWithParent(uriPath, nil, zk.WorldACL(zk.PermAll), 0)
+	err = zc.createNodeWithParent(uriPath, nil, zk.WorldACL(zk.PermAll), 0)
     if err != nil{
     	return false, err
 	}
@@ -130,7 +130,7 @@ func (zc *ShenYuZkClient) PersistURI(uriRegisterData interface{})(registerResult
 	//set dic
 	zc.NodeDataMap.Store(realNode,nodeData)
 	//createMode FlagEphemeral=1 if session DisConnect will delete
-	err = zc.CreateNodeOrUpdate(realNode,nodeData,zk.WorldACL(zk.PermAll),zk.FlagEphemeral)
+	err = zc.createNodeOrUpdate(realNode,nodeData,zk.WorldACL(zk.PermAll),zk.FlagEphemeral)
 	if err != nil{
 		return false, err
 	}
@@ -161,8 +161,7 @@ WatchEventHandler
 **/
 func(zc *ShenYuZkClient) WatchEventHandler(){
 	for {
-		select {
-		   case event := <- zc.MasterWatch:
+		for event := range zc.MasterWatch{
 			if event.State == zk.StateConnected || event.State == zk.StateConnectedReadOnly{
 				if zc.NodeDataMap != nil {
 					zc.NodeDataMap.Range(func(k ,v interface{}) bool{
@@ -171,7 +170,7 @@ func(zc *ShenYuZkClient) WatchEventHandler(){
 						logger.Info("watch change %s",key)
 						var exists,_,_ =zc.ZkClient.Exists(key)
 						if !exists {
-							err := zc.CreateNodeOrUpdate(key, val, zk.WorldACL(zk.PermAll), zk.FlagEphemeral)
+							err := zc.createNodeOrUpdate(key, val, zk.WorldACL(zk.PermAll), zk.FlagEphemeral)
 							if err != nil{
 								logger.Error("watch eventHandler CreateNodeOrUpdate err:%+v",err)
 							}
@@ -187,7 +186,7 @@ func(zc *ShenYuZkClient) WatchEventHandler(){
 /*
  createNodeWithParent
  */
-func(zc *ShenYuZkClient) CreateNodeWithParent(path string,data []byte, acl []zk.ACL,createMode int32) error {
+func(zc *ShenYuZkClient) createNodeWithParent(path string,data []byte, acl []zk.ACL,createMode int32) error {
 	path = getZooKeeperPath(path)
 	if path != constants.PathSeparator {
 		path = utils.RemoveSuffix(utils.RemovePrefix(path))
@@ -218,7 +217,7 @@ func(zc *ShenYuZkClient) CreateNodeWithParent(path string,data []byte, acl []zk.
 /**
   create node or update nodedata
  */
-func(zc *ShenYuZkClient) CreateNodeOrUpdate(path string,data []byte, acl []zk.ACL,createMode int32) error {
+func(zc *ShenYuZkClient) createNodeOrUpdate(path string,data []byte, acl []zk.ACL,createMode int32) error {
 	path = getZooKeeperPath(path)
 	if path != constants.PathSeparator {
 		path = utils.RemoveSuffix(utils.RemovePrefix(path))

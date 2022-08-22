@@ -19,7 +19,6 @@ package consul_client
 
 import (
 	"encoding/json"
-	"fmt"
 	"github.com/apache/shenyu-client-golang/common/constants"
 	"github.com/apache/shenyu-client-golang/common/utils"
 	"github.com/apache/shenyu-client-golang/model"
@@ -134,14 +133,14 @@ func (scc *ShenYuConsulClient) PersistURI(uriRegisterData interface{})(registerR
 		Meta:      map[string]string{constants.UriType: string(uriRegString)},
 	}
 
-	//server checker
-	check := &api.AgentServiceCheck{
-		Timeout:                        constants.DEFAULT_CONSUL_CHECK_TIMEOUT,
-		Interval:                       constants.DEFAULT_CONSUL_CHECK_INTERVAL,
-		DeregisterCriticalServiceAfter: constants.DEFAULT_CONSUL_CHECK_DEREGISTER,
-		HTTP:                           fmt.Sprintf("%s://%s:%d/actuator/health", uriRegister.RPCType, registration.Address, registration.Port),
-	}
-	registration.Check = check
+	////server checker
+	//check := &api.AgentServiceCheck{
+	//	Timeout:                        constants.DEFAULT_CONSUL_CHECK_TIMEOUT,
+	//	Interval:                       constants.DEFAULT_CONSUL_CHECK_INTERVAL,
+	//	DeregisterCriticalServiceAfter: constants.DEFAULT_CONSUL_CHECK_DEREGISTER,
+	//	HTTP:                           fmt.Sprintf("%s://%s:%d/actuator/health", uriRegister.RPCType, registration.Address, registration.Port),
+	//}
+	//registration.Check = check
 
 	//register
 	err = scc.ConsulClient.Agent().ServiceRegister(registration)
