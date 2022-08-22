@@ -18,6 +18,7 @@
 package http_client
 
 import (
+	"fmt"
 	"github.com/apache/shenyu-client-golang/common/constants"
 	"io/ioutil"
 	"net/http"
@@ -67,7 +68,7 @@ func TestHttpClientRequest(t *testing.T) {
 	}
 	/*var adminToken = model.AdminToken{}
 	err = json.Unmarshal(bytes, &adminToken)*/
-	logger.Infof("Get body is %v->", string(bytes))
+	fmt.Printf("Get body is %v->", string(bytes))
 	if response.StatusCode == 200 {
 		return
 	} else {
