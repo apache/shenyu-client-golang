@@ -138,7 +138,7 @@ func (sec *ShenYuEtcdClient) RegisterServiceInstance(metaData interface{}) (regi
 	defer cancel()
 	_, err = sec.EtcdClient.Put(ctx, key, string(data))
 	if err != nil {
-		logger.Error("RegisterServiceInstance failure! ,error is :%v", err)
+		logger.Errorf("RegisterServiceInstance failure! ,error is :%v", err)
 		return false, err
 	}
 	logger.Infof("RegisterServiceInstance,result:%v", true)
