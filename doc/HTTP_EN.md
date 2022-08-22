@@ -22,31 +22,19 @@ Post "http://127.0.0.1:9095/shenyu-client/register-uri": dial tcp 127.0.0.1:9095
 
 ```go
 //init ShenYuAdminClient
-adminClient := &model.ShenYuAdminClient{
+    var serverList = []string{
+    "http://127.0.0.1:9095",
+    }
+    acp := &admin_client.ShenYuAdminClientParams{
+    ServerList: serverList,
     UserName: "admin",  //require user provide
     Password: "123456", //require user provide
 }
 
-adminToken, err := clients.NewShenYuAdminClient(adminClient)
 
-The adminToken like this :
-{
-    "code":200,
-    "message":"login dashboard user success",
-    "data":{
-        "id":"1",
-        "userName":"admin",
-        "role":1,
-        "enabled":true,
-        "dateCreated":"2018-06-23 15:12:22",
-        "dateUpdated":"2022-03-09 15:08:14",
-        "token":"eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwiZXhwIjoxNjUwNjc5OTQ2fQ.K92Il2kmJ0X3FgjY4igW35-pw9nsf5VKdUyqBoyIaF4"
-    }
-}
-
-When you success get toekn, you will see this :
-this is ShenYu Admin client token -> eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyTmFtZSI6ImFkbWluIiwiZXhwIjoxNjUwNjc5OTQ2fQ.K92Il2kmJ0X3FgjY4igW35-pw9nsf5VKdUyqBoyIaF4
-
+    sdkClient := shenyu_sdk_client.GetFactoryClient(constants.RPCTYPE_HTTP)
+    client, createResult, err := sdkClient.NewClient(acp)
+    hcc := client.(*admin_client.ShenYuAdminClient)
 ```
 
 
@@ -60,20 +48,19 @@ metaData := &model.MetaDataRegister{
 		Host:    "127.0.0.1",            //require user provide
 		Port:    "8080",                 //require user provide
 	}
-	result, err := clients.RegisterMetaData(adminToken.AdminTokenData, metaData)
-	if err != nil {
-		logger.Warn("MetaDataRegister has error:",err)
-	}
-	logger.Info("finish register metadata ,the result is->", result)
-	
+    result, err := hcc.PersistInterface(metaData)
+    if err != nil {
+    logger.Warn("MetaDataRegister has error:", err)
+    }
+    logger.Info("finish register metadata ,the result is->", result)
 	
 When Register success , you will see this :  
 finish register metadata ,the result is-> true
 ```
 
-**4.Step 3  Url  Register  to ShenYu GateWay. (Need step 1 token to invoke)**
+**4.Step 3  Url  Register  to ShenYu GateWay. **
 ```go
-//URIRegister(Need Step 1 toekn adminToken.AdminTokenData)
+//URIRegister
 //init urlRegister
 	urlRegister := &model.URIRegister{
 		Protocol:    "testMetaDataRegister", //require user provide
@@ -83,11 +70,12 @@ finish register metadata ,the result is-> true
 		Host:        "127.0.0.1",            //require user provide
 		Port:        "8080",                 //require user provide
 	}
-	result, err = clients.UrlRegister(adminToken.AdminTokenData, urlRegister)
-	if err != nil {
-		logger.Warn("UrlRegister has error:", err)
-	}
-	logger.Info("finish UrlRegister ,the result is->", result)
+    result, err = hcc.PersistInterface(urlRegister)
+    if err != nil {
+    logger.Warn("UrlRegister has error:", err)
+    }
+    logger.Info("finish UrlRegister ,the result is->", result)
+
 ```
 
 ## Entire Success log
