@@ -76,6 +76,7 @@ func TestRegisterServiceInstance(t *testing.T) {
 		AppName:     "testGoAppName2",     //require user provide
 		Path:        "/your/path", //require user provide
 		ContextPath: "/golang",           //require user provide
+		RPCType: constants.RPCTYPE_HTTP,
 		Enabled:     true,                //require user provide
 		Host:        "127.0.0.1",         //require user provide
 		Port:        "8080",              //require user provide

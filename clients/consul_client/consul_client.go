@@ -102,7 +102,7 @@ func (scc *ShenYuConsulClient) PersistInterface(metaData interface{})(registerRe
 	var metadataStr,_ = json.Marshal(metaData)
 	var putPair = &api.KVPair{
 		Key: realNode,
-		Value: []byte(metadataStr),
+		Value: metadataStr,
 		Flags: 0,
 	}
     _,err =scc.ConsulClient.KV().Put(putPair,nil)

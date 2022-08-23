@@ -51,6 +51,9 @@ func BuildMetadataDto(metadata *model.MetaDataRegister){
 	if metadata.RuleName == "" {
 		metadata.RuleName = metadata.Path
 	}
+	if metadata.RPCType == ""{
+		metadata.RPCType = constants.RPCTYPE_HTTP
+	}
 }
 
 /**
@@ -59,6 +62,6 @@ BuildURINodeName
 func BuildURINodeName(registerDTO model.URIRegister ) string {
     var host = registerDTO.Host
     var port = registerDTO.Port
-	var str = []string{host, string(port)}
+	var str = []string{host, port}
 	return strings.Join(str,constants.COLONS)
 }
