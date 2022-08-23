@@ -15,7 +15,7 @@
     sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
     client, createResult, err := sdkClient.NewClient(ecp)
     if !createResult && err != nil {
-    logger.Fatal("Create ShenYuEtcdClient error : %+V", err)
+    logger.Fatal("Create ShenYuEtcdClient error : %v", err)
     }
     
     etcd := client.(*etcd_client.ShenYuEtcdClient)
@@ -48,12 +48,12 @@
    //register multiple metaData
     registerResult1, err := etcd.RegisterServiceInstance(metaData1)
         if !registerResult1 && err != nil {
-        logger.Fatal("Register etcd Instance error : %+V", err)
+        logger.Fatal("Register etcd Instance error : %v", err)
     }
 
     registerResult2, err := etcd.RegisterServiceInstance(metaData2)
         if !registerResult2 && err != nil {
-        logger.Fatal("Register etcd Instance error : %+V", err)
+        logger.Fatal("Register etcd Instance error : %v", err)
     }
     //do your logic
 ```
@@ -78,7 +78,7 @@
     instanceDetail, err := etcd.GetServiceInstanceInfo(metaData1)
         nodes1, ok := instanceDetail.([]*model.MetaDataRegister)
         if !ok {
-        logger.Fatal("get etcd client metaData error %+v:", err)
+        logger.Fatal("get etcd client metaData error %v:", err)
      }
     
     //range nodes
@@ -92,7 +92,7 @@
     instanceDetail2, err := etcd.GetServiceInstanceInfo(metaData2)
         nodes2, ok := instanceDetail2.([]*model.MetaDataRegister)
         if !ok {
-            logger.Fatal("get etcd client metaData error %+v:", err)
+            logger.Fatal("get etcd client metaData error %v:", err)
     }
     //GetServiceInstanceInfo end
 

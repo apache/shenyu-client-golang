@@ -18,10 +18,10 @@
 package main
 
 import (
+	"fmt"
 	"github.com/apache/shenyu-client-golang/clients"
 	"github.com/apache/shenyu-client-golang/common/constants"
 	"github.com/apache/shenyu-client-golang/model"
-	"github.com/wonderivan/logger"
 )
 
 /**
@@ -37,7 +37,7 @@ func main() {
 
 	adminToken, err := clients.NewShenYuAdminClient(adminClient)
 	if err == nil {
-		logger.Info("this is ShenYu Admin client token ->", adminToken.AdminTokenData.Token)
+		fmt.Printf("this is ShenYu Admin client token %v ->", adminToken.AdminTokenData.Token)
 	}
 
 	//init MetaDataRegister
@@ -51,9 +51,9 @@ func main() {
 	}
 	result, err := clients.RegisterMetaData(adminToken.AdminTokenData, metaData)
 	if err != nil {
-		logger.Warn("MetaDataRegister has error:", err)
+		fmt.Printf("MetaDataRegister has error %v:", err)
 	}
-	logger.Info("finish register metadata ,the result is->", result)
+	fmt.Printf("finish register metadata ,the result is %v ->", result)
 
 	//init urlRegister
 	urlRegister := &model.URIRegister{
@@ -66,9 +66,9 @@ func main() {
 	}
 	result, err = clients.UrlRegister(adminToken.AdminTokenData, urlRegister)
 	if err != nil {
-		logger.Warn("UrlRegister has error:", err)
+		fmt.Printf("UrlRegister has error %v:", err)
 	}
-	logger.Info("finish UrlRegister ,the result is->", result)
+	fmt.Printf("finish UrlRegister ,the result is %v ->", result)
 
 	//do you logic
 }

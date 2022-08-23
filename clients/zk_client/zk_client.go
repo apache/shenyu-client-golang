@@ -22,8 +22,12 @@ import (
 	"github.com/apache/shenyu-client-golang/common/constants"
 	"github.com/apache/shenyu-client-golang/model"
 	"github.com/samuel/go-zookeeper/zk"
-	"github.com/wonderivan/logger"
+	"github.com/sirupsen/logrus"
 	"time"
+)
+
+var (
+	logger = logrus.New()
 )
 
 /**
@@ -48,11 +52,11 @@ type ZkClientParam struct {
 func (zc *ShenYuZkClient) NewClient(clientParam interface{}) (client interface{}, createResult bool, err error) {
 	zcp, ok := clientParam.(*ZkClientParam)
 	if !ok {
-		logger.Fatal("The clientParam  must not nil!")
+		logger.Fatalf("The clientParam  must not nil!")
 	}
 	//client = new(ShenYuZkClient)
 	if len(zcp.ZkRoot) == 0 {
-		logger.Fatal("The param zkRoot must set a value!")
+		logger.Fatalf("The param zkRoot must set a value!")
 	}
 	conn, _, err := zk.Connect(zcp.ZkServers, time.Duration(constants.DEFAULT_ZOOKEEPER_CLIENT_TIME)*time.Second)
 	if err != nil {
@@ -76,7 +80,7 @@ func (zc *ShenYuZkClient) NewClient(clientParam interface{}) (client interface{}
 func (zc *ShenYuZkClient) DeregisterServiceInstance(metaData interface{}) (deRegisterResult bool, err error) {
 	mdr, ok := metaData.(*model.MetaDataRegister)
 	if !ok {
-		logger.Fatal("get zk client metaData error %+v:", err)
+		logger.Fatalf("get zk client metaData error %v:", err)
 	}
 	if err := zc.ensureName(mdr.AppName); err != nil {
 		return false, err
@@ -105,7 +109,7 @@ func (zc *ShenYuZkClient) GetServiceInstanceInfo(metaData interface{}) (instance
 	var nodes []*model.MetaDataRegister
 	data, _, err := zc.ZkClient.Get(path)
 	if err != nil {
-		logger.Fatal("zk Get node failure, err:", err)
+		logger.Fatalf("zk Get node failure, err  %v:", err)
 	}
 	node := new(model.MetaDataRegister)
 	err = json.Unmarshal(data, node)
@@ -156,7 +160,7 @@ func (zc *ShenYuZkClient) RegisterServiceInstance(metaData interface{}) (registe
 	mdr := zc.checkCommonParam(metaData, err)
 	err = zc.ensureRoot()
 	if err != nil {
-		logger.Fatal("ensureRoot failure, err:", err)
+		logger.Fatalf("ensureRoot failure, err  %v:", err)
 	}
 	path := zc.Zcp.ZkRoot + "/" + mdr.AppName
 	data, err := json.Marshal(metaData)
@@ -176,7 +180,7 @@ func (zc *ShenYuZkClient) RegisterServiceInstance(metaData interface{}) (registe
 func (zc *ShenYuZkClient) checkCommonParam(metaData interface{}, err error) *model.MetaDataRegister {
 	mdr, ok := metaData.(*model.MetaDataRegister)
 	if !ok {
-		logger.Fatal("get zk client metaData error %+v:", err)
+		logger.Fatalf("get zk client metaData error %v:", err)
 	}
 	return mdr
 }
@@ -210,16 +214,16 @@ func (zc *ShenYuZkClient) ensureRoot() error {
  **/
 func (zc *ShenYuZkClient) ensureName(name string) error {
 	path := zc.Zcp.ZkRoot + "/" + name
-	logger.Info("ensureName check, path is ->", path)
+	logger.Infof("ensureName check, path is  %v: ->", path)
 	exists, _, err := zc.ZkClient.Exists(path) //avoid create error
-	logger.Info("ensureName check result is ->", exists)
+	logger.Infof("ensureName check result is  %v: ->", exists)
 	if err != nil {
 		return err
 	}
 	if !exists {
 		_, err = zc.ZkClient.Create(path, []byte(""), 0, zk.WorldACL(zk.PermAll))
 		if err != nil && err == zk.ErrNodeExists {
-			logger.Info("ensureName inner create success")
+			logger.Infof("ensureName inner create success")
 			return nil
 		}
 	}

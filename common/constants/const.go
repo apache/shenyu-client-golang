@@ -34,6 +34,7 @@ const (
 	DEFAULT_CONSUL_CHECK_TIMEOUT    = "1s"
 	DEFAULT_CONSUL_CHECK_INTERVAL   = "3s"
 	DEFAULT_CONSUL_CHECK_DEREGISTER = "15s"
+	DEFAULT_ETCD_TIMEOUT            = 5
 
 	//System default key
 	ADMIN_USERNAME                  = "userName"

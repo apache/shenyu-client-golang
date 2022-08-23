@@ -46,7 +46,7 @@
     sdkClient := shenyu_sdk_client.GetFactoryClient(constants.NACOS_CLIENT)
     result, createResult, err := sdkClient.NewClient(ncp)
         if !createResult && err != nil {
-        logger.Fatal("Create nacos client error : %+V", err)
+        logger.Fatal("Create nacos client error : %v", err)
     }
 
 	nc := &nacos_client.ShenYuNacosClient{
@@ -59,7 +59,7 @@
 ```go
    instanceInfo, err := nc.GetServiceInstanceInfo(queryData)
     if instanceInfo == nil {
-        logger.Fatal("Register nacos Instance error : %+V", err)
+        logger.Fatal("Register nacos Instance error : %v", err)
     }
         //do your logic
 ```
@@ -78,7 +78,7 @@
 
     serviceInstance, err := nc.DeregisterServiceInstance(deregisterInstanceParam)
         if !serviceInstance && err != nil {
-        logger.Info("DeregisterServiceInstance result : %+V", serviceInstance)
+        logger.Info("DeregisterServiceInstance result : %v", serviceInstance)
 }
         //do your logic
 ```
@@ -87,7 +87,7 @@
 ```go
         instanceInfo, result, err := nc.GetServiceInstanceInfo(queryData)
             if result != false && err != nil {
-            logger.Fatal("Register nacos Instance error : %+V", err)
+            logger.Fatal("Register nacos Instance error : %v", err)
         }
         //do your logic
 ```

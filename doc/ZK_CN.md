@@ -14,7 +14,7 @@
     client, createResult, err := sdkClient.NewClient(zcp)
     
     if !createResult && err != nil {
-    logger.Fatal("Create ShenYuZkClient error : %+V", err)
+    logger.Fatal("Create ShenYuZkClient error : %v", err)
     }
     
     zc := client.(*zk_client.ShenYuZkClient)
@@ -46,12 +46,12 @@
    //可以进行多个实例注册
     registerResult1, err := zc.RegisterServiceInstance(metaData1)
         if !registerResult1 && err != nil {
-             logger.Fatal("Register zk Instance error : %+V", err)
+             logger.Fatal("Register zk Instance error : %v", err)
         }
     
     registerResult2, err := zc.RegisterServiceInstance(metaData2)
         if !registerResult2 && err != nil {
-             logger.Fatal("Register zk Instance error : %+V", err)
+             logger.Fatal("Register zk Instance error : %v", err)
         }
     //做你的逻辑处理
 ```
@@ -76,7 +76,7 @@
     instanceDetail, err := zc.GetServiceInstanceInfo(metaData1)
     nodes1, ok := instanceDetail.([]*model.MetaDataRegister)
     if !ok {
-    logger.Fatal("get zk client metaData error %+v:", err)
+    logger.Fatal("get zk client metaData error %v:", err)
     }
     
     //range nodes
@@ -90,7 +90,7 @@
     instanceDetail2, err := zc.GetServiceInstanceInfo(metaData2)
     nodes2, ok := instanceDetail2.([]*model.MetaDataRegister)
     if !ok {
-    logger.Fatal("get zk client metaData error %+v:", err)
+    logger.Fatal("get zk client metaData error %v:", err)
     }
 
 ```

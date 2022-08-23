@@ -19,8 +19,12 @@ package http_client
 
 import (
 	"github.com/pkg/errors"
-	"github.com/wonderivan/logger"
+	"github.com/sirupsen/logrus"
 	"net/http"
+)
+
+var (
+	logger = logrus.New()
 )
 
 type HttpClient struct {
@@ -42,7 +46,7 @@ func (client *HttpClient) Request(method string, url string, header http.Header,
 		return
 	default:
 		err = errors.New("not available method")
-		logger.Error("request method[%s], url[%s],header:[%s],params:[%s], not available method ", method, url, ToJsonString(header), ToJsonString(params))
+		logger.Errorf("request method[%v], url[%v],header:[%v],params:[%v], not available method ", method, url, ToJsonString(header), ToJsonString(params))
 	}
 	return
 }

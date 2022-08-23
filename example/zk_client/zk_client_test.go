@@ -18,7 +18,6 @@
 package main
 
 import (
-	"fmt"
 	"github.com/apache/shenyu-client-golang/clients/zk_client"
 	"github.com/apache/shenyu-client-golang/common/constants"
 	"github.com/apache/shenyu-client-golang/common/shenyu_sdk_client"
@@ -174,7 +173,5 @@ func TestDeregisterServiceInstance(t *testing.T) {
 	deRegisterResult3, err := zc.DeregisterServiceInstance(metaData3)
 	assert.Nil(t, err)
 	assert.True(t, deRegisterResult3)
-
-	fmt.Println("Finish DeregisterServiceInstance ..")
 
 }

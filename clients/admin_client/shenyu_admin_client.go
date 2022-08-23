@@ -21,9 +21,13 @@ import (
 	"encoding/json"
 	"github.com/apache/shenyu-client-golang/common/constants"
 	"github.com/apache/shenyu-client-golang/model"
-	"github.com/wonderivan/logger"
+	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
+)
+
+var (
+	logger = logrus.New()
 )
 
 /**
@@ -48,7 +52,7 @@ func GetShenYuAdminUser(shenYuCommonRequest *model.ShenYuCommonRequest) (adminTo
 	if err != nil {
 		return
 	}
-	logger.Info("Get ShenYu Admin response, body is ->", adminToken)
+	logger.Infof("Get ShenYu Admin response, body is %v:->", adminToken)
 	if response.StatusCode == http.StatusOK && adminToken.Code == http.StatusOK {
 		return model.AdminToken{
 			Code:    adminToken.Code,

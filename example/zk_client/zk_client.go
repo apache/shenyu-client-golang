@@ -19,11 +19,11 @@ package main
 
 import (
 	"encoding/json"
+	"fmt"
 	"github.com/apache/shenyu-client-golang/clients/zk_client"
 	"github.com/apache/shenyu-client-golang/common/constants"
 	"github.com/apache/shenyu-client-golang/common/shenyu_sdk_client"
 	"github.com/apache/shenyu-client-golang/model"
-	"github.com/wonderivan/logger"
 	"time"
 )
 
@@ -39,7 +39,7 @@ func main() {
 	client, createResult, err := sdkClient.NewClient(zcp)
 
 	if !createResult && err != nil {
-		logger.Fatal("Create ShenYuZkClient error : %+V", err)
+		fmt.Printf("Create ShenYuZkClient error : %v", err)
 	}
 
 	zc := client.(*zk_client.ShenYuZkClient)
@@ -75,17 +75,17 @@ func main() {
 	//register multiple metaData
 	registerResult1, err := zc.RegisterServiceInstance(metaData1)
 	if !registerResult1 && err != nil {
-		logger.Fatal("Register zk Instance error : %+V", err)
+		fmt.Printf("Register zk Instance error : %v", err)
 	}
 
 	registerResult2, err := zc.RegisterServiceInstance(metaData2)
 	if !registerResult2 && err != nil {
-		logger.Fatal("Register zk Instance error : %+V", err)
+		fmt.Printf("Register zk Instance error : %v", err)
 	}
 
 	registerResult3, err := zc.RegisterServiceInstance(metaData3)
 	if !registerResult3 && err != nil {
-		logger.Fatal("Register zk Instance error : %+V", err)
+		fmt.Printf("Register zk Instance error : %v", err)
 	}
 	//RegisterServiceInstance end
 
@@ -95,48 +95,48 @@ func main() {
 	instanceDetail, err := zc.GetServiceInstanceInfo(metaData1)
 	nodes1, ok := instanceDetail.([]*model.MetaDataRegister)
 	if !ok {
-		logger.Fatal("get zk client metaData error %+v:", err)
+		fmt.Printf("get zk client metaData error %v:", err)
 	}
 
 	//range nodes
 	for index, node := range nodes1 {
 		nodeJson, err := json.Marshal(node)
 		if err == nil {
-			logger.Info("GetNodesInfo ,success Index", index, string(nodeJson))
+			fmt.Printf("GetNodesInfo ,success Index %v,%v", index, string(nodeJson))
 		}
 	}
 
 	instanceDetail2, err := zc.GetServiceInstanceInfo(metaData2)
 	nodes2, ok := instanceDetail2.([]*model.MetaDataRegister)
 	if !ok {
-		logger.Fatal("get zk client metaData error %+v:", err)
+		fmt.Printf("get zk client metaData error %v:", err)
 	}
 
 	//range nodes1
 	for index, node := range nodes2 {
 		nodeJson, err := json.Marshal(node)
 		if err == nil {
-			logger.Info("GetNodesInfo ,success Index", index, string(nodeJson))
+			fmt.Printf("GetNodesInfo ,success Index %v,%v", index, string(nodeJson))
 		}
 	}
 
 	instanceDetail3, err := zc.GetServiceInstanceInfo(metaData3)
 	nodes3, ok := instanceDetail3.([]*model.MetaDataRegister)
 	if !ok {
-		logger.Fatal("get zk client metaData error %+v:", err)
+		fmt.Printf("get zk client metaData error %v:", err)
 	}
 
 	for index, node := range nodes3 {
 		nodeJson, err := json.Marshal(node)
 		if err == nil {
-			logger.Info("GetNodesInfo ,success Index", index, string(nodeJson))
+			fmt.Printf("GetNodesInfo ,success Index %v,%v", index, string(nodeJson))
 		}
 	}
 	//GetServiceInstanceInfo end
 
 	//DeregisterServiceInstance start
 	//your can chose to invoke,not require
-	logger.Info("> DeregisterServiceInstance start")
+	fmt.Printf("> DeregisterServiceInstance start")
 	deRegisterResult1, err := zc.DeregisterServiceInstance(metaData1)
 	if err != nil {
 		panic(err)
@@ -153,7 +153,7 @@ func main() {
 	}
 
 	if deRegisterResult1 && deRegisterResult2 && deRegisterResult3 {
-		logger.Info("DeregisterServiceInstance success !")
+		fmt.Printf("DeregisterServiceInstance success !")
 	}
 	//DeregisterServiceInstance end
 
