@@ -37,10 +37,10 @@ func main() {
 	//Create ShenYuNacosClient start
 	//set nacos env configuration
 	ncp := &nacos_client.NacosClientParam{
-		ServerList:   []string{ "http://127.0.0.1:8848"},   //"console.nacos.io",
+		ServerList:   []string{ "http://console.nacos.io:80"},   //"console.nacos.io",
 		NamespaceId: "ShenyuRegisterCenter",
-		UserName: "nacos",
-		Password: "nacos",
+		UserName: "",
+		Password: "",
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.NACOS_CLIENT)

@@ -105,15 +105,18 @@ func (ncp *NacosClientParam) initNacosClient() (namingClient naming_client.INami
 
 	//init ClientConfig
 	cc := *constant.NewClientConfig(
-		constant.WithUsername(ncp.UserName),
-		constant.WithPassword(ncp.Password),
+		//constant.WithUsername(ncp.UserName),
+		//constant.WithPassword(ncp.Password),
 		constant.WithNamespaceId(ncp.NamespaceId),
 		constant.WithTimeoutMs(5000),
 		constant.WithNotLoadCacheAtStart(true),
 		constant.WithLogDir("/tmp/nacos/log"),
 		constant.WithCacheDir("/tmp/nacos/cache"),
-	)
-
+		)
+	if ncp.UserName != "" && ncp.Password != "" {
+		cc.Username = ncp.UserName
+		cc.Username = ncp.Password
+	}
 	namingClient, err = oriNc.NewNamingClient(
 		vo.NacosClientParam{
 			ClientConfig:  &cc,
