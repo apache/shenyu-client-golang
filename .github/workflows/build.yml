@@ -60,6 +60,9 @@ jobs:
       - name: Start Etcd Docker Compose
         run: docker-compose -f  docker-compose-etcd.yml up -d
 
+      - name: Start Nacos Docker Compose
+        run: docker-compose -f  docker-compose-nacos.yml up -d
+
       - name: Run Unit tests.
         run: |
           go test `go list ./... | grep example` -coverprofile=coverage.txt -covermode=atomic

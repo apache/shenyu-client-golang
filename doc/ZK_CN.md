@@ -14,7 +14,7 @@
     client, createResult, err := sdkClient.NewClient(zcp)
     
     if !createResult && err != nil {
-    logger.Fatalf("Create ShenYuZkClient error : %+V", err)
+    logger.Fatalf("Create ShenYuZkClient error : %+v", err)
     }
     
     zc := client.(*zk_client.ShenYuZkClient)

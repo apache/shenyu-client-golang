@@ -45,7 +45,7 @@ func main() {
 	client, createResult, err := sdkClient.NewClient(ccp)
 
 	if !createResult && err != nil {
-		logger.Fatalf("Create ShenYuConsulClient error : %+V", err)
+		logger.Fatalf("Create ShenYuConsulClient error : %+v", err)
 	}
 
 	scc := client.(*consul_client.ShenYuConsulClient)

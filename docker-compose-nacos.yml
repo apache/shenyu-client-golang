@@ -1,0 +1,98 @@
+version: "3.1"
+
+services:
+  nacos1:
+    hostname: nacos1
+    container_name: nacos1
+    image: nacos/nacos-server:v2.1.1
+    volumes:
+      - ./cluster-logs/nacos1:/home/nacos/logs
+      - ./init.d/custom.properties:/home/nacos/init.d/custom.properties
+    environment:
+      - PREFER_HOST_MODE=hostname
+      - NACOS_SERVERS=nacos1:8848 nacos2:8848 nacos3:8848
+      - MYSQL_SERVICE_HOST=mysql
+      - MYSQL_SERVICE_DB_NAME=nacos_devtest
+      - MYSQL_SERVICE_PORT=3306
+      - MYSQL_SERVICE_USER=nacos
+      - MYSQL_SERVICE_PASSWORD=nacos
+    networks:
+      - shenyu    
+    ports:
+      - "8849:8848"
+      - "9849:9848"
+      - "9850:9849"
+    restart: always
+    depends_on:
+      - mysql
+
+  nacos2:
+    hostname: nacos2
+    image: nacos/nacos-server:v2.1.1
+    container_name: nacos2
+    volumes:
+      - ./cluster-logs/nacos2:/home/nacos/logs
+      - ./init.d/custom.properties:/home/nacos/init.d/custom.properties
+    environment:
+      - PREFER_HOST_MODE=hostname
+      - NACOS_SERVERS=nacos1:8848 nacos2:8848 nacos3:8848
+      - MYSQL_SERVICE_HOST=mysql
+      - MYSQL_SERVICE_DB_NAME=nacos_devtest
+      - MYSQL_SERVICE_PORT=3306
+      - MYSQL_SERVICE_USER=nacos
+      - MYSQL_SERVICE_PASSWORD=nacos 
+    networks:
+      - shenyu
+    ports:
+      - "8851:8848"
+      - "9851:9848"
+      - "9852:9849"
+    restart: always
+    depends_on:
+      - mysql
+
+  nacos3:
+    hostname: nacos3
+    image: nacos/nacos-server:v2.1.1
+    container_name: nacos3
+    volumes:
+      - ./cluster-logs/nacos3:/home/nacos/logs
+      - ./init.d/custom.properties:/home/nacos/init.d/custom.properties
+    environment:
+      - PREFER_HOST_MODE=hostname
+      - NACOS_SERVERS=nacos1:8848 nacos2:8848 nacos3:8848
+      - MYSQL_SERVICE_HOST=mysql
+      - MYSQL_SERVICE_DB_NAME=nacos_devtest
+      - MYSQL_SERVICE_PORT=3306
+      - MYSQL_SERVICE_USER=nacos
+      - MYSQL_SERVICE_PASSWORD=nacos 
+    networks:
+      - shenyu
+    ports:
+      - "8853:8848"
+      - "9853:9848"
+      - "9854:9849"
+    restart: always
+    depends_on:
+      - mysql
+
+  mysql:
+    container_name: mysql
+    image: nacos/nacos-mysql:5.7
+    environment:
+      - MYSQL_ROOT_PASSWORD=root
+      - MYSQL_DATABASE=nacos_devtest
+      - MYSQL_USER=nacos
+      - MYSQL_PASSWORD=nacos
+    volumes:
+      - ./mysql:/var/lib/mysql
+    restart: always
+    networks:
+      - shenyu   
+    ports:
+      - "3306:3306"
+
+networks:
+  shenyu:
+     name: shenyu
+

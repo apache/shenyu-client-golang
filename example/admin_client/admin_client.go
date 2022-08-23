@@ -48,7 +48,7 @@ func main() {
 	client, createResult, err := sdkClient.NewClient(acp)
 
 	if !createResult && err != nil {
-		logger.Fatalf("Create ShenYuAdminClient error : %+V", err)
+		logger.Fatalf("Create ShenYuAdminClient error : %+v", err)
 	}
 
 	hcc := client.(*admin_client.ShenYuAdminClient)

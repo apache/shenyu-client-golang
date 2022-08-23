@@ -15,7 +15,7 @@
     sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
     client, createResult, err := sdkClient.NewClient(ecp)
     if !createResult && err != nil {
-    logger.Fatalf("Create ShenYuEtcdClient error : %+V", err)
+    logger.Fatalf("Create ShenYuEtcdClient error : %+v", err)
     }
     
     etcd := client.(*etcd_client.ShenYuEtcdClient)

@@ -14,7 +14,7 @@
     sdkClient := shenyu_sdk_client.GetFactoryClient(constants.NACOS_CLIENT)
     client, createResult, err := sdkClient.NewClient(ncp)
     if !createResult && err != nil {
-    logger.Fatalf("Create ShenYuNacosClient error : %+V", err)
+    logger.Fatalf("Create ShenYuNacosClient error : %+v", err)
     }
     
     nc := client.(*nacos_client.ShenYuNacosClient)
