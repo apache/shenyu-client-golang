@@ -177,6 +177,8 @@ func (nc *ShenYuNacosClient) PersistURI(uriRegisterData interface{})(registerRes
     var metaData =  map[string]string{constants.CONTEXT_PATH: contextPath,constants.URI_META_DATA:string(uriRegString)}
 	var param  =  vo.RegisterInstanceParam{
 		ServiceName: serviceName,
+		Weight: 1,
+		Enable: true,
         Ephemeral: true,
         Ip: uriRegister.Host,
         Port: port,

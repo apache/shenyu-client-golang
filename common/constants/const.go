@@ -48,6 +48,7 @@ const (
 	DEFAULT_ADMIN_TOKEN_PARAM_ERROR = 500
 	RPCTYPE_HTTP                    = "http"
 	RPCTYPE_GRPC                    = "grpc"
+	RPCTYPE_SPRING_CLOUND           = "springCloud"
 	DEFAULT_BASE_PATH               = "/shenyu-client"
 	REGISTER_URI                    = "/register-uri"
 	REGISTER_METADATA               = "/register-metadata"

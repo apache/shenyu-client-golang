@@ -14,7 +14,7 @@ func BuildMetadataNodeName(metadata model.MetaDataRegister) string {
 	var nodeName string
 	var rpcType = metadata.RPCType
 
-	if constants.RPCTYPE_HTTP == rpcType {
+	if constants.RPCTYPE_HTTP == rpcType || constants.RPCTYPE_SPRING_CLOUND == rpcType {
 	var ruleName = strings.Replace(metadata.RuleName,constants.PathSeparator, constants.SelectorJoinRule,-1)
 	 nodeName = fmt.Sprintf("%s%s%s", metadata.ContextPath, constants.SelectorJoinRule,ruleName)
 	} else {
