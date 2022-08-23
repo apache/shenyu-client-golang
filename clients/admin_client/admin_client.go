@@ -23,12 +23,16 @@ import (
 	"github.com/apache/shenyu-client-golang/common/constants"
 	"github.com/apache/shenyu-client-golang/common/shenyu_error"
 	"github.com/apache/shenyu-client-golang/model"
-	"github.com/wonderivan/logger"
+	"github.com/sirupsen/logrus"
 	"io/ioutil"
 	"net/http"
 	"strconv"
 	"strings"
 	"sync"
+)
+
+var (
+	logger = logrus.New()
 )
 
 /**
@@ -58,20 +62,20 @@ var (
 func (hcc *ShenYuAdminClient) NewClient(clientParam interface{}) (client interface{}, createResult bool, err error) {
 	acp, ok := clientParam.(*ShenYuAdminClientParams)
 	if !ok {
-		logger.Fatal("The clientParam  must not nil!")
+		logger.Fatalf("The clientParam  must not nil!")
 	}
 	if len(acp.ServerList) == 0{
-		logger.Fatal("The clientParam ServerList must not nil!")
+		logger.Fatalf("The clientParam ServerList must not nil!")
 	}
 	accessTokens = new(sync.Map)
 	//token handler
 	for _,address := range acp.ServerList{
 		var err = hcc.setAccessToken(acp.UserName,acp.Password,address)
 		if err != nil{
-			logger.Fatal("init http client error,setAccessToken err %+v:", err)
+			logger.Fatalf("init http client error,setAccessToken err %+v:", err)
 		}
 	}
-	logger.Info("Create customer http client success!")
+	logger.Infof("Create customer http client success!")
 	return &ShenYuAdminClient{
 		Acp: &ShenYuAdminClientParams{
 			ServerList: acp.ServerList,
@@ -87,15 +91,15 @@ PersistInterface
 func (hcc *ShenYuAdminClient) PersistInterface(metaData interface{})(registerResult bool, err error){
 	var metadata,ok =  metaData.(*model.MetaDataRegister)
 	if !ok {
-		logger.Fatal("get admin client metaData error %+v:", err)
+		logger.Fatalf("get admin client metaData error %+v:", err)
 	}
 	registerResult,err = hcc.registerMetaData(metadata)
 	if err != nil{
-		logger.Error("admin client register fail %+v",err)
+		logger.Errorf("admin client register fail %+v",err)
 		return registerResult, err
 	}
 	var metadaStr,_ = json.Marshal(metadata)
-	logger.Info("%s admin client register success: %s",metadata.RPCType,string(metadaStr))
+	logger.Infof("%s admin client register success: %s",metadata.RPCType,string(metadaStr))
 	return registerResult,nil
 }
 
@@ -105,14 +109,14 @@ PersistURI
 func (hcc *ShenYuAdminClient) PersistURI(uriRegisterData interface{})(registerResult bool, err error){
 	uriRegister,ok := uriRegisterData.(*model.URIRegister)
 	if !ok {
-		logger.Fatal("get admin client uriregister error %+v:", err)
+		logger.Fatalf("get admin client uriregister error %+v:", err)
 	}
 	registerResult,err =  hcc.urlRegister(uriRegister)
 	if err != nil{
-		logger.Error("admin client register fail %+v",err)
+		logger.Errorf("admin client register fail %+v",err)
 		return registerResult, err
 	}
-	logger.Info("RegisterServiceInstance,result:%+v", true)
+	logger.Infof("RegisterServiceInstance,result:%+v", true)
 	return registerResult, nil
 }
 
@@ -199,11 +203,11 @@ func (hcc *ShenYuAdminClient) setAccessToken(userName string,password string,ser
 	}
 	var token, err = getShenYuHttpToken(tokenRequest)
 	if err != nil{
-		logger.Error("get token fail")
+		logger.Errorf("get token fail")
 		return err
 	}
 	if token == ""{
-		logger.Error("get token fail,is empty %+v",err)
+		logger.Errorf("get token fail,is empty %+v",err)
 		return errors.New("get token is empty")
 	}
 	accessTokens.Store(server,token)
@@ -228,7 +232,7 @@ func getShenYuHttpToken(shenYuCommonRequest *model.ShenYuCommonRequest) (token s
 	if err != nil {
 		return
 	}
-	logger.Info("Get ShenYu Http response, body is ->", adminToken)
+	logger.Infof("Get ShenYu Http response, body is ->%+v", adminToken)
 	if response.StatusCode == http.StatusOK && adminToken.Code == http.StatusOK {
 		return adminToken.AdminTokenData.Token, nil
 	}
@@ -252,13 +256,13 @@ func (hcc *ShenYuAdminClient) doRegister(params map[string]string,path string,bz
 			//set token again,if err return
 			err = hcc.setAccessToken(hcc.Acp.UserName,hcc.Acp.Password,server)
 			if err != nil {
-				logger.Fatal("request access token err %+v",err)
+				logger.Fatalf("request access token err %+v",err)
 			}
 			tokenStr, ok = accessTokens.Load(server)
 			if ok {
 				token = tokenStr.(string)
 			}else {
-				logger.Fatal("load token err %+v",err)
+				logger.Fatalf("load token err %+v",err)
 			}
 		}
 

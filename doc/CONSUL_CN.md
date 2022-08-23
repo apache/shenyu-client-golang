@@ -16,7 +16,7 @@
     client, createResult, err := sdkClient.NewClient(ccp)
     
     if !createResult && err != nil {
-    logger.Fatal("Create ShenYuConsulClient error : %+V", err)
+    logger.Fatalf("Create ShenYuConsulClient error : %+V", err)
     }
     
     scc := client.(*consul_client.ShenYuConsulClient)
@@ -35,9 +35,9 @@
 	}
     result, err := acc.PersistInterface(metaData)
     if err != nil {
-    logger.Warn("MetaDataRegister has error:", err)
+    logger.Warnf("MetaDataRegister has error:", err)
     }
-    logger.Info("finish register metadata ,the result is->", result)
+    logger.Infof("finish register metadata ,the result is->", result)
 
 
 当你注册成功,你将看到这些:
@@ -58,9 +58,9 @@ finish register metadata ,the result is-> true
     }
     result, err = acc.PersistInterface(urlRegister)
     if err != nil {
-    logger.Warn("UrlRegister has error:", err)
+    logger.Warnf("UrlRegister has error:", err)
     }
-    logger.Info("finish UrlRegister ,the result is->", result)
+    logger.Infof("finish UrlRegister ,the result is->", result)
         
 
 ```

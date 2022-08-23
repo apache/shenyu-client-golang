@@ -22,7 +22,11 @@ import (
 	"github.com/apache/shenyu-client-golang/common/constants"
 	"github.com/apache/shenyu-client-golang/common/shenyu_sdk_client"
 	"github.com/apache/shenyu-client-golang/model"
-	"github.com/wonderivan/logger"
+	"github.com/sirupsen/logrus"
+)
+
+var (
+	logger = logrus.New()
 )
 
 /**
@@ -42,7 +46,7 @@ func main() {
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.NACOS_CLIENT)
 	client, createResult, err := sdkClient.NewClient(ncp)
 	if !createResult && err != nil {
-		logger.Fatal("Create ShenYuNacosClient error : %+V", err)
+		logger.Fatalf("Create ShenYuNacosClient error : %+v", err)
 	}
 
 	nc := client.(*nacos_client.ShenYuNacosClient)
@@ -61,9 +65,9 @@ func main() {
 	}
 	result, err := nc.PersistInterface(metaData)
 	if err != nil {
-		logger.Warn("MetaDataRegister has error:", err)
+		logger.Warnf("MetaDataRegister has error:%+v", err)
 	}
-	logger.Info("finish register metadata ,the result is->", result)
+	logger.Infof("finish register metadata ,the result is->%+v", result)
 
 	//init urlRegister
 	urlRegister := &model.URIRegister{
@@ -76,8 +80,8 @@ func main() {
 	}
 	result, err = nc.PersistURI(urlRegister)
 	if err != nil {
-		logger.Warn("UrlRegister has error:", err)
+		logger.Warnf("UrlRegister has error:%+v", err)
 	}
-	logger.Info("finish UrlRegister ,the result is->", result)
+	logger.Infof("finish UrlRegister ,the result is->%+v", result)
 	//do your logic
 }

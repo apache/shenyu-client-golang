@@ -24,10 +24,14 @@ import (
 	"github.com/apache/shenyu-client-golang/common/utils"
 	"github.com/apache/shenyu-client-golang/model"
 	"github.com/samuel/go-zookeeper/zk"
-	"github.com/wonderivan/logger"
+	"github.com/sirupsen/logrus"
 	"strings"
 	"sync"
 	"time"
+)
+
+var (
+	logger = logrus.New()
 )
 
 /**
@@ -55,19 +59,19 @@ type ZkClientParam struct {
 func (zc *ShenYuZkClient) NewClient(clientParam interface{}) (client interface{}, createResult bool, err error) {
 	zcp, ok := clientParam.(*ZkClientParam)
 	if !ok {
-		logger.Fatal("The clientParam  must not nil!")
+		logger.Fatalf("The clientParam  must not nil!")
 	}
 	//event
 	eventCallbackOption := zk.WithEventCallback(callback)
 	conn, watchEventChan, err := zk.Connect(zcp.ServerList, time.Duration(constants.DEFAULT_ZOOKEEPER_CLIENT_TIME)*time.Second,eventCallbackOption)
 	if err != nil {
-		logger.Error("zk connect fail %+v",err)
+		logger.Errorf("zk connect fail %+v",err)
 		return &ShenYuZkClient{}, false, err
 	}
 	if zcp.Digest != ""{
 		err = conn.AddAuth("digest",[]byte(zcp.Digest))
 		if err != nil{
-			logger.Error("zk digest fail %+v",err)
+			logger.Errorf("zk digest fail %+v",err)
 			return &ShenYuZkClient{}, false, err
 		}
 	}
@@ -88,7 +92,7 @@ PersistInterface
 func (zc *ShenYuZkClient) PersistInterface(metaData interface{})(registerResult bool, err error){
 	var metadata,ok =  metaData.(*model.MetaDataRegister)
 	if !ok {
-		logger.Fatal("get zookeeper client metaData error %+v:", err)
+		logger.Fatalf("get zookeeper client metaData error %+v:", err)
 	}
 	utils.BuildMetadataDto(metadata)
 	var contextPath = utils.BuildRealNodeRemovePrefix(metadata.ContextPath, metadata.AppName)
@@ -106,7 +110,7 @@ func (zc *ShenYuZkClient) PersistInterface(metaData interface{})(registerResult 
 	if err != nil{
 		return false, err
 	}
-	logger.Info("%s zookeeper client register success: %s",metadata.RPCType,metadataStr)
+	logger.Infof("%s zookeeper client register success: %s",metadata.RPCType,metadataStr)
 	return true,nil
 }
 
@@ -116,7 +120,7 @@ PersistURI
 func (zc *ShenYuZkClient) PersistURI(uriRegisterData interface{})(registerResult bool, err error){
 	uriRegister,ok := uriRegisterData.(*model.URIRegister)
 	if !ok {
-		logger.Fatal("get zookeeper client uriregister error %+v:", err)
+		logger.Fatalf("get zookeeper client uriregister error %+v:", err)
 	}
 	var contextPath = utils.BuildRealNodeRemovePrefix(uriRegister.ContextPath,uriRegister.AppName)
 	var uriNodeName = utils.BuildURINodeName(*uriRegister)
@@ -167,12 +171,12 @@ func(zc *ShenYuZkClient) WatchEventHandler(){
 					zc.NodeDataMap.Range(func(k ,v interface{}) bool{
 						key, _ := k.(string)
 						val, _ := v.([]byte)
-						logger.Info("watch change %s",key)
+						logger.Infof("watch change %s",key)
 						var exists,_,_ =zc.ZkClient.Exists(key)
 						if !exists {
 							err := zc.createNodeOrUpdate(key, val, zk.WorldACL(zk.PermAll), zk.FlagEphemeral)
 							if err != nil{
-								logger.Error("watch eventHandler CreateNodeOrUpdate err:%+v",err)
+								logger.Errorf("watch eventHandler CreateNodeOrUpdate err:%+v",err)
 							}
 						}
 						return true

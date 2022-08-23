@@ -14,7 +14,7 @@
     sdkClient := shenyu_sdk_client.GetFactoryClient(constants.NACOS_CLIENT)
     client, createResult, err := sdkClient.NewClient(ncp)
     if !createResult && err != nil {
-    logger.Fatal("Create ShenYuNacosClient error : %+V", err)
+    logger.Fatalf("Create ShenYuNacosClient error : %+V", err)
     }
     
     nc := client.(*nacos_client.ShenYuNacosClient)
@@ -34,9 +34,9 @@ metaData := &model.MetaDataRegister{
 	}
     result, err := nc.PersistInterface(metaData)
     if err != nil {
-    logger.Warn("MetaDataRegister has error:", err)
+    logger.Warnf("MetaDataRegister has error:", err)
     }
-    logger.Info("finish register metadata ,the result is->", result)
+    logger.Infof("finish register metadata ,the result is->", result)
 	
 When Register success , you will see this :  
 finish register metadata ,the result is-> true
@@ -56,9 +56,9 @@ finish register metadata ,the result is-> true
     }
     result, err = nc.PersistInterface(urlRegister)
     if err != nil {
-    logger.Warn("UrlRegister has error:", err)
+    logger.Warnf("UrlRegister has error:", err)
     }
-    logger.Info("finish UrlRegister ,the result is->", result)
+    logger.Infof("finish UrlRegister ,the result is->", result)
 ```
 
 ## Entire Success log

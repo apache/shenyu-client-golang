@@ -22,7 +22,11 @@ import (
 	"github.com/apache/shenyu-client-golang/common/constants"
 	"github.com/apache/shenyu-client-golang/common/shenyu_sdk_client"
 	"github.com/apache/shenyu-client-golang/model"
-	"github.com/wonderivan/logger"
+	"github.com/sirupsen/logrus"
+)
+
+var (
+	logger = logrus.New()
 )
 
 func main() {
@@ -37,7 +41,7 @@ func main() {
 	client, createResult, err := sdkClient.NewClient(zcp)
 
 	if !createResult && err != nil {
-		logger.Fatal("Create ShenYuZkClient error : %+V", err)
+		logger.Fatalf("Create ShenYuZkClient error : %+v", err)
 	}
 
 	zc := client.(*zk_client.ShenYuZkClient)
@@ -60,9 +64,9 @@ func main() {
 	}
 	result, err := zc.PersistInterface(metaData)
 	if err != nil {
-		logger.Warn("MetaDataRegister has error:", err)
+		logger.Warnf("MetaDataRegister has error:%+v", err)
 	}
-	logger.Info("finish register metadata ,the result is->", result)
+	logger.Infof("finish register metadata ,the result is->%+v", result)
 
 	//init urlRegister
 	urlRegister := &model.URIRegister{
@@ -75,9 +79,9 @@ func main() {
 	}
 	result,err = zc.PersistURI(urlRegister)
 	if err != nil {
-		logger.Warn("UrlRegister has error:", err)
+		logger.Warnf("UrlRegister has error:%+v", err)
 	}
-	logger.Info("finish UrlRegister ,the result is->", result)
+	logger.Infof("finish UrlRegister ,the result is->%+v", result)
 
 	//do your logic
 }

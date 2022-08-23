@@ -14,7 +14,7 @@
     client, createResult, err := sdkClient.NewClient(zcp)
     
     if !createResult && err != nil {
-    logger.Fatal("Create ShenYuZkClient error : %+V", err)
+    logger.Fatalf("Create ShenYuZkClient error : %+V", err)
     }
     
     zc := client.(*zk_client.ShenYuZkClient)
@@ -37,9 +37,9 @@
 	}
     result, err := zc.PersistInterface(metaData)
     if err != nil {
-    logger.Warn("MetaDataRegister has error:", err)
+    logger.Warnf("MetaDataRegister has error:", err)
     }
-    logger.Info("finish register metadata ,the result is->", result)
+    logger.Infof("finish register metadata ,the result is->", result)
 
 
 当你注册成功,你将看到这些:
@@ -60,9 +60,9 @@ finish register metadata ,the result is-> true
     }
     result, err = zc.PersistInterface(urlRegister)
     if err != nil {
-    logger.Warn("UrlRegister has error:", err)
+    logger.Warnf("UrlRegister has error:", err)
     }
-    logger.Info("finish UrlRegister ,the result is->", result)
+    logger.Infof("finish UrlRegister ,the result is->", result)
 ```
 
 ## 完整的成功日志

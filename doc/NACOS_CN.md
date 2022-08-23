@@ -14,7 +14,7 @@
     sdkClient := shenyu_sdk_client.GetFactoryClient(constants.NACOS_CLIENT)
     client, createResult, err := sdkClient.NewClient(ncp)
     if !createResult && err != nil {
-    logger.Fatal("Create ShenYuNacosClient error : %+V", err)
+    logger.Fatalf("Create ShenYuNacosClient error : %+V", err)
     }
     
     nc := client.(*nacos_client.ShenYuNacosClient)
@@ -33,9 +33,9 @@
 	}
     result, err := nc.PersistInterface(metaData)
     if err != nil {
-    logger.Warn("MetaDataRegister has error:", err)
+    logger.Warnf("MetaDataRegister has error:", err)
     }
-    logger.Info("finish register metadata ,the result is->", result)
+    logger.Infof("finish register metadata ,the result is->", result)
 
 
 当你注册成功,你将看到这些:
@@ -56,9 +56,9 @@ finish register metadata ,the result is-> true
     }
     result, err = nc.PersistInterface(urlRegister)
     if err != nil {
-    logger.Warn("UrlRegister has error:", err)
+    logger.Warnf("UrlRegister has error:", err)
     }
-    logger.Info("finish UrlRegister ,the result is->", result)
+    logger.Infof("finish UrlRegister ,the result is->", result)
 ```
 
 **完整的成功日志**

@@ -27,10 +27,14 @@ import (
 	"github.com/nacos-group/nacos-sdk-go/clients/naming_client"
 	"github.com/nacos-group/nacos-sdk-go/common/constant"
 	"github.com/nacos-group/nacos-sdk-go/vo"
-	"github.com/wonderivan/logger"
+	"github.com/sirupsen/logrus"
 	"net"
 	"net/url"
 	"strconv"
+)
+
+var (
+	logger = logrus.New()
 )
 
 /**
@@ -60,14 +64,14 @@ type NacosClientParam struct {
 func (nc *ShenYuNacosClient) NewClient(clientParam interface{}) (client interface{}, createResult bool, err error) {
 	ncp, ok := clientParam.(*NacosClientParam)
 	if !ok {
-		logger.Fatal("init nacos client error %+v:", err)
+		logger.Fatalf("init nacos client error %+v:", err)
 	}
 	if len(ncp.ServerList) == 0{
-		logger.Fatal("The clientParam ServerList must not nil!")
+		logger.Fatalf("The clientParam ServerList must not nil!")
 	}
 	namingClient,configClient, err := ncp.initNacosClient()
 	if err != nil {
-		logger.Fatal("init nacos client error %+v:", err)
+		logger.Fatalf("init nacos client error %+v:", err)
 	}
 
 	if ncp.GroupName == "" {
@@ -137,7 +141,7 @@ PersistInterface
 func (nc *ShenYuNacosClient) PersistInterface(metaData interface{})(registerResult bool, err error){
 	var metadata,ok =  metaData.(*model.MetaDataRegister)
 	if !ok {
-		logger.Fatal("get nacos client metaData error %+v:", err)
+		logger.Fatalf("get nacos client metaData error %+v:", err)
 	}
 	utils.BuildMetadataDto(metadata)
 	var contextPath = utils.BuildRealNodeRemovePrefix(metadata.ContextPath, metadata.AppName)
@@ -154,10 +158,10 @@ func (nc *ShenYuNacosClient) PersistInterface(metaData interface{})(registerResu
 	}
 	publishResult,err := nc.ConfigClient.PublishConfig(param)
 	if !publishResult{
-		logger.Error("nacos register metadata fail,please check: %+v",err)
+		logger.Errorf("nacos register metadata fail,please check: %+v",err)
 		return publishResult,err
 	}
-	logger.Info("rpcType:%s ->nacos client register success,meta:%s->ruleName:%s",metadata.RPCType,metadataStr,metadata.RuleName)
+	logger.Infof("rpcType:%s ->nacos client register success,meta:%s->ruleName:%s",metadata.RPCType,metadataStr,metadata.RuleName)
 	return publishResult,nil
 }
 
@@ -167,7 +171,7 @@ PersistURI
 func (nc *ShenYuNacosClient) PersistURI(uriRegisterData interface{})(registerResult bool, err error){
 	uriRegister,ok := uriRegisterData.(*model.URIRegister)
 	if !ok {
-		logger.Fatal("get nacos client uriregister error %+v:", err)
+		logger.Fatalf("get nacos client uriregister error %+v:", err)
 	}
 	//required
 	var serviceName = utils.BuildServiceInstancePath(uriRegister.RPCType)
@@ -187,10 +191,10 @@ func (nc *ShenYuNacosClient) PersistURI(uriRegisterData interface{})(registerRes
 	}
 	registerResult, err = nc.NamingClient.RegisterInstance(param)
 	if err != nil {
-		logger.Error("RegisterServiceInstance failure! ,error is :%+v", err)
+		logger.Errorf("RegisterServiceInstance failure! ,error is :%+v", err)
 		return false, err
 	}
-	logger.Info("RegisterServiceInstance,result:%+v\n\n,param:%+v \n\n", registerResult, param)
+	logger.Infof("RegisterServiceInstance,result:%+v\n\n,param:%+v \n\n", registerResult, param)
 	return registerResult, nil
 }
 

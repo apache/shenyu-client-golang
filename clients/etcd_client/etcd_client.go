@@ -23,9 +23,13 @@ import (
 	"github.com/apache/shenyu-client-golang/common/constants"
 	"github.com/apache/shenyu-client-golang/common/utils"
 	"github.com/apache/shenyu-client-golang/model"
-	"github.com/wonderivan/logger"
+	"github.com/sirupsen/logrus"
 	clientv3 "go.etcd.io/etcd/client/v3"
 	"time"
+)
+
+var (
+	logger = logrus.New()
 )
 
 /**
@@ -54,7 +58,7 @@ type EtcdClientParam struct {
 func (sec *ShenYuEtcdClient) NewClient(clientParam interface{}) (client interface{}, createResult bool, err error) {
 	ecp, ok := clientParam.(*EtcdClientParam)
 	if !ok {
-		logger.Fatal("The clientParam  must not nil!")
+		logger.Fatalf("The clientParam  must not nil!")
 	}
 	if len(ecp.ServerList) > 0 {
 		//use customer param to create client
@@ -65,7 +69,7 @@ func (sec *ShenYuEtcdClient) NewClient(clientParam interface{}) (client interfac
 			Password:    ecp.Password,
 		})
 		if err == nil {
-			logger.Info("Create customer etcd client success!")
+			logger.Infof("Create customer etcd client success!")
 			//get leaseId
 			var leaseId,err = genLeaseId(client,ecp.TTL)
 			if err != nil{
@@ -86,7 +90,7 @@ func (sec *ShenYuEtcdClient) NewClient(clientParam interface{}) (client interfac
 				GlobalLease: leaseId,
 			}, true, nil
 		}
-		logger.Fatal("init etcd client error %+v:", err)
+		logger.Fatalf("init etcd client error %+v:", err)
 	}
 	return
 }
@@ -97,7 +101,7 @@ PersistInterface
 func (sec *ShenYuEtcdClient) PersistInterface(metaData interface{})(registerResult bool, err error){
 	var metadata,ok =  metaData.(*model.MetaDataRegister)
 	if !ok {
-		logger.Fatal("get etcd client metaData error %+v:", err)
+		logger.Fatalf("get etcd client metaData error %+v:", err)
 	}
 	utils.BuildMetadataDto(metadata)
 	var contextPath = utils.BuildRealNodeRemovePrefix(metadata.ContextPath, metadata.AppName)
@@ -109,7 +113,7 @@ func (sec *ShenYuEtcdClient) PersistInterface(metaData interface{})(registerResu
 	if err != nil{
 		return false,err
 	}
-	logger.Info("%s etcd client register success: %s",metadata.RPCType,metadataStr)
+	logger.Infof("%s etcd client register success: %s",metadata.RPCType,metadataStr)
 	return true,nil
 }
 
@@ -119,7 +123,7 @@ PersistURI
 func (sec *ShenYuEtcdClient) PersistURI(uriRegisterData interface{})(registerResult bool, err error){
 	uriRegister,ok := uriRegisterData.(*model.URIRegister)
 	if !ok {
-		logger.Fatal("get etcd client uriregister error %+v:", err)
+		logger.Fatalf("get etcd client uriregister error %+v:", err)
 	}
 	var contextPath = utils.BuildRealNodeRemovePrefix(uriRegister.ContextPath, uriRegister.AppName)
 	var uriNodeName = utils.BuildURINodeName(*uriRegister)
@@ -130,7 +134,7 @@ func (sec *ShenYuEtcdClient) PersistURI(uriRegisterData interface{})(registerRes
     if err != nil{
     	return false, err
 	}
-	logger.Info("RegisterServiceInstance,result:%+v", true)
+	logger.Infof("RegisterServiceInstance,result:%+v", true)
 	return true, nil
 }
 
@@ -160,7 +164,7 @@ func  genLeaseId(client *clientv3.Client,ttl int64) (clientv3.LeaseID,error) {
 	//grant lease
 	lease, err := client.Grant(ctx, ttl)
 	if err != nil {
-		logger.Error("Grant lease failed: %v\n", err)
+		logger.Errorf("Grant lease failed: %v\n", err)
 		return 0,err
 	}
 	return lease.ID,nil
@@ -174,7 +178,7 @@ func  keepAlive(client *clientv3.Client,leaseId clientv3.LeaseID)  {
 	//keep alive
 	kaCh, err := client.KeepAlive(context.Background(), leaseId)
 	if err != nil {
-		logger.Error("Keep alive with lease[%s] failed: %v\n",leaseId, err)
+		logger.Errorf("Keep alive with lease[%v] failed: %v\n",leaseId, err)
 		return
 	}
 	for {

@@ -23,8 +23,12 @@ import (
 	"github.com/apache/shenyu-client-golang/common/utils"
 	"github.com/apache/shenyu-client-golang/model"
 	"github.com/hashicorp/consul/api"
-	"github.com/wonderivan/logger"
+	"github.com/sirupsen/logrus"
 	"strconv"
+)
+
+var (
+	logger = logrus.New()
 )
 
 /**
@@ -53,10 +57,10 @@ type ConsulClientParam struct {
 func (scc *ShenYuConsulClient) NewClient(clientParam interface{}) (client interface{}, createResult bool, err error) {
 	ccp, ok := clientParam.(*ConsulClientParam)
 	if !ok {
-		logger.Fatal("The clientParam  must not nil!")
+		logger.Fatalf("The clientParam  must not nil!")
 	}
 	if len(ccp.ServerList) == 0{
-		logger.Fatal("The clientParam ServerList must not nil!")
+		logger.Fatalf("The clientParam ServerList must not nil!")
 	}
 	//use customer param to create client
 	config := api.DefaultConfig()
@@ -65,7 +69,7 @@ func (scc *ShenYuConsulClient) NewClient(clientParam interface{}) (client interf
 	//config.Namespace = ccp.NameSpace
 	client, err = api.NewClient(config)
 	if err == nil {
-		logger.Info("Create customer consul client success!")
+		logger.Infof("Create customer consul client success!")
 		return &ShenYuConsulClient{
 			Ccp: &ConsulClientParam{
 				 Id: ccp.Id,
@@ -77,7 +81,7 @@ func (scc *ShenYuConsulClient) NewClient(clientParam interface{}) (client interf
 			ConsulClient: client.(*api.Client),
 		}, true, nil
 	}
-	logger.Error("init consul client error %+v:", err)
+	logger.Errorf("init consul client error %+v:", err)
 	return nil,false,err
 }
 
@@ -87,7 +91,7 @@ PersistInterface
 func (scc *ShenYuConsulClient) PersistInterface(metaData interface{})(registerResult bool, err error){
 	var metadata,ok =  metaData.(*model.MetaDataRegister)
 	if !ok {
-		logger.Fatal("get consul client metaData error %+v:", err)
+		logger.Fatalf("get consul client metaData error %+v:", err)
 	}
 	utils.BuildMetadataDto(metadata)
 	var contextPath = utils.BuildRealNodeRemovePrefix(metadata.ContextPath, metadata.AppName)
@@ -103,10 +107,10 @@ func (scc *ShenYuConsulClient) PersistInterface(metaData interface{})(registerRe
 	}
     _,err =scc.ConsulClient.KV().Put(putPair,nil)
     if err != nil{
-		logger.Error("Consul client register failure! ,error is :%+v", err)
+		logger.Errorf("Consul client register failure! ,error is :%+v", err)
 		return false,err
 	}
-	logger.Info("%s Consul client register success: %s",metadata.RPCType,metadataStr)
+	logger.Infof("%s Consul client register success: %s",metadata.RPCType,metadataStr)
 	return true,nil
 }
 
@@ -116,7 +120,7 @@ PersistURI
 func (scc *ShenYuConsulClient) PersistURI(uriRegisterData interface{})(registerResult bool, err error){
 	uriRegister,ok := uriRegisterData.(*model.URIRegister)
 	if !ok {
-		logger.Fatal("get consul client uriregister error %+v:", err)
+		logger.Fatalf("get consul client uriregister error %+v:", err)
 	}
 	port, _ := strconv.Atoi(uriRegister.Port)
 	uriRegString, _ := json.Marshal(uriRegister)
@@ -145,9 +149,9 @@ func (scc *ShenYuConsulClient) PersistURI(uriRegisterData interface{})(registerR
 	//register
 	err = scc.ConsulClient.Agent().ServiceRegister(registration)
 	if err != nil {
-		logger.Fatal("RegisterServiceInstance failure! ,error is :%+v", err)
+		logger.Fatalf("RegisterServiceInstance failure! ,error is :%+v", err)
 	}
-	logger.Info("RegisterServiceInstance,result:%+v", true)
+	logger.Infof("RegisterServiceInstance,result:%+v", true)
 	return true, nil
 }
 
@@ -157,7 +161,7 @@ Close
 func (scc *ShenYuConsulClient) Close(){
   var err=	scc.ConsulClient.Agent().ServiceDeregister(scc.Ccp.Id)
   if err != nil{
-  	logger.Error("close consul fail:%=v",err)
+  	logger.Errorf("close consul fail:%=v",err)
   }
 }
 
