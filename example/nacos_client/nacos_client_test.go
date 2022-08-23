@@ -52,7 +52,7 @@ func TestInitNacosClient(t *testing.T) {
 func TestRegisterServiceInstance(t *testing.T) {
 	//set nacos env configuration
 	ncp := &nacos_client.NacosClientParam{
-		ServerList:   []string{ "http://127.0.0.1:8848"},   //"console.nacos.io",
+		ServerList:   []string{ "http://console.nacos.io:80"},   //"console.nacos.io",
 		NamespaceId: "ShenyuRegisterCenter",
 		UserName: "",
 		Password: "",
