@@ -238,7 +238,7 @@ func(zc *ShenYuZkClient) createNodeOrUpdate(path string,data []byte, acl []zk.AC
 		var exist,_,_ = zc.ZkClient.Exists(cur)
 		if exist {
 			if cur == tempPath{
-				_,err = zc.ZkClient.Set(path,data,-1)
+				_,err = zc.ZkClient.Set(utils.RepairData(path),data,-1)
 			}
 			continue
 		}
