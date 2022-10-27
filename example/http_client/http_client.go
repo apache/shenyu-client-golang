@@ -35,7 +35,7 @@ func main() {
 		Password: "123456", //user provide
 	}
 
-	adminToken, err := clients.NewShenYuAdminClient(adminClient)
+	adminToken, err := clients.NewShenYuAdminClient("", adminClient)
 	if err == nil {
 		fmt.Printf("this is ShenYu Admin client token %v ->", adminToken.AdminTokenData.Token)
 	}
@@ -49,7 +49,7 @@ func main() {
 		Host:        "127.0.0.1",         //require user provide
 		Port:        "8080",              //require user provide
 	}
-	result, err := clients.RegisterMetaData(adminToken.AdminTokenData, metaData)
+	result, err := clients.RegisterMetaData("", adminToken.AdminTokenData, metaData)
 	if err != nil {
 		fmt.Printf("MetaDataRegister has error %v:", err)
 	}
@@ -64,7 +64,7 @@ func main() {
 		Host:        "127.0.0.1",            //require user provide
 		Port:        "8080",                 //require user provide
 	}
-	result, err = clients.UrlRegister(adminToken.AdminTokenData, urlRegister)
+	result, err = clients.UrlRegister("", adminToken.AdminTokenData, urlRegister)
 	if err != nil {
 		fmt.Printf("UrlRegister has error %v:", err)
 	}

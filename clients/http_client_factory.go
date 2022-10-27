@@ -23,13 +23,14 @@ import (
 	"github.com/apache/shenyu-client-golang/common/constants"
 	"github.com/apache/shenyu-client-golang/common/shenyu_error"
 	"github.com/apache/shenyu-client-golang/model"
+	"net/url"
 	"reflect"
 )
 
 /**
  * Get ShenYuAdminClient
  **/
-func NewShenYuAdminClient(client *model.ShenYuAdminClient) (adminToken model.AdminToken, err error) {
+func NewShenYuAdminClient(shenyuAdmin string, client *model.ShenYuAdminClient) (adminToken model.AdminToken, err error) {
 	headers := map[string][]string{}
 	headers[constants.DEFAULT_CONNECTION] = []string{constants.DEFAULT_CONNECTION_VALUE}
 	headers[constants.DEFAULT_CONTENT_TYPE] = []string{constants.DEFAULT_CONTENT_TYPE_VALUE}
@@ -39,11 +40,11 @@ func NewShenYuAdminClient(client *model.ShenYuAdminClient) (adminToken model.Adm
 		params[constants.ADMIN_USERNAME] = constants.DEFAULT_ADMIN_ACCOUNT
 		params[constants.ADMIN_PASSWORD] = constants.DEFAULT_ADMIN_PASSWORD
 	} else {
-		params[constants.ADMIN_USERNAME] = client.UserName
-		params[constants.ADMIN_PASSWORD] = client.Password
+		params[constants.ADMIN_USERNAME] = url.PathEscape(client.UserName)
+		params[constants.ADMIN_PASSWORD] = url.PathEscape(client.Password)
 	}
 
-	tokenRequest := initShenYuCommonRequest(headers, params, constants.DEFAULT_SHENYU_TOKEN, "token")
+	tokenRequest := initShenYuCommonRequest(headers, shenyuAdmin, params, constants.DEFAULT_SHENYU_TOKEN, "token")
 
 	adminToken, err = admin_client.GetShenYuAdminUser(tokenRequest)
 	if err == nil {
@@ -56,7 +57,7 @@ func NewShenYuAdminClient(client *model.ShenYuAdminClient) (adminToken model.Adm
 /**
  * Register metadata to ShenYu Gateway
  **/
-func RegisterMetaData(adminTokenData model.AdminTokenData, metaData *model.MetaDataRegister) (registerResult bool, err error) {
+func RegisterMetaData(shenyuAdmin string, adminTokenData model.AdminTokenData, metaData *model.MetaDataRegister) (registerResult bool, err error) {
 	headers := adapterHeaders(adminTokenData)
 
 	params := map[string]string{}
@@ -81,7 +82,7 @@ func RegisterMetaData(adminTokenData model.AdminTokenData, metaData *model.MetaD
 		params["ruleName"] = metaData.Path
 	}
 
-	tokenRequest := initShenYuCommonRequest(headers, params, constants.REGISTER_METADATA, "")
+	tokenRequest := initShenYuCommonRequest(headers, shenyuAdmin, params, constants.REGISTER_METADATA, "")
 
 	registerResult, err = http_client.RegisterMetaData(tokenRequest)
 	if err == nil {
@@ -94,7 +95,7 @@ func RegisterMetaData(adminTokenData model.AdminTokenData, metaData *model.MetaD
 /**
  * Url Register to ShenYu Gateway
  **/
-func UrlRegister(adminTokenData model.AdminTokenData, urlMetaData *model.URIRegister) (registerResult bool, err error) {
+func UrlRegister(shenyuAdmin string, adminTokenData model.AdminTokenData, urlMetaData *model.URIRegister) (registerResult bool, err error) {
 	headers := adapterHeaders(adminTokenData)
 
 	params := map[string]string{}
@@ -108,7 +109,7 @@ func UrlRegister(adminTokenData model.AdminTokenData, urlMetaData *model.URIRegi
 	params["port"] = urlMetaData.Port
 	params["rpcType"] = urlMetaData.RPCType
 
-	tokenRequest := initShenYuCommonRequest(headers, params, constants.REGISTER_URI, "")
+	tokenRequest := initShenYuCommonRequest(headers, shenyuAdmin, params, constants.REGISTER_URI, "")
 
 	registerResult, err = http_client.DoUrlRegister(tokenRequest)
 	if err == nil {
@@ -121,12 +122,17 @@ func UrlRegister(adminTokenData model.AdminTokenData, urlMetaData *model.URIRegi
 /**
  * initShenYuCommonRequest
  **/
-func initShenYuCommonRequest(headers map[string][]string, params map[string]string, requestUrl string, busType string) *model.ShenYuCommonRequest {
+func initShenYuCommonRequest(headers map[string][]string, shenyuAdmin string, params map[string]string, requestUrl string, busType string) *model.ShenYuCommonRequest {
 	url := ""
-	if len(busType) > 0 {
-		url = constants.DEFAULT_SHENYU_ADMIN_URL + requestUrl //get Token
+	if len(shenyuAdmin) > 0 {
+		url = shenyuAdmin
 	} else {
-		url = constants.DEFAULT_SHENYU_ADMIN_URL + constants.DEFAULT_BASE_PATH + requestUrl //register
+		url = constants.DEFAULT_SHENYU_ADMIN_URL
+	}
+	if len(busType) > 0 {
+		url = url + requestUrl //get Token
+	} else {
+		url = url + constants.DEFAULT_BASE_PATH + requestUrl //register
 	}
 	tokenRequest := &model.ShenYuCommonRequest{
 		Url:       url,
