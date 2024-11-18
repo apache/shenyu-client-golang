@@ -24,6 +24,7 @@ import (
 	"github.com/apache/shenyu-client-golang/common/shenyu_error"
 	"github.com/apache/shenyu-client-golang/model"
 	"reflect"
+	"strings"
 )
 
 /**
@@ -57,65 +58,80 @@ func NewShenYuAdminClient(client *model.ShenYuAdminClient) (adminToken model.Adm
  * Register metadata to ShenYu Gateway
  **/
 func RegisterMetaData(adminTokenData model.AdminTokenData, metaData *model.MetaDataRegister) (registerResult bool, err error) {
-	headers := adapterHeaders(adminTokenData)
 
-	params := map[string]string{}
-	if metaData.AppName == "" || metaData.Path == "" || metaData.Host == "" || metaData.Port == "" {
+	if metaData.AppName == "" || metaData.Path == "" || metaData.Host == "" || metaData.Port == "" || metaData.NamespaceIds == "" {
 		return false, shenyu_error.NewShenYuError(constants.MISS_PARAM_ERROR_CODE, constants.MISS_PARAM_ERROR_MSG, err)
 	}
-	params["appName"] = metaData.AppName
-	params["path"] = metaData.Path
-	params["contextPath"] = metaData.ContextPath
-	params["host"] = metaData.Host
-	params["port"] = metaData.Port
 
-	if metaData.RPCType != "" {
-		params["rpcType"] = metaData.RPCType
-	} else {
-		params["rpcType"] = constants.RPCTYPE_HTTP
+	namespaceIds := strings.Split(metaData.NamespaceIds, ";")
+
+	for _, namespaceId := range namespaceIds {
+		if namespaceId == "" {
+			continue
+		}
+		params := map[string]string{}
+		params["appName"] = metaData.AppName
+		params["path"] = metaData.Path
+		params["contextPath"] = metaData.ContextPath
+		params["host"] = metaData.Host
+		params["port"] = metaData.Port
+		params["namespaceId"] = namespaceId
+
+		if metaData.RPCType != "" {
+			params["rpcType"] = metaData.RPCType
+		} else {
+			params["rpcType"] = constants.RPCTYPE_HTTP
+		}
+
+		if metaData.RuleName != "" {
+			params["ruleName"] = metaData.RuleName
+		} else {
+			params["ruleName"] = metaData.Path
+		}
+		headers := adapterHeaders(adminTokenData)
+		tokenRequest := initShenYuCommonRequest(headers, params, constants.REGISTER_METADATA, "")
+
+		_, err = http_client.RegisterMetaData(tokenRequest)
+		if err != nil {
+			return false, err
+		}
 	}
-
-	if metaData.RuleName != "" {
-		params["ruleName"] = metaData.RuleName
-	} else {
-		params["ruleName"] = metaData.Path
-	}
-
-	tokenRequest := initShenYuCommonRequest(headers, params, constants.REGISTER_METADATA, "")
-
-	registerResult, err = http_client.RegisterMetaData(tokenRequest)
-	if err == nil {
-		return registerResult, nil
-	} else {
-		return false, err
-	}
+	return true, nil
 }
 
 /**
  * Url Register to ShenYu Gateway
  **/
 func UrlRegister(adminTokenData model.AdminTokenData, urlMetaData *model.URIRegister) (registerResult bool, err error) {
-	headers := adapterHeaders(adminTokenData)
 
-	params := map[string]string{}
-	if urlMetaData.AppName == "" || urlMetaData.RPCType == "" || urlMetaData.Host == "" || urlMetaData.Port == "" {
+	if urlMetaData.AppName == "" || urlMetaData.RPCType == "" || urlMetaData.Host == "" || urlMetaData.Port == "" || urlMetaData.NamespaceIds == "" {
 		return false, shenyu_error.NewShenYuError(constants.MISS_PARAM_ERROR_CODE, constants.MISS_PARAM_ERROR_MSG, err)
 	}
-	params["protocol"] = urlMetaData.Protocol
-	params["appName"] = urlMetaData.AppName
-	params["contextPath"] = urlMetaData.ContextPath
-	params["host"] = urlMetaData.Host
-	params["port"] = urlMetaData.Port
-	params["rpcType"] = urlMetaData.RPCType
 
-	tokenRequest := initShenYuCommonRequest(headers, params, constants.REGISTER_URI, "")
+	namespaceIds := strings.Split(urlMetaData.NamespaceIds, ";")
 
-	registerResult, err = http_client.DoUrlRegister(tokenRequest)
-	if err == nil {
-		return registerResult, nil
-	} else {
-		return false, err
+	for _, namespaceId := range namespaceIds {
+		if namespaceId == "" {
+			continue
+		}
+		params := map[string]string{}
+		params["protocol"] = urlMetaData.Protocol
+		params["appName"] = urlMetaData.AppName
+		params["contextPath"] = urlMetaData.ContextPath
+		params["host"] = urlMetaData.Host
+		params["port"] = urlMetaData.Port
+		params["rpcType"] = urlMetaData.RPCType
+		params["namespaceId"] = namespaceId
+
+		headers := adapterHeaders(adminTokenData)
+		tokenRequest := initShenYuCommonRequest(headers, params, constants.REGISTER_URI, "")
+
+		_, err = http_client.DoUrlRegister(tokenRequest)
+		if err != nil {
+			return false, err
+		}
 	}
+	return true, nil
 }
 
 /**

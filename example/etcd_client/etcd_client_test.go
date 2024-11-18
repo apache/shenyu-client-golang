@@ -33,7 +33,7 @@ import (
 func TestInitEtcdClient(t *testing.T) {
 	ecp := &etcd_client.EtcdClientParam{
 		EtcdServers: []string{"http://127.0.0.1:2379"}, //require user provide
-		TTL:    50,
+		TTL:         50,
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
@@ -52,7 +52,7 @@ func TestInitEtcdClient(t *testing.T) {
 func TestRegisterServiceInstanceAndGetServiceInstanceInfo(t *testing.T) {
 	ecp := &etcd_client.EtcdClientParam{
 		EtcdServers: []string{"http://127.0.0.1:2379"}, //require user provide
-		TTL:    50,
+		TTL:         50,
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
@@ -67,21 +67,22 @@ func TestRegisterServiceInstanceAndGetServiceInstanceInfo(t *testing.T) {
 
 	//init MetaDataRegister
 	metaData1 := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister1", //require user provide
-		Path:    "your/path1",            //require user provide
-		Enabled: true,                    //require user provide
-		Host:    "127.0.0.1",             //require user provide
-		Port:    "8080",                  //require user provide
+		AppName:      "testMetaDataRegister1",                //require user provide
+		Path:         "your/path1",                           //require user provide
+		Enabled:      true,                                   //require user provide
+		Host:         "127.0.0.1",                            //require user provide
+		Port:         "8080",                                 //require user provide
+		NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 	}
 
 	metaData2 := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister2", //require user provide
-		Path:    "your/path2",            //require user provide
-		Enabled: true,                    //require user provide
-		Host:    "127.0.0.1",             //require user provide
-		Port:    "8181",                  //require user provide
+		AppName:      "testMetaDataRegister2",                //require user provide
+		Path:         "your/path2",                           //require user provide
+		Enabled:      true,                                   //require user provide
+		Host:         "127.0.0.1",                            //require user provide
+		Port:         "8181",                                 //require user provide
+		NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 	}
-
 
 	//register multiple metaData
 	registerResult1, err := etcd.RegisterServiceInstance(metaData1)
@@ -91,7 +92,6 @@ func TestRegisterServiceInstanceAndGetServiceInstanceInfo(t *testing.T) {
 	registerResult2, err := etcd.RegisterServiceInstance(metaData2)
 	assert.Nil(t, err)
 	assert.True(t, registerResult2)
-
 
 	time.Sleep(time.Second)
 
@@ -111,7 +111,7 @@ func TestRegisterServiceInstanceAndGetServiceInstanceInfo(t *testing.T) {
 func TestDeRegisterServiceInstance(t *testing.T) {
 	ecp := &etcd_client.EtcdClientParam{
 		EtcdServers: []string{"http://127.0.0.1:2379"}, //require user provide
-		TTL:    50,
+		TTL:         50,
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.ETCD_CLIENT)
@@ -126,21 +126,22 @@ func TestDeRegisterServiceInstance(t *testing.T) {
 
 	//init MetaDataRegister
 	metaData1 := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister1", //require user provide
-		Path:    "your/path1",            //require user provide
-		Enabled: true,                    //require user provide
-		Host:    "127.0.0.1",             //require user provide
-		Port:    "8080",                  //require user provide
+		AppName:      "testMetaDataRegister1",                //require user provide
+		Path:         "your/path1",                           //require user provide
+		Enabled:      true,                                   //require user provide
+		Host:         "127.0.0.1",                            //require user provide
+		Port:         "8080",                                 //require user provide
+		NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 	}
 
 	metaData2 := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister2", //require user provide
-		Path:    "your/path2",            //require user provide
-		Enabled: true,                    //require user provide
-		Host:    "127.0.0.1",             //require user provide
-		Port:    "8181",                  //require user provide
+		AppName:      "testMetaDataRegister2",                //require user provide
+		Path:         "your/path2",                           //require user provide
+		Enabled:      true,                                   //require user provide
+		Host:         "127.0.0.1",                            //require user provide
+		Port:         "8181",                                 //require user provide
+		NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 	}
-
 
 	//register multiple metaData
 	registerResult1, err := etcd.DeregisterServiceInstance(metaData1)
@@ -151,5 +152,3 @@ func TestDeRegisterServiceInstance(t *testing.T) {
 	assert.Nil(t, err)
 	assert.True(t, registerResult2)
 }
-
-

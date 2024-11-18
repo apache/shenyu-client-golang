@@ -37,38 +37,40 @@ func main() {
 
 	adminToken, err := clients.NewShenYuAdminClient(adminClient)
 	if err == nil {
-		fmt.Printf("this is ShenYu Admin client token %v ->", adminToken.AdminTokenData.Token)
+		fmt.Printf("this is ShenYu Admin client token: %v\n", adminToken.AdminTokenData.Token)
 	}
 
 	//init MetaDataRegister
 	metaData := &model.MetaDataRegister{
-		AppName:     "testGoAppName",     //require user provide
-		Path:        "/golang/your/path", //require user provide
-		ContextPath: "/golang",           //require user provide
-		Enabled:     true,                //require user provide
-		Host:        "127.0.0.1",         //require user provide
-		Port:        "8080",              //require user provide
+		AppName:      "testGoAppName",                        //require user provide
+		Path:         "/golang/your/path",                    //require user provide
+		ContextPath:  "/golang",                              //require user provide
+		Enabled:      true,                                   //require user provide
+		Host:         "127.0.0.1",                            //require user provide
+		Port:         "8080",                                 //require user provide
+		NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 	}
 	result, err := clients.RegisterMetaData(adminToken.AdminTokenData, metaData)
 	if err != nil {
-		fmt.Printf("MetaDataRegister has error %v:", err)
+		fmt.Printf("MetaDataRegister has error: %v\n", err)
 	}
-	fmt.Printf("finish register metadata ,the result is %v ->", result)
+	fmt.Printf("finish register metadata ,the result is: %v\n", result)
 
 	//init urlRegister
 	urlRegister := &model.URIRegister{
-		Protocol:    "http://",              //require user provide
-		AppName:     "testGoAppName",        //require user provide
-		ContextPath: "/golang",              //require user provide
-		RPCType:     constants.RPCTYPE_HTTP, //require user provide
-		Host:        "127.0.0.1",            //require user provide
-		Port:        "8080",                 //require user provide
+		Protocol:     "http://",                              //require user provide
+		AppName:      "testGoAppName",                        //require user provide
+		ContextPath:  "/golang",                              //require user provide
+		RPCType:      constants.RPCTYPE_HTTP,                 //require user provide
+		Host:         "127.0.0.1",                            //require user provide
+		Port:         "8080",                                 //require user provide
+		NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 	}
 	result, err = clients.UrlRegister(adminToken.AdminTokenData, urlRegister)
 	if err != nil {
-		fmt.Printf("UrlRegister has error %v:", err)
+		fmt.Printf("UrlRegister has error: %v\n", err)
 	}
-	fmt.Printf("finish UrlRegister ,the result is %v ->", result)
+	fmt.Printf("finish UrlRegister ,the result is: %v\n", result)
 
 	//do you logic
 }

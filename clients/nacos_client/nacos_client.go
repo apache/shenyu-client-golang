@@ -42,7 +42,7 @@ type ShenYuNacosClient struct {
 type NacosClientParam struct {
 	IpAddr      string //the nacos server address require user provide
 	Port        uint64 //the nacos server port require user provide
-	NamespaceId string // the namespaceId of Nacos.When namespace is public, fill in the blank string here  require user provide.
+	NamespaceId string //the namespaceId of Nacos require user provide.
 }
 
 /**

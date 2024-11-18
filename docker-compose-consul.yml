@@ -17,7 +17,7 @@ version: "3.1"
 
 services:
   consul1:
-    image: consul:latest
+    image: consul:1.15.4
     container_name: consul1
     restart: always
     networks:
@@ -28,35 +28,43 @@ services:
       - ./data/consul/consul1/config:/consul/config
 
   consul2:
-    image: consul:latest
+    image: consul:1.15.4
     container_name: consul2
     restart: always
     networks:
       - shenyu
+    depends_on:
+      - consul1
     command: agent -server -client=0.0.0.0 -bind 0.0.0.0 -retry-join=consul1 -node=consul2
     volumes:
       - ./data/consul/consul2/data:/consul/data
       - ./data/consul/consul2/config:/consul/config
 
   consul3:
-    image: consul:latest
+    image: consul:1.15.4
     container_name: consul3
     restart: always
     networks:
       - shenyu
+    depends_on:
+      - consul1
     command: agent -server -client=0.0.0.0 -bind 0.0.0.0 -retry-join=consul1 -node=consul3
     volumes:
       - ./data/consul/consul3/data:/consul/data
       - ./data/consul/consul3/config:/consul/config
 
   consul4:
-    image: consul:latest
+    image: consul:1.15.4
     container_name: consul4
     restart: always
     ports:
       - 8500:8500
     networks:
       - shenyu
+    depends_on:
+      - consul1
+      - consul2
+      - consul3
     command: agent -client=0.0.0.0 -bind 0.0.0.0 -retry-join=consul1 -ui -node=client1
     volumes:
       - ./data/consul/consul4/data:/consul/data

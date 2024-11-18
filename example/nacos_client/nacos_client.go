@@ -39,7 +39,7 @@ func main() {
 	ncp := &nacos_client.NacosClientParam{
 		IpAddr:      "console.nacos.io",
 		Port:        80,
-		NamespaceId: "e525eafa-f7d7-4029-83d9-008937f9d468",
+		NamespaceId: "public",
 	}
 
 	sdkClient := shenyu_sdk_client.GetFactoryClient(constants.NACOS_CLIENT)
@@ -56,12 +56,13 @@ func main() {
 	//RegisterServiceInstance start
 	//metaData is necessary param, this will be register to shenyu gateway to use
 	metaData := &model.URIRegister{
-		Protocol:    "testMetaDataRegister", //require user provide
-		AppName:     "testURLRegister",      //require user provide
-		ContextPath: "contextPath",          //require user provide
-		RPCType:     constants.RPCTYPE_HTTP, //require user provide
-		Host:        "127.0.0.1",            //require user provide
-		Port:        "8080",                 //require user provide
+		Protocol:     "testMetaDataRegister",                 //require user provide
+		AppName:      "testURLRegister",                      //require user provide
+		ContextPath:  "contextPath",                          //require user provide
+		RPCType:      constants.RPCTYPE_HTTP,                 //require user provide
+		Host:         "127.0.0.1",                            //require user provide
+		Port:         "8080",                                 //require user provide
+		NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 	}
 	metaDataStringJson, _ := json.Marshal(metaData)
 

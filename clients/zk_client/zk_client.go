@@ -90,6 +90,12 @@ func (zc *ShenYuZkClient) DeregisterServiceInstance(metaData interface{}) (deReg
 	if err != nil {
 		return false, err
 	}
+	if len(childs) == 0 {
+		err := zc.ZkClient.Delete(path, stat.Version)
+		if err != nil {
+			return false, err
+		}
+	}
 	for _, child := range childs {
 		fullPath := path + "/" + child
 		err := zc.ZkClient.Delete(fullPath, stat.Version)
