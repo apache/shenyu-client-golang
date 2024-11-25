@@ -44,19 +44,21 @@ func main() {
 
 	//init MetaDataRegister
 	metaData1 := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister1", //require user provide
-		Path:    "your/path1",            //require user provide
-		Enabled: true,                    //require user provide
-		Host:    "127.0.0.1",             //require user provide
-		Port:    "8080",                  //require user provide
+		AppName:      "testMetaDataRegister1",                //require user provide
+		Path:         "your/path1",                           //require user provide
+		Enabled:      true,                                   //require user provide
+		Host:         "127.0.0.1",                            //require user provide
+		Port:         "8080",                                 //require user provide
+		NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 	}
 
 	metaData2 := &model.MetaDataRegister{
-		AppName: "testMetaDataRegister2", //require user provide
-		Path:    "your/path2",            //require user provide
-		Enabled: true,                    //require user provide
-		Host:    "127.0.0.1",             //require user provide
-		Port:    "8181",                  //require user provide
+		AppName:      "testMetaDataRegister2",                //require user provide
+		Path:         "your/path2",                           //require user provide
+		Enabled:      true,                                   //require user provide
+		Host:         "127.0.0.1",                            //require user provide
+		Port:         "8181",                                 //require user provide
+		NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 	}
 
 	//register multiple metaData

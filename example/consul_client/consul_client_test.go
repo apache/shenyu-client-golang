@@ -73,36 +73,39 @@ func TestRegisterServiceInstance(t *testing.T) {
 	metaData1 := &model.ConsulMetaDataRegister{
 		ServiceId: uuid1,
 		ShenYuMetaData: &model.MetaDataRegister{
-			AppName: "testMetaDataRegister1", //require user provide
-			Path:    "/your/path1",           //require user provide
-			Enabled: true,                    //require user provide
-			Host:    "127.0.0.1",             //require user provide
-			Port:    "8080",                  //require user provide
-			RPCType: "http",                  //require user provide
+			AppName:      "testMetaDataRegister1",                //require user provide
+			Path:         "/your/path1",                          //require user provide
+			Enabled:      true,                                   //require user provide
+			Host:         "127.0.0.1",                            //require user provide
+			Port:         "8080",                                 //require user provide
+			RPCType:      "http",                                 //require user provide
+			NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 		},
 	}
 
 	metaData2 := &model.ConsulMetaDataRegister{
 		ServiceId: uuid2,
 		ShenYuMetaData: &model.MetaDataRegister{
-			AppName: "testMetaDataRegister2", //require user provide
-			Path:    "/your/path2",           //require user provide
-			Enabled: true,                    //require user provide
-			Host:    "127.0.0.1",             //require user provide
-			Port:    "8181",                  //require user provide
-			RPCType: "http",                  //require user provide
+			AppName:      "testMetaDataRegister2",                //require user provide
+			Path:         "/your/path2",                          //require user provide
+			Enabled:      true,                                   //require user provide
+			Host:         "127.0.0.1",                            //require user provide
+			Port:         "8181",                                 //require user provide
+			RPCType:      "http",                                 //require user provide
+			NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 		},
 	}
 
 	metaData3 := &model.ConsulMetaDataRegister{
 		ServiceId: uuid3,
 		ShenYuMetaData: &model.MetaDataRegister{
-			AppName: "testMetaDataRegister3", //require user provide
-			Path:    "/your/path3",           //require user provide
-			Enabled: true,                    //require user provide
-			Host:    "127.0.0.1",             //require user provide
-			Port:    "8282",                  //require user provide
-			RPCType: "http",                  //require user provide
+			AppName:      "testMetaDataRegister3",                //require user provide
+			Path:         "/your/path3",                          //require user provide
+			Enabled:      true,                                   //require user provide
+			Host:         "127.0.0.1",                            //require user provide
+			Port:         "8282",                                 //require user provide
+			RPCType:      "http",                                 //require user provide
+			NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 		},
 	}
 
@@ -147,36 +150,39 @@ func TestDeregisterServiceInstance(t *testing.T) {
 	metaData1 := &model.ConsulMetaDataRegister{
 		ServiceId: uuid1,
 		ShenYuMetaData: &model.MetaDataRegister{
-			AppName: "testMetaDataRegister1", //require user provide
-			Path:    "/your/path1",           //require user provide
-			Enabled: true,                    //require user provide
-			Host:    "127.0.0.1",             //require user provide
-			Port:    "8080",                  //require user provide
-			RPCType: "http",                  //require user provide
+			AppName:      "testMetaDataRegister1",                //require user provide
+			Path:         "/your/path1",                          //require user provide
+			Enabled:      true,                                   //require user provide
+			Host:         "127.0.0.1",                            //require user provide
+			Port:         "8080",                                 //require user provide
+			RPCType:      "http",                                 //require user provide
+			NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 		},
 	}
 
 	metaData2 := &model.ConsulMetaDataRegister{
 		ServiceId: uuid2,
 		ShenYuMetaData: &model.MetaDataRegister{
-			AppName: "testMetaDataRegister2", //require user provide
-			Path:    "/your/path2",           //require user provide
-			Enabled: true,                    //require user provide
-			Host:    "127.0.0.1",             //require user provide
-			Port:    "8181",                  //require user provide
-			RPCType: "http",                  //require user provide
+			AppName:      "testMetaDataRegister2",                //require user provide
+			Path:         "/your/path2",                          //require user provide
+			Enabled:      true,                                   //require user provide
+			Host:         "127.0.0.1",                            //require user provide
+			Port:         "8181",                                 //require user provide
+			RPCType:      "http",                                 //require user provide
+			NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 		},
 	}
 
 	metaData3 := &model.ConsulMetaDataRegister{
 		ServiceId: uuid3,
 		ShenYuMetaData: &model.MetaDataRegister{
-			AppName: "testMetaDataRegister3", //require user provide
-			Path:    "/your/path3",           //require user provide
-			Enabled: true,                    //require user provide
-			Host:    "127.0.0.1",             //require user provide
-			Port:    "8282",                  //require user provide
-			RPCType: "http",                  //require user provide
+			AppName:      "testMetaDataRegister3",                //require user provide
+			Path:         "/your/path3",                          //require user provide
+			Enabled:      true,                                   //require user provide
+			Host:         "127.0.0.1",                            //require user provide
+			Port:         "8282",                                 //require user provide
+			RPCType:      "http",                                 //require user provide
+			NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 		},
 	}
 
@@ -237,36 +243,39 @@ func TestGetServiceInstanceInfo(t *testing.T) {
 	metaData1 := &model.ConsulMetaDataRegister{
 		ServiceId: uuid1,
 		ShenYuMetaData: &model.MetaDataRegister{
-			AppName: "testMetaDataRegister1", //require user provide
-			Path:    "/your/path1",           //require user provide
-			Enabled: true,                    //require user provide
-			Host:    "127.0.0.1",             //require user provide
-			Port:    "8080",                  //require user provide
-			RPCType: "http",                  //require user provide
+			AppName:      "testMetaDataRegister1",                //require user provide
+			Path:         "/your/path1",                          //require user provide
+			Enabled:      true,                                   //require user provide
+			Host:         "127.0.0.1",                            //require user provide
+			Port:         "8080",                                 //require user provide
+			RPCType:      "http",                                 //require user provide
+			NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 		},
 	}
 
 	metaData2 := &model.ConsulMetaDataRegister{
 		ServiceId: uuid2,
 		ShenYuMetaData: &model.MetaDataRegister{
-			AppName: "testMetaDataRegister2", //require user provide
-			Path:    "/your/path2",           //require user provide
-			Enabled: true,                    //require user provide
-			Host:    "127.0.0.1",             //require user provide
-			Port:    "8181",                  //require user provide
-			RPCType: "http",                  //require user provide
+			AppName:      "testMetaDataRegister2",                //require user provide
+			Path:         "/your/path2",                          //require user provide
+			Enabled:      true,                                   //require user provide
+			Host:         "127.0.0.1",                            //require user provide
+			Port:         "8181",                                 //require user provide
+			RPCType:      "http",                                 //require user provide
+			NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 		},
 	}
 
 	metaData3 := &model.ConsulMetaDataRegister{
 		ServiceId: uuid3,
 		ShenYuMetaData: &model.MetaDataRegister{
-			AppName: "testMetaDataRegister3", //require user provide
-			Path:    "/your/path3",           //require user provide
-			Enabled: true,                    //require user provide
-			Host:    "127.0.0.1",             //require user provide
-			Port:    "8282",                  //require user provide
-			RPCType: "http",                  //require user provide
+			AppName:      "testMetaDataRegister3",                //require user provide
+			Path:         "/your/path3",                          //require user provide
+			Enabled:      true,                                   //require user provide
+			Host:         "127.0.0.1",                            //require user provide
+			Port:         "8282",                                 //require user provide
+			RPCType:      "http",                                 //require user provide
+			NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 		},
 	}
 
@@ -333,36 +342,39 @@ func TestEntireConsulFunction(t *testing.T) {
 	metaData1 := &model.ConsulMetaDataRegister{
 		ServiceId: uuid1,
 		ShenYuMetaData: &model.MetaDataRegister{
-			AppName: "testEntireMetaDataRegister1", //require user provide
-			Path:    "/your/entire/path1",          //require user provide
-			Enabled: true,                          //require user provide
-			Host:    "127.0.0.1",                   //require user provide
-			Port:    "8080",                        //require user provide
-			RPCType: "http",                        //require user provide
+			AppName:      "testEntireMetaDataRegister1",          //require user provide
+			Path:         "/your/entire/path1",                   //require user provide
+			Enabled:      true,                                   //require user provide
+			Host:         "127.0.0.1",                            //require user provide
+			Port:         "8080",                                 //require user provide
+			RPCType:      "http",                                 //require user provide
+			NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 		},
 	}
 
 	metaData2 := &model.ConsulMetaDataRegister{
 		ServiceId: uuid2,
 		ShenYuMetaData: &model.MetaDataRegister{
-			AppName: "testEntireMetaDataRegister2", //require user provide
-			Path:    "/your/entire/path2",          //require user provide
-			Enabled: true,                          //require user provide
-			Host:    "127.0.0.1",                   //require user provide
-			Port:    "8181",                        //require user provide
-			RPCType: "http",                        //require user provide
+			AppName:      "testEntireMetaDataRegister2",          //require user provide
+			Path:         "/your/entire/path2",                   //require user provide
+			Enabled:      true,                                   //require user provide
+			Host:         "127.0.0.1",                            //require user provide
+			Port:         "8181",                                 //require user provide
+			RPCType:      "http",                                 //require user provide
+			NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 		},
 	}
 
 	metaData3 := &model.ConsulMetaDataRegister{
 		ServiceId: uuid3,
 		ShenYuMetaData: &model.MetaDataRegister{
-			AppName: "testEntireMetaDataRegister3", //require user provide
-			Path:    "/your/entire/path3",          //require user provide
-			Enabled: true,                          //require user provide
-			Host:    "127.0.0.1",                   //require user provide
-			Port:    "8282",                        //require user provide
-			RPCType: "http",                        //require user provide
+			AppName:      "testEntireMetaDataRegister3",          //require user provide
+			Path:         "/your/entire/path3",                   //require user provide
+			Enabled:      true,                                   //require user provide
+			Host:         "127.0.0.1",                            //require user provide
+			Port:         "8282",                                 //require user provide
+			RPCType:      "http",                                 //require user provide
+			NamespaceIds: "649330b6-c2d7-4edc-be8e-8a54df9eb385", //require user provide
 		},
 	}
 

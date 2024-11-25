@@ -21,10 +21,11 @@ package model
  * The ShenYu Http URIRegister
  **/
 type URIRegister struct {
-	Protocol    string `json:"protocol"`
-	AppName     string `json:"appName"`
-	ContextPath string `json:"contextPath"`
-	RPCType     string `json:"rpcType"`
-	Host        string `json:"host"`
-	Port        string `json:"port"`
+	Protocol     string `json:"protocol"`
+	AppName      string `json:"appName"`
+	ContextPath  string `json:"contextPath"`
+	RPCType      string `json:"rpcType"`
+	Host         string `json:"host"`
+	Port         string `json:"port"`
+	NamespaceIds string `json:"namespaceIds"` // Support multiple ns, split by ";"
 }
