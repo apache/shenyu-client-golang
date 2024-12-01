@@ -28,7 +28,7 @@ jobs:
       - name: Set up Go
         uses: actions/setup-go@v1
         with:
-          go-version: 1.17
+          go-version: 1.18
 
       - name: Check out code
         uses: actions/checkout@v1
@@ -40,7 +40,7 @@ jobs:
     name: Test
     strategy:
       matrix:
-        go-version: [ 1.14.x, 1.15.x, 1.16.x ]
+        go-version: [ 1.18.x, 1.19.x ]
     runs-on: ubuntu-latest
     steps:
       - name: Set up Go
@@ -51,10 +51,18 @@ jobs:
       - name: Check out code
         uses: actions/checkout@v1
 
-      - name: Install docker-compose
+      - name: Install docker-compose & nacos-init-sql
         run: |
           sudo curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
           sudo chmod +x /usr/local/bin/docker-compose
+          sudo mkdir -p initdb.d
+          sudo curl -o initdb.d/mysql-schema.sql https://raw.githubusercontent.com/alibaba/nacos/master/distribution/conf/mysql-schema.sql
+
+      - name: Create Docker network
+        run: docker network create -d bridge shenyu
+
+      - name: Start Nacos Docker Compose
+        run: docker-compose -f  docker-compose-nacos.yml up -d
 
       - name: Start Zookeeper Docker Compose
         run: docker-compose -f  docker-compose-zk.yml up -d

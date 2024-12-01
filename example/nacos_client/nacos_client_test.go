@@ -23,8 +23,8 @@ import (
 	"github.com/apache/shenyu-client-golang/common/constants"
 	"github.com/apache/shenyu-client-golang/common/shenyu_sdk_client"
 	"github.com/apache/shenyu-client-golang/model"
-	"github.com/nacos-group/nacos-sdk-go/clients/naming_client"
-	"github.com/nacos-group/nacos-sdk-go/vo"
+	"github.com/nacos-group/nacos-sdk-go/v2/clients/naming_client"
+	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 	"github.com/stretchr/testify/assert"
 	"testing"
 	"time"
@@ -36,8 +36,8 @@ import (
 func TestInitNacosClient(t *testing.T) {
 	//set nacos env configuration
 	ncp := &nacos_client.NacosClientParam{
-		IpAddr:      "console.nacos.io",
-		Port:        80,
+		IpAddr:      "127.0.0.1",
+		Port:        8848,
 		NamespaceId: "public",
 	}
 
@@ -55,8 +55,8 @@ func TestInitNacosClient(t *testing.T) {
 func TestInitNacosClientAndRegister(t *testing.T) {
 	//set nacos env configuration
 	ncp := &nacos_client.NacosClientParam{
-		IpAddr:      "console.nacos.io",
-		Port:        80,
+		IpAddr:      "127.0.0.1",
+		Port:        8848,
 		NamespaceId: "public",
 	}
 
@@ -93,6 +93,8 @@ func TestInitNacosClientAndRegister(t *testing.T) {
 		Healthy:     true,        //require user provide
 		Ephemeral:   true,        //require user provide
 		Metadata:    map[string]string{"contextPath": "contextPath", "uriMetadata": string(metaDataStringJson)},
+		ClusterName: "DEFAULT",
+		GroupName:   "DEFAULT_GROUP",
 	}
 
 	instance, err := nc.RegisterServiceInstance(nacosRegisterInstance)
@@ -106,8 +108,8 @@ func TestInitNacosClientAndRegister(t *testing.T) {
 func TestRegisterAndGetInstance(t *testing.T) {
 	//set nacos env configuration
 	ncp := &nacos_client.NacosClientParam{
-		IpAddr:      "console.nacos.io",
-		Port:        80,
+		IpAddr:      "127.0.0.1",
+		Port:        8848,
 		NamespaceId: "public",
 	}
 
@@ -171,8 +173,8 @@ func TestRegisterAndGetInstance(t *testing.T) {
 func TestRegisterAndDeregister(t *testing.T) {
 	//set nacos env configuration
 	ncp := &nacos_client.NacosClientParam{
-		IpAddr:      "console.nacos.io",
-		Port:        80,
+		IpAddr:      "127.0.0.1",
+		Port:        8848,
 		NamespaceId: "public",
 	}
 
