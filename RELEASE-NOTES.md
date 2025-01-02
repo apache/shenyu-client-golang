@@ -1,3 +1,8 @@
+## 1.1.0
+
+### New Features
+* Support Namespace
+
 ## 1.0.0
 
 ### New Features
