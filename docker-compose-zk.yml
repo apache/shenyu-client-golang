@@ -16,45 +16,46 @@
 version: "3.1"
 
 services:
-  shenyu1:
+  zk1:
     container_name: shenyu-zk1
-    image: zookeeper
+    image: zookeeper:latest
     restart: always
-    hostname: shenyu1
+    hostname: zk1
     ports:
       - 2181:2181
     networks:
       - shenyu
     environment:
       ZOO_MY_ID: 1
-      ZOO_SERVERS: server.1=shenyu1:2888:3888;2181 server.2=shenyu2:2888:3888;2181 server.3=shenyu3:2888:3888;2181
+      ZOO_SERVERS: server.1=zk1:2888:3888;2181 server.2=zk2:2888:3888;2181 server.3=zk3:2888:3888;2181
 
-  shenyu2:
+  zk2:
     container_name: shenyu-zk2
-    image: zookeeper
+    image: zookeeper:latest
     restart: always
-    hostname: shenyu2
+    hostname: zk2
     ports:
       - 2182:2181
     networks:
       - shenyu
     environment:
       ZOO_MY_ID: 2
-      ZOO_SERVERS: server.1=shenyu1:2888:3888;2181 server.2=shenyu2:2888:3888;2181 server.3=shenyu3:2888:3888;2181
+      ZOO_SERVERS: server.1=zk1:2888:3888;2181 server.2=zk2:2888:3888;2181 server.3=zk3:2888:3888;2181
 
-  shenyu3:
+  zk3:
     container_name: shenyu-zk3
-    image: zookeeper
+    image: zookeeper:latest
     restart: always
-    hostname: shenyu3
+    hostname: zk3
     ports:
       - 2183:2181
     networks:
       - shenyu
     environment:
       ZOO_MY_ID: 3
-      ZOO_SERVERS: server.1=shenyu1:2888:3888;2181 server.2=shenyu2:2888:3888;2181 server.3=shenyu3:2888:3888;2181
+      ZOO_SERVERS: server.1=zk1:2888:3888;2181 server.2=zk2:2888:3888;2181 server.3=zk3:2888:3888;2181
 
 networks:
   shenyu:
     name: shenyu
+    external: true

@@ -24,8 +24,8 @@ import (
 	"github.com/apache/shenyu-client-golang/common/constants"
 	"github.com/apache/shenyu-client-golang/common/shenyu_sdk_client"
 	"github.com/apache/shenyu-client-golang/model"
-	"github.com/nacos-group/nacos-sdk-go/clients/naming_client"
-	"github.com/nacos-group/nacos-sdk-go/vo"
+	"github.com/nacos-group/nacos-sdk-go/v2/clients/naming_client"
+	"github.com/nacos-group/nacos-sdk-go/v2/vo"
 	"time"
 )
 
@@ -37,8 +37,8 @@ func main() {
 	//Create ShenYuNacosClient start
 	//set nacos env configuration
 	ncp := &nacos_client.NacosClientParam{
-		IpAddr:      "console.nacos.io",
-		Port:        80,
+		IpAddr:      "127.0.0.1",
+		Port:        8848,
 		NamespaceId: "public",
 	}
 

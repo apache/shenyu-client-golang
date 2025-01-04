@@ -6,8 +6,8 @@
 ```go
 //set nacos env configuration
     ncp := &nacos_client.NacosClientParam{
-        IpAddr:      "console.nacos.io",
-        Port:        80,
+        IpAddr:      "127.0.0.1,
+        Port:        8848,
         NamespaceId: "e525eafa-f7d7-4029-83d9-008937f9d468",
 }
 ```
