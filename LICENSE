@@ -199,3 +199,86 @@
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
+
+========================================================================
+Apache 2.0 licenses
+========================================================================
+
+The following components are provided under the Apache License. See project link for details.
+The text of each license is the standard Apache 2.0 license.
+
+    github.com/aliyun/alibaba-cloud-sdk-go, https://github.com/aliyun/alibaba-cloud-sdk-go/  Apache 2.0
+    github.com/coreos/go-semver/semver, https://github.com/coreos/go-semver/  Apache 2.0
+    github.com/coreos/go-systemd/v22/journal, https://github.com/coreos/go-systemd/  Apache 2.0
+    github.com/jmespath/go-jmespath, https://github.com/jmespath/go-jmespath/  Apache 2.0
+    github.com/modern-go/concurrent, https://github.com/modern-go/concurrent/  Apache 2.0
+    github.com/modern-go/reflect2, https://github.com/modern-go/reflect2/  Apache 2.0
+    github.com/nacos-group/nacos-sdk-go, https://github.com/nacos-group/nacos-sdk-go/  Apache 2.0
+    go.etcd.io/etcd, https://github.com/etcd-io/etcd/  Apache 2.0
+    google.golang.org/genproto/googleapis, https://github.com/googleapis/go-genproto/  Apache 2.0
+    google.golang.org/grpc, https://github.com/grpc/grpc-go/  Apache 2.0
+    gopkg.in/ini.v1, https://github.com/go-ini/ini/  Apache 2.0
+
+========================================================================
+MIT licenses
+========================================================================
+
+The following components are provided under the MIT License. See project link for details.
+The text of each license is the standard MIT license.
+
+    github.com/armon/go-metrics, https://github.com/armon/go-metrics/  MIT
+    github.com/buger/jsonparser, https://github.com/buger/jsonparser/  MIT
+    github.com/fatih/color, https://github.com/fatih/color/  MIT
+    github.com/go-errors/errors, https://github.com/go-errors/errors/  MIT
+    github.com/hashicorp/go-hclog, https://github.com/hashicorp/go-hclog/  MIT
+    github.com/json-iterator/go, https://github.com/json-iterator/go/  MIT
+    github.com/mattn/go-colorable, https://github.com/mattn/go-colorable/  MIT
+    github.com/mattn/go-isatty, https://github.com/mattn/go-isatty/  MIT
+    github.com/mitchellh/go-homedir, https://github.com/mitchellh/go-homedir/  MIT
+    github.com/mitchellh/mapstructure, https://github.com/mitchellh/mapstructure/  MIT
+    github.com/sirupsen/logrus, https://github.com/sirupsen/logrus/  MIT
+    go.uber.org/atomic, https://github.com/uber-go/atomic/  MIT
+    go.uber.org/multierr, https://github.com/uber-go/multierr/  MIT
+    go.uber.org/zap, https://github.com/uber-go/zap/  MIT
+    gopkg.in/natefinch/lumberjack.v2, https://github.com/natefinch/lumberjack/  MIT
+
+========================================================================
+BSD-3-Clause licenses
+========================================================================
+
+The following components are provided under the BSD-3-Clause License. See project link for details.
+The text of each license is the standard BSD-3-Clause license.
+
+    github.com/gogo/protobuf, https://github.com/gogo/protobuf/  BSD-3-Clause
+    github.com/golang/protobuf, https://github.com/golang/protobuf/  BSD-3-Clause
+    github.com/pkg/errors, https://github.com/pkg/errors/  BSD-3-Clause
+    github.com/samuel/go-zookeeper/zk, https://github.com/samuel/go-zookeeper/  BSD-3-Clause
+    golang.org/x/net, https://cs.opensource.google/go/x/net/  BSD-3-Clause
+    golang.org/x/sync/semaphore, https://cs.opensource.google/go/x/sync/  BSD-3-Clause
+    golang.org/x/sys, https://cs.opensource.google/go/x/sys/  BSD-3-Clause
+    golang.org/x/text, https://cs.opensource.google/go/x/text/  BSD-3-Clause
+    google.golang.org/protobuf, https://github.com/protocolbuffers/protobuf-go/  BSD-3-Clause
+
+========================================================================
+BSD-2-Clause licenses
+========================================================================
+
+The following components are provided under the BSD-2-Clause License. See project link for details.
+The text of each license is the standard BSD-2-Clause license.
+
+    github.com/pkg/errors, https://github.com/pkg/errors/ BSD-2-Clause
+
+========================================================================
+MPL-2.0 licenses
+========================================================================
+
+The following components are provided under the MPL-2.0 License. See project link for details.
+The text of each license is the standard MPL-2.0 license.
+
+    github.com/hashicorp/consul/api, https://github.com/hashicorp/consul/  MPL-2.0
+    github.com/hashicorp/go-cleanhttp, https://github.com/hashicorp/go-cleanhttp/  MPL-2.0
+    github.com/hashicorp/go-immutable-radix, https://github.com/hashicorp/go-immutable-radix/  MPL-2.0
+    github.com/hashicorp/go-rootcerts, https://github.com/hashicorp/go-rootcerts/  MPL-2.0
+    github.com/hashicorp/go-uuid, https://github.com/hashicorp/go-uuid/  MPL-2.0
+    github.com/hashicorp/golang-lru/simplelru, https://github.com/hashicorp/golang-lru/  MPL-2.0
+    github.com/hashicorp/serf/coordinate, https://github.com/hashicorp/serf/  MPL-2.0
